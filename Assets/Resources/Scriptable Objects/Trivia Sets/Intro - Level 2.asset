@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fc3af93001511045a7a881c2a99504e, type: 3}
+  m_Name: Intro - Level 2
+  m_EditorClassIdentifier: 
+  setTitle: Intro - Level 2
+  difficulty: 5
+  startTimeInSeconds: 150
+  secondsLostForWrongAnswer: 2
+  secondsGainedForCorrectAnswer: 10
+  parTimeRemainingInSeconds: 60
+  questions:
+  - Question: What insect will a caterpillar grow into?
+    Answers:
+    - answerText: Butterfly
+      correct: 1
+    - answerText: Beetle
+      correct: 0
+    - answerText: Spider
+      correct: 0
+    - answerText: Ant
+      correct: 0
+  - Question: 'Which animal is black and white? '
+    Answers:
+    - answerText: Zebra
+      correct: 1
+    - answerText: Canary
+      correct: 0
+    - answerText: Frog
+      correct: 0
+    - answerText: Mouse
+      correct: 0
+  - Question: What fruit does orange juice come from?
+    Answers:
+    - answerText: Oranges
+      correct: 1
+    - answerText: Apples
+      correct: 0
+    - answerText: Grapefruit
+      correct: 0
+    - answerText: Peaches
+      correct: 0
+  - Question: What is the sweet food made by bees?
+    Answers:
+    - answerText: Honey
+      correct: 1
+    - answerText: Ketchup
+      correct: 0
+    - answerText: Syrup
+      correct: 0
+    - answerText: Oranges
+      correct: 0
+  - Question: A leap year occurs every ___  years?
+    Answers:
+    - answerText: Four
+      correct: 1
+    - answerText: Five
+      correct: 0
+    - answerText: Three
+      correct: 0
+    - answerText: Fourteen
+      correct: 0
+  - Question: What food is made by baking cheese and tomato sauce on a flat dough?
+    Answers:
+    - answerText: Pizza
+      correct: 1
+    - answerText: Sorbet
+      correct: 0
+    - answerText: Poutine
+      correct: 0
+    - answerText: Paella
+      correct: 0
+  - Question: How long is a decade?
+    Answers:
+    - answerText: 10 years
+      correct: 1
+    - answerText: 10 months
+      correct: 0
+    - answerText: 10 days
+      correct: 0
+    - answerText: 10 minutes
+      correct: 0
+  unlocked: 0
+  nextTriviaSet: {fileID: 11400000, guid: 509eb574736793546a483474d9934686, type: 2}
+  completed: 0
+  allQuestionsCorrect: 0
+  underParTime: 0

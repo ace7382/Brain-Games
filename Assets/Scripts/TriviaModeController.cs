@@ -10,9 +10,19 @@ using Doozy.Runtime.UIManager.Components;
 
 public class TriviaModeController : MonoBehaviour
 {
+    [Header("Start Menu Variables")]
     public TextMeshProUGUI                                  title;
     public TextMeshProUGUI                                  subtitle;
     public TextMeshProUGUI                                  numOfQuestions;
+    public TextMeshProUGUI                                  difficultyText;
+    public TextMeshProUGUI                                  startTimeText;
+    public TextMeshProUGUI                                  timeModsText;
+    public GameObject                                       completedDot;
+    public GameObject                                       parTimeDot;
+    public GameObject                                       allQuestionsDot;
+
+    [Space]
+    [Space]
 
     public TextMeshProUGUI                                  question;
     public TextMeshProUGUI                                  answer0;
@@ -20,11 +30,13 @@ public class TriviaModeController : MonoBehaviour
     public TextMeshProUGUI                                  answer2;
     public TextMeshProUGUI                                  answer3;
     public TextMeshProUGUI                                  questionCount;
+    public Image                                            clockFill;
 
     public Font                                             responsePopupFont;
 
     public Progressor                                       clockProgressor;
     public TextMeshProUGUI                                  timeDisplay;
+    public Color                                            clockMidColor;
 
     [HideInInspector] public TriviaSet                      currentTriviaSet;
 
@@ -41,6 +53,7 @@ public class TriviaModeController : MonoBehaviour
     private float                                           clockMaxSeconds = 60f;
 
     private bool                                            isPlaying = false;
+    private bool                                            won = false;
 
     private void Awake()
     {
@@ -71,33 +84,69 @@ public class TriviaModeController : MonoBehaviour
 
             float percentFill = Mathf.Clamp((secondsRemaining / clockMaxSeconds), 0f, float.MaxValue);
 
-            clockProgressor.SetProgressAt(percentFill);
+            //clockProgressor.SetProgressAt(percentFill);
 
-            UpdateTimerDisplay();
+            //if (percentFill >= 1)
+            //{
+            //    clockFill.color = Color.green;
+            //}
+            //else if (percentFill <= .25)
+            //{
+            //    clockFill.color = Color.red;
+            //}
+            //else
+            //{
+            //    clockFill.color = new Color(8, 175, 233);
+            //}
+
+            UpdateTimerDisplay(percentFill);
 
             if (secondsRemaining <= 0.0f)
+            {
+                won = false;
                 EndGame();
+            }
         }
     }
 
+    //Called by the View - Screen TriviaPlay's Show Animation Started callback
     public void StartGame()
     {
         isPlaying = true;
-        secondsRemaining = 63f;
+        secondsRemaining = currentTriviaSet.startTimeInSeconds;
     }
 
     public void SetUp(Signal signal)
     {
         //Signal Data should be object[2]
-        //  index 0 =>  Level name
-        //  index 1 =>  TriviaSet
+        //  index 0 =>  int         - 0 == new level, 1 == replay current level, 2 == play next level
+        //  index 1 =>  TriviaSet   - the triviaset for the current level (only needed if 0 above)
 
-        object[] data       = signal.GetValueUnsafe<object[]>();
-        currentTriviaSet    = (TriviaSet)data[1];
+        object[] data = signal.GetValueUnsafe<object[]>();
 
-        title.text          = "Trivia " + data[0].ToString();
-        subtitle.text       = "\"" + currentTriviaSet.setTitle + "\"";
-        numOfQuestions.text = currentTriviaSet.questions.Count.ToString() +  " Questions";
+        if ((int)data[0] == 0) //Level was defined by call
+        {
+            currentTriviaSet = (TriviaSet)data[1];
+        }
+        else if ((int)data[0] == 2) //Play Next Level
+        {
+            currentTriviaSet = currentTriviaSet.nextTriviaSet;
+        }
+        //data[0] == 1 => Replay doesn't need to update the TriviaSet
+
+        title.text              = "Trivia Time";
+        subtitle.text           = currentTriviaSet.setTitle;
+        difficultyText.text     = currentTriviaSet.difficulty.ToString();
+        numOfQuestions.text     = currentTriviaSet.questions.Count.ToString() + " Questions";
+        timeModsText.text       = string.Format("Correct +{0}s  Wrong -{1}s", currentTriviaSet.secondsGainedForCorrectAnswer
+                                    , currentTriviaSet.secondsLostForWrongAnswer);
+
+        System.TimeSpan ts      = System.TimeSpan.FromSeconds(currentTriviaSet.startTimeInSeconds);
+        startTimeText.text      = ts.Minutes + ":" + ts.Seconds.ToString("00");
+
+        completedDot.SetActive(currentTriviaSet.completed);
+        parTimeDot.SetActive(currentTriviaSet.underParTime);
+        allQuestionsDot.SetActive(currentTriviaSet.allQuestionsCorrect);
 
         answer0.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
         answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
@@ -106,6 +155,7 @@ public class TriviaModeController : MonoBehaviour
 
         currentQuestionIndex = -1;
         questionsAnsweredCorrectly = 0;
+        clockMaxSeconds = currentTriviaSet.startTimeInSeconds;
         LoadNextQuestion();
     }
 
@@ -119,20 +169,43 @@ public class TriviaModeController : MonoBehaviour
         if (currentAnswers[selection].correct)
         {
             questionsAnsweredCorrectly++;
-            secondsRemaining += 5;
-
             ResponsePopup(true, selection);
-            TextPopup("+5s", timeDisplay.transform, Vector2.zero, Color.green);
+
+            //Getting the Last Question correct won't give you more time
+            if (currentQuestionIndex < currentTriviaSet.questions.Count - 1)
+            {
+                secondsRemaining += currentTriviaSet.secondsGainedForCorrectAnswer;
+                TextPopup(string.Format("+{0}s", currentTriviaSet.secondsGainedForCorrectAnswer.ToString())
+                    , timeDisplay.transform, Vector2.zero, Color.green);
+            }
         }
         else
         {
-            secondsRemaining -= 10;
-
             ResponsePopup(false, selection);
-            TextPopup("-10s", timeDisplay.transform, Vector2.zero, Color.red);
+            
+            //Getting the last question incorrect will make you lose time though, so you can lose on the last question
+            secondsRemaining -= currentTriviaSet.secondsLostForWrongAnswer;
+            TextPopup(string.Format("-{0}s", currentTriviaSet.secondsLostForWrongAnswer.ToString())
+                , timeDisplay.transform, Vector2.zero, Color.red);
         }
 
-        LoadNextQuestion();
+        if (secondsRemaining <= 0f)
+        {
+            won = false;
+
+            secondsRemaining = 0;
+            clockProgressor.SetProgressAt(0);
+            UpdateTimerDisplay(0);
+
+            EndGame();
+        }
+        else
+        {
+            float percentFill = Mathf.Clamp((secondsRemaining / clockMaxSeconds), 0f, float.MaxValue);
+            UpdateTimerDisplay(percentFill);
+
+            LoadNextQuestion();
+        }
     }
 
     public void SubmitAnswer(int answerNum)
@@ -171,12 +244,28 @@ public class TriviaModeController : MonoBehaviour
         }
         else
         {
+            won = true;
             EndGame();
         }
     }
 
-    private void UpdateTimerDisplay()
+    private void UpdateTimerDisplay(float percentFill)
     {
+        clockProgressor.SetProgressAt(percentFill);
+
+        if (percentFill >= 1)
+        {
+            clockFill.color = Color.green;
+        }
+        else if (secondsRemaining <= currentTriviaSet.parTimeRemainingInSeconds)
+        {
+            clockFill.color = Color.red;
+        }
+        else
+        {
+            clockFill.color = clockMidColor;
+        }
+
         System.TimeSpan ts = System.TimeSpan.FromSeconds(secondsRemaining);
         timeDisplay.text = ts.Minutes + ":" + ts.Seconds.ToString("00");
     }
@@ -231,12 +320,41 @@ public class TriviaModeController : MonoBehaviour
         answer2.transform.parent.gameObject.GetComponent<UIButton>().interactable = false;
         answer3.transform.parent.gameObject.GetComponent<UIButton>().interactable = false;
 
+        if (won)
+        {
+            if (!currentTriviaSet.completed)
+                currentTriviaSet.completed = true;
+            
+            if (currentTriviaSet.nextTriviaSet != null && !currentTriviaSet.nextTriviaSet.unlocked)
+                currentTriviaSet.nextTriviaSet.unlocked = true;
+
+            if (!currentTriviaSet.underParTime && secondsRemaining >= currentTriviaSet.parTimeRemainingInSeconds)
+                currentTriviaSet.underParTime = true;
+
+            if (!currentTriviaSet.allQuestionsCorrect && questionsAnsweredCorrectly == currentTriviaSet.questions.Count)
+                currentTriviaSet.allQuestionsCorrect = true;
+        }
+
         Invoke("GoToEndScreen", 2.5f);   
     }
 
     private void GoToEndScreen()
     {
-        Signal.Send("Trivia", "EndGame");
+        object[] data   = new object[9];
+        data[0]         = won;
+        data[1]         = questionsAnsweredCorrectly;
+        data[2]         = currentTriviaSet.questions.Count;
+        data[3]         = secondsRemaining;
+        data[4]         = false;
+        data[5]         = currentTriviaSet.completed;
+        data[6]         = currentTriviaSet.underParTime;
+        data[7]         = currentTriviaSet.allQuestionsCorrect;
+        data[8]         = currentTriviaSet.parTimeRemainingInSeconds;
+
+        if (currentTriviaSet.nextTriviaSet != null)
+            data[4] = currentTriviaSet.nextTriviaSet.unlocked;
+
+        Signal.Send("Trivia", "EndGame", data);
     }
 
     private void TextPopup(string word, Transform par, Vector2 center, Color col)

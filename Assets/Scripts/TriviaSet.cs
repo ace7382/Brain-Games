@@ -5,6 +5,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Trivia Question Set", menuName = "New Trivia Question Set", order = 52)]
 public class TriviaSet : ScriptableObject
 {
+    public enum DifficultyLevel
+    {
+        VeryEasy = 5,
+        Easy = 10,
+        Medium = 15,
+        Hard = 20,
+        VeryHard = 25,
+        Insane = 30        
+    };
+
     [System.Serializable]
     public class TriviaQuestion
     {
@@ -13,29 +23,27 @@ public class TriviaSet : ScriptableObject
         {
             public string  answerText;
             public bool    correct;
-
-            public override string ToString()
-            {
-                return answerText + " || Correct? " + correct.ToString();
-            }
         }
 
         public string Question;
         public List<TriviaAnswer> Answers;
-
-        public override string ToString()
-        {
-            string ret = string.Empty;
-
-            foreach (TriviaAnswer a in Answers)
-            {
-                ret += a.ToString() + "\n";
-            }
-
-            return ret;
-        }
     }
 
     public string setTitle;
+    public DifficultyLevel difficulty;
+
+    public int startTimeInSeconds;
+    public int secondsLostForWrongAnswer;
+    public int secondsGainedForCorrectAnswer;
+    public int parTimeRemainingInSeconds;
+
     public List<TriviaQuestion> questions;
+
+    public bool unlocked;
+    public TriviaSet nextTriviaSet;
+
+    [Header("Level Goals")]
+    public bool completed;
+    public bool allQuestionsCorrect;
+    public bool underParTime;
 }

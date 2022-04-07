@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fc3af93001511045a7a881c2a99504e, type: 3}
+  m_Name: Dogs - Level 2
+  m_EditorClassIdentifier: 
+  setTitle: Dogs - Level 2
+  difficulty: 5
+  startTimeInSeconds: 60
+  secondsLostForWrongAnswer: 5
+  secondsGainedForCorrectAnswer: 5
+  parTimeRemainingInSeconds: 25
+  questions:
+  - Question: What do you call Corsair when he is dyed blue?
+    Answers:
+    - answerText: Beep Bluep
+      correct: 1
+    - answerText: Beep Boop
+      correct: 0
+    - answerText: Corsair
+      correct: 0
+    - answerText: Paisley
+      correct: 0
+  - Question: Who is the dustiest dog?
+    Answers:
+    - answerText: Mahogany
+      correct: 1
+    - answerText: Briar
+      correct: 0
+    - answerText: Corsair
+      correct: 0
+    - answerText: Paisley
+      correct: 0
+  - Question: Who is the best dog to pet?
+    Answers:
+    - answerText: Bucket
+      correct: 1
+    - answerText: Briar
+      correct: 1
+    - answerText: Corsair
+      correct: 1
+    - answerText: Paisley
+      correct: 1
+  unlocked: 0
+  nextTriviaSet: {fileID: 0}
+  completed: 0
+  allQuestionsCorrect: 0
+  underParTime: 0
