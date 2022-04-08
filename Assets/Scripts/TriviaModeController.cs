@@ -1,18 +1,16 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.Reactor;
+using Doozy.Runtime.UIManager.Components;
 using UnityEngine.UI;
 using BizzyBeeGames;
-using Doozy.Runtime.UIManager.Components;
 
 public class TriviaModeController : MonoBehaviour
 {
     [Header("Start Menu Variables")]
     public TextMeshProUGUI                                  title;
-    public TextMeshProUGUI                                  subtitle;
     public TextMeshProUGUI                                  numOfQuestions;
     public TextMeshProUGUI                                  difficultyText;
     public TextMeshProUGUI                                  startTimeText;
@@ -84,21 +82,6 @@ public class TriviaModeController : MonoBehaviour
 
             float percentFill = Mathf.Clamp((secondsRemaining / clockMaxSeconds), 0f, float.MaxValue);
 
-            //clockProgressor.SetProgressAt(percentFill);
-
-            //if (percentFill >= 1)
-            //{
-            //    clockFill.color = Color.green;
-            //}
-            //else if (percentFill <= .25)
-            //{
-            //    clockFill.color = Color.red;
-            //}
-            //else
-            //{
-            //    clockFill.color = new Color(8, 175, 233);
-            //}
-
             UpdateTimerDisplay(percentFill);
 
             if (secondsRemaining <= 0.0f)
@@ -134,8 +117,7 @@ public class TriviaModeController : MonoBehaviour
         }
         //data[0] == 1 => Replay doesn't need to update the TriviaSet
 
-        title.text              = "Trivia Time";
-        subtitle.text           = currentTriviaSet.setTitle;
+        title.text              = currentTriviaSet.setTitle;
         difficultyText.text     = currentTriviaSet.difficulty.ToString();
         numOfQuestions.text     = currentTriviaSet.questions.Count.ToString() + " Questions";
         timeModsText.text       = string.Format("Correct +{0}s  Wrong -{1}s", currentTriviaSet.secondsGainedForCorrectAnswer
