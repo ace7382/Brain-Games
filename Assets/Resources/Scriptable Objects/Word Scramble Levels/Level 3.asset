@@ -13,8 +13,37 @@ MonoBehaviour:
   m_Name: Level 3
   m_EditorClassIdentifier: 
   title: Level 3
-  letters: apple
-  goalWordCount: 0
-  hiddenWords: []
+  unlocked: 1
+  letters: elapp
+  goalWordCount: 10
+  secondGoalWordCount: 20
+  specialWord: apple
+  hiddenWords:
+  - ale
+  - alp
+  - ape
+  - appl
+  - appel
+  - apple
+  - lap
+  - lea
+  - lep
+  - lapp
+  - leap
+  - lepa
+  - pal
+  - pap
+  - pea
+  - pep
+  - ppa
+  - ppl
+  - pale
+  - palp
+  - pape
+  - peal
+  - plap
+  - plea
+  - pepla
+  foundWords:
+  - app
   nextWordScrambleLevel: {fileID: 11400000, guid: 8d3a718a68e5da44da586ed5aaad2d24, type: 2}
-  unlocked: 0

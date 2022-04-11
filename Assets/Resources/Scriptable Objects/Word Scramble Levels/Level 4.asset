@@ -13,8 +13,47 @@ MonoBehaviour:
   m_Name: Level 4
   m_EditorClassIdentifier: 
   title: Level 4
-  letters: smore
-  goalWordCount: 0
-  hiddenWords: []
-  nextWordScrambleLevel: {fileID: 11400000, guid: abca12ec63d0e6a4e8887b96f2f9a088, type: 2}
   unlocked: 0
+  letters: cubtek
+  goalWordCount: 18
+  secondGoalWordCount: 30
+  specialWord: bucket
+  hiddenWords:
+  - bec
+  - bet
+  - bkt
+  - btu
+  - but
+  - beck
+  - buck
+  - bute
+  - becut
+  - bucket
+  - cte
+  - cub
+  - cue
+  - cut
+  - cube
+  - cuke
+  - cute
+  - ecb
+  - ecu
+  - keb
+  - ket
+  - kue
+  - ketu
+  - tck
+  - tec
+  - tub
+  - tue
+  - tebu
+  - teck
+  - teuk
+  - tube
+  - tuck
+  - tuke
+  - ubc
+  - uke
+  - ute
+  foundWords: []
+  nextWordScrambleLevel: {fileID: 11400000, guid: abca12ec63d0e6a4e8887b96f2f9a088, type: 2}

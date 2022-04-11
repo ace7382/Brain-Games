@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -13,6 +11,8 @@ public class WordScrambleTileController : MonoBehaviour
 
     public TextMeshProUGUI  letText;
     public Image            tileBackground;
+
+    public int              childIndex;
 
     public void SetUp(char c)
     {

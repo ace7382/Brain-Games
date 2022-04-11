@@ -6,8 +6,27 @@ using System.Linq;
 
 public class DevelopmentHelperScripts : MonoBehaviour
 {
+    [MenuItem("Dev Commands/Link all Level Buttons to Main Menu Controller")]
+    public static void LinkLevelButtonsToMainMenuController()
+    {
+        MainMenuController m = GameObject.FindObjectOfType<MainMenuController>();
+
+        TriviaModeLevelButtonController[] triviaButtons = FindObjectsOfType<TriviaModeLevelButtonController>();
+        WordScrambleLevelButtonController[] wordScrambleButtons = FindObjectsOfType<WordScrambleLevelButtonController>();
+
+        m.triviaLevelButtons = triviaButtons.ToList();
+        m.wordScrambleLevelButtons = wordScrambleButtons.ToList();
+    }
+
+    [MenuItem("Dev Commands/Reset all Levels")]
+    public static void ResetAllLevels()
+    {
+        ResetTriviaLevels();
+        ResetWordScrambleLevels();
+    }
+
     [MenuItem("Dev Commands/Reset Trivia Levels")]
-    public static void CreateSecretShop()
+    public static void ResetTriviaLevels()
     {
         List<TriviaSet> triviasets = new List<TriviaSet>(Resources.LoadAll<TriviaSet>("Scriptable Objects/Trivia Sets"));
 
@@ -31,17 +50,8 @@ public class DevelopmentHelperScripts : MonoBehaviour
         }
     }
 
-    [MenuItem("Dev Commands/Link all Trivia Level Buttons to Main Menu Controller")]
-    public static void LinkTriviaLevelButtonsToMainMenuController()
-    {
-        MainMenuController m = GameObject.FindObjectOfType<MainMenuController>();
-        TriviaModeLevelButtonController[] buttons = GameObject.FindObjectsOfType<TriviaModeLevelButtonController>();
-
-        m.triviaLevelButtons = buttons.ToList<TriviaModeLevelButtonController>();
-    }
-
-    [MenuItem("Dev Commands/Generate Word Scramble Words")]
-    public static void PopulateWordScrambleLevelsWithWordsFromMasterWordList()
+    [MenuItem("Dev Commands/Reset Word Scramble Levels")]
+    public static void ResetWordScrambleLevels()
     {
         List<WordScrambleLevel> levels = 
             new List<WordScrambleLevel>(Resources.LoadAll<WordScrambleLevel>("Scriptable Objects/Word Scramble Levels"));
@@ -81,6 +91,11 @@ public class DevelopmentHelperScripts : MonoBehaviour
                     level.hiddenWords.Add(allWords[i]);
                 }
             }
+
+            if (level.name.Contains("Level 1"))
+                level.unlocked = true;
+            else
+                level.unlocked = false;
         }
     }
 

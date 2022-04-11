@@ -13,18 +13,20 @@ MonoBehaviour:
   m_Name: Level 2
   m_EditorClassIdentifier: 
   title: Level 2
-  unlocked: 0
-  letters: dogs
-  goalWordCount: 5
+  unlocked: 1
+  letters: gosd
+  goalWordCount: 4
+  secondGoalWordCount: 8
+  specialWord: dogs
   hiddenWords:
-  - dog
-  - dos
-  - dogs
-  - god
   - gos
-  - gods
   - ods
   - sod
   - sog
-  foundWords: []
+  foundWords:
+  - dogs
+  - dos
+  - dog
+  - god
+  - gods
   nextWordScrambleLevel: {fileID: 11400000, guid: a194140110ba7b341b9ebd8a94dd9ccb, type: 2}

@@ -11,9 +11,9 @@ public class WordScrambleLevelButtonController : MonoBehaviour
     [SerializeField] private GameObject lockIcon;
     [SerializeField] private GameObject levelNumber;
     [SerializeField] private UIButton   button;
-    [SerializeField] private GameObject completedDot;
-    [SerializeField] private GameObject underParDot;
-    [SerializeField] private GameObject allQuestionsCorrectDot;
+    [SerializeField] private GameObject goal1Dot;
+    [SerializeField] private GameObject goal2Dot;
+    [SerializeField] private GameObject specialWordDot;
 
     //Called By Word Scramble Level Buttons' PointerClick behavior
     public void Click()
@@ -31,6 +31,21 @@ public class WordScrambleLevelButtonController : MonoBehaviour
 
     public void ShowLockedStatus()
     {
+        if (wordScrambleLevel.unlocked)
+        {
+            lockIcon.SetActive(false);
+            levelNumber.SetActive(true);
+            button.interactable = true;
 
+            goal1Dot.SetActive(wordScrambleLevel.foundWords.Count >= wordScrambleLevel.goalWordCount);
+            goal2Dot.SetActive(wordScrambleLevel.foundWords.Count >= wordScrambleLevel.secondGoalWordCount);
+            specialWordDot.SetActive(wordScrambleLevel.foundWords.Contains(wordScrambleLevel.specialWord));
+        }
+        else
+        {
+            lockIcon.SetActive(true);
+            levelNumber.SetActive(false);
+            button.interactable = false;
+        }
     }
 }

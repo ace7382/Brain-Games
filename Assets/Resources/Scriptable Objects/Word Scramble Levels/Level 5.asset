@@ -13,8 +13,31 @@ MonoBehaviour:
   m_Name: Level 5
   m_EditorClassIdentifier: 
   title: Level 5
-  letters: banter
-  goalWordCount: 0
-  hiddenWords: []
-  nextWordScrambleLevel: {fileID: 11400000, guid: e7f53546919d0a44c91539a0d1d2d0f7, type: 2}
   unlocked: 0
+  letters: rriab
+  goalWordCount: 10
+  secondGoalWordCount: 15
+  specialWord: briar
+  hiddenWords:
+  - air
+  - arb
+  - arr
+  - abir
+  - abri
+  - arri
+  - bai
+  - bar
+  - bra
+  - brr
+  - bari
+  - barr
+  - birr
+  - briar
+  - iba
+  - ira
+  - rab
+  - ria
+  - rib
+  - rabi
+  foundWords: []
+  nextWordScrambleLevel: {fileID: 11400000, guid: e7f53546919d0a44c91539a0d1d2d0f7, type: 2}

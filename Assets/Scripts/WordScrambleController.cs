@@ -77,6 +77,16 @@ public class WordScrambleController : MonoBehaviour
 
     public void EndGame()
     {
+        for (int i = 0; i < tiles.Count; i++)
+            ReturnTile(tiles[i]);
+
+        selectedWord = "";
+
+        //You can only get to endgame now by winning and clicking the GO!! button
+        //TODO: maybe move this somewhere else if there's another way to "end game" like returning home etc
+        if (currentWordScrambleLevel.nextWordScrambleLevel != null)
+            currentWordScrambleLevel.nextWordScrambleLevel.unlocked = true;
+
         object[] data = new object[1];
         data[0] = currentWordScrambleLevel;
 
@@ -101,30 +111,79 @@ public class WordScrambleController : MonoBehaviour
         }
         //data[0] == 1 => Replay doesn't need to update the WOrdScrambleLevel
 
-        tiles       = new List<WordScrambleTileController>();
-
         //TODO: Pool these too
         foreach (Transform child in foundWordList.transform)
             Destroy(child.gameObject);
 
         foundWordList.GetComponent<GridLayoutGroup>().cellSize = new Vector2(40 * currentWordScrambleLevel.letters.Length, 50);
 
-        //TODO: Pool these, or make them reset/hide
-        for (int i = 0; i < currentWordScrambleLevel.letters.Length; i++)
+        selectedWord = "";
+
+        if (tiles == null)
         {
-            char letter                         = currentWordScrambleLevel.letters[i];
-
-            GameObject go                       = Instantiate(letterTilePrefab);
-            WordScrambleTileController control  = go.GetComponent<WordScrambleTileController>();
-
-            go.transform.SetParent(letterTray.transform);
-
-            go.transform.localScale             = Vector3.one;
-            go.transform.localPosition          = Vector3.one;
-
-            control.SetUp(letter);
-            tiles.Add(control);
+            Debug.Log("new tile list created");
+            tiles = new List<WordScrambleTileController>();
         }
+
+        letterTray.GetComponent<HorizontalLayoutGroup>().enabled = true;
+
+        for (int i = 0; i < currentWordScrambleLevel.letters.Length; i++) //9 is max tiles
+        {
+            //Debug.Log(i);
+
+            if (tiles.Count > i)
+            {
+                //Debug.Log("aa");
+
+                tiles[i].Clear();
+
+                if (i < currentWordScrambleLevel.letters.Length)
+                {
+                    //Debug.Log("bb");
+
+                    tiles[i].SetUp(currentWordScrambleLevel.letters[i]);
+                    tiles[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    //Debug.Log("cc");
+
+                    tiles[i].gameObject.SetActive(false);
+                }
+            }
+            else //if there is no tile yet
+            {
+                //Debug.Log("dd");
+
+                char letter = currentWordScrambleLevel.letters[i];
+
+                GameObject go = Instantiate(letterTilePrefab);
+                WordScrambleTileController control = go.GetComponent<WordScrambleTileController>();
+
+                go.transform.SetParent(letterTray.transform);
+
+                go.transform.localScale = Vector3.one;
+                go.transform.localPosition = Vector3.one;
+
+                control.SetUp(letter);
+                tiles.Add(control);
+
+                //Debug.Log("ee");
+            }
+
+            //Debug.Log("ff");
+
+            tiles[i].childIndex = i;
+        }
+
+        for (int i = currentWordScrambleLevel.letters.Length; i < tiles.Count; i++)
+        {
+            tiles[i].Clear();
+            tiles[i].gameObject.SetActive(false);
+        }
+
+        Canvas.ForceUpdateCanvases();
+        letterTray.GetComponent<HorizontalLayoutGroup>().enabled = false;
 
         for (int i = 0; i < currentWordScrambleLevel.foundWords.Count; i++)
         {
@@ -174,10 +233,20 @@ public class WordScrambleController : MonoBehaviour
         }
     }
 
+    //TODO: the letter tray will reorder and resize if multiple letters are returned and they are not
+    //      in the order that they would be on the tray
     private void ReturnTile(WordScrambleTileController t)
     {
         t.transform.SetParent(letterTray.transform);
-        t.transform.localRotation = Quaternion.identity;
+        t.transform.localRotation   = Quaternion.identity;
+        t.transform.SetSiblingIndex(t.childIndex);
+
+        HorizontalLayoutGroup h = letterTray.GetComponent<HorizontalLayoutGroup>();
+
+        h.enabled = true;
+        Canvas.ForceUpdateCanvases();
+        h.enabled = false;
+
 
         t.selected                  = false;
         t.selectedPlace             = -1;
