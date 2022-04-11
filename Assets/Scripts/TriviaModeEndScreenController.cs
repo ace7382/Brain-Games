@@ -103,6 +103,7 @@ public class TriviaModeEndScreenController : MonoBehaviour
         StartCoroutine(menuLoading);
     }
 
+    //Called by the invisible button's click
     public void SkipMenuAnimation()
     {
         skipMenuAnimationButton.SetActive(false);

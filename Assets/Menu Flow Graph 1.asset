@@ -46,7 +46,7 @@ MonoBehaviour:
   NodeState: 0
   CanBeDeleted: 1
   Passthrough: 0
-  ClearGraphHistory: 0
+  ClearGraphHistory: 1
   Position: {x: 1177, y: 0}
   OnEnterShowViews:
   - Id:
@@ -140,6 +140,72 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
+--- !u!114 &-5446649114305400559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b2479a69f56cf54c96de81c44e8ad1a, type: 3}
+  m_Name: Portal
+  m_EditorClassIdentifier: 
+  FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
+  NodeId: fc1c57cf-c211-405b-b01e-579c48591b0b
+  NodeType: 1
+  NodeName: Portal
+  NodeDescription: 
+  InputPorts: []
+  OutputPorts:
+  - NodeId: fc1c57cf-c211-405b-b01e-579c48591b0b
+    PortId: 3d400c6f-a40c-4797-95c9-b89c96dea55b
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - e349a8f6-ef3a-47ab-a0f2-0103bb62b58d
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 1
+  Position: {x: 652, y: 611.86957}
+  Trigger: 0
+  SignalPayload:
+    StreamId:
+      Category: WordScramble
+      Name: EndGame
+      Custom: 0
+    SignalValueType: 0
+    IntegerValue: 0
+    BooleanValue: 0
+    FloatValue: 0
+    StringValue: 
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+    Vector4Value: {x: 0, y: 0, z: 0, w: 0}
+  ButtonId:
+    Category: None
+    Name: None
+    Custom: 0
+  ToggleId:
+    Category: None
+    Name: None
+    Custom: 0
+  CommandToggle: 2
+  ViewId:
+    Category: None
+    Name: None
+    Custom: 0
+  CommandShowHide: 0
 --- !u!114 &-2819881898719066116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,7 +279,7 @@ MonoBehaviour:
   NodeState: 0
   CanBeDeleted: 1
   Passthrough: 1
-  ClearGraphHistory: 0
+  ClearGraphHistory: 1
   Position: {x: 652, y: 0}
   Trigger: 0
   SignalPayload:
@@ -336,6 +402,8 @@ MonoBehaviour:
   - {fileID: 3660787409783741022}
   - {fileID: 6488737627170364709}
   - {fileID: 8239184231873523030}
+  - {fileID: -5446649114305400559}
+  - {fileID: 8317416955230002128}
   RootNode: {fileID: -2819881898719066116}
   ActiveNode: {fileID: 0}
 --- !u!114 &3660787409783741022
@@ -438,7 +506,7 @@ MonoBehaviour:
   NodeState: 0
   CanBeDeleted: 1
   Passthrough: 1
-  ClearGraphHistory: 0
+  ClearGraphHistory: 1
   Position: {x: 652, y: 433.7743}
   Trigger: 0
   SignalPayload:
@@ -484,7 +552,7 @@ MonoBehaviour:
   FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
   NodeId: 23815753-351f-4631-9fbd-06de819c0a91
   NodeType: 0
-  NodeName: U I
+  NodeName: Word Scramble Play
   NodeDescription: 
   InputPorts:
   - NodeId: 23815753-351f-4631-9fbd-06de819c0a91
@@ -533,6 +601,71 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
+--- !u!114 &8317416955230002128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
+  NodeId: 38d30159-1194-45c8-b9b3-eb318a789c29
+  NodeType: 0
+  NodeName: Word Scramble End Menu
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 38d30159-1194-45c8-b9b3-eb318a789c29
+    PortId: e349a8f6-ef3a-47ab-a0f2-0103bb62b58d
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 3d400c6f-a40c-4797-95c9-b89c96dea55b
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 38d30159-1194-45c8-b9b3-eb318a789c29
+    PortId: a75c992e-4d66-4105-8749-11205145324d
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 4fa46c37-ff81-46ac-b585-b3ff3b4959da
+    Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"WordScrambleEnd","Name":"ReturnHome","Custom":true},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 1
+  Position: {x: 853, y: 612}
+  OnEnterShowViews:
+  - Id:
+      Category: Screen
+      Name: WordScrambleEnd
+      Custom: 1
+    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: Screen
+      Name: WordScrambleEnd
+      Custom: 1
+    Mode: 0
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
 --- !u!114 &8592052321728505814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -568,7 +701,7 @@ MonoBehaviour:
   NodeState: 0
   CanBeDeleted: 1
   Passthrough: 1
-  ClearGraphHistory: 0
+  ClearGraphHistory: 1
   Position: {x: 652, y: 178}
   Trigger: 0
   SignalPayload:
@@ -625,6 +758,7 @@ MonoBehaviour:
     - 9080b3db-2115-40c6-a1ff-dfeafe915119
     - f27e19e8-2ab0-449b-a853-3f1225419c4e
     - b944f300-acab-47b8-a581-4e5a666e0388
+    - a75c992e-4d66-4105-8749-11205145324d
     Value: '{"CanGoBack":false}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

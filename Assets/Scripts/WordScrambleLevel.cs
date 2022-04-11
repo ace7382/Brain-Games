@@ -6,8 +6,21 @@ using UnityEngine;
 public class WordScrambleLevel : ScriptableObject
 {
     public string               title;
-    public string               letters;
-    public List<string>         hiddenWords;
-    public WordScrambleLevel    nextWordScrambleLevel;
     public bool                 unlocked;
+    public string               letters;
+
+    [Space]
+    [Space]
+
+    public int                  goalWordCount;
+    public int                  secondGoalWordCount;
+    public string               specialWord;
+    public List<string>         hiddenWords;
+    public List<string>         foundWords;
+
+    [Space]
+    [Space]
+
+    public WordScrambleLevel    nextWordScrambleLevel;
+
 }

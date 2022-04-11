@@ -8,8 +8,8 @@ using UnityEngine.UI;
 public class WordScrambleController : MonoBehaviour
 {
     //TODO: When finding words that will overflow the found words box, figure out how to
-    //      increase the content box's size so that it's fully scrollable. I think I figgured
-    //      it out in Achievement Hunter's shop code
+    //      increase the content box's size so that it's fully scrollable. I think I figured
+    //      it out in Achievement Hunter's shop code? maybe on the word search somewhere too??
 
     public TextAsset                            FullWordList;
     public WordScrambleLevel                    currentWordScrambleLevel;
@@ -19,14 +19,15 @@ public class WordScrambleController : MonoBehaviour
     public GameObject                           foundWordList;
     public GameObject                           letterTilePrefab;
     public GameObject                           foundWordPrefab;
+    public TextMeshProUGUI                      wordCountFoundText;
+    public TextMeshProUGUI                      wordCountGoalText;
+    public GameObject                           finishButton;
 
     public TMP_FontAsset                        selectedFont;
     public TMP_FontAsset                        unselectedFont;
 
     public string                               selectedWord;
 
-    private List<string>                        listOfAllWords;
-    private List<string>                        foundWords;
     private List<WordScrambleTileController>    tiles;
 
     private SignalReceiver                      wordscramble_wordscramblesetup_receiver;
@@ -41,8 +42,6 @@ public class WordScrambleController : MonoBehaviour
 
         wordscramble_wordscramblesetup_receiver = new SignalReceiver().SetOnSignalCallback(SetUp);
         wordscramble_tileclicked_receiver = new SignalReceiver().SetOnSignalCallback(TileClicked);
-
-        SetAllWords();
     }
 
     private void OnEnable()
@@ -57,8 +56,7 @@ public class WordScrambleController : MonoBehaviour
         wordscramble_tileclicked_stream.DisconnectReceiver(wordscramble_tileclicked_receiver);
     }
 
-
-    //Usec by the Submit Button's Click callback
+    //Used by the Submit Button's Click callback
     public void SubmitWord()
     {
         if (selectedWord == "")
@@ -70,10 +68,19 @@ public class WordScrambleController : MonoBehaviour
                 ReturnTile(tiles[i]);
         }
 
-        if (/*!foundWords.Contains(selectedWord) && */listOfAllWords.Contains(selectedWord))
+        if (!currentWordScrambleLevel.foundWords.Contains(selectedWord) 
+            && currentWordScrambleLevel.hiddenWords.Contains(selectedWord))
             FoundWord(selectedWord);
 
         selectedWord = "";
+    }
+
+    public void EndGame()
+    {
+        object[] data = new object[1];
+        data[0] = currentWordScrambleLevel;
+
+        Signal.Send("WordScramble", "EndGame", data);
     }
 
     private void SetUp(Signal signal)
@@ -92,11 +99,9 @@ public class WordScrambleController : MonoBehaviour
         {
             currentWordScrambleLevel = currentWordScrambleLevel.nextWordScrambleLevel;
         }
-        //data[0] == 1 => Replay doesn't need to update the TriviaSet
+        //data[0] == 1 => Replay doesn't need to update the WOrdScrambleLevel
 
         tiles       = new List<WordScrambleTileController>();
-
-        foundWords  = new List<string>();
 
         //TODO: Pool these too
         foreach (Transform child in foundWordList.transform)
@@ -120,24 +125,16 @@ public class WordScrambleController : MonoBehaviour
             control.SetUp(letter);
             tiles.Add(control);
         }
-    }
 
-    private void SetAllWords()
-    {
-        string[] allWords = FullWordList.text.Split('\n');
-
-        listOfAllWords = new List<string>();
-
-        for (int i = 0; i < allWords.Length; i++)
+        for (int i = 0; i < currentWordScrambleLevel.foundWords.Count; i++)
         {
-            string word = allWords[i].TrimEnd('\r', '\n');
-
-            if (word.Length >= 2 && !string.IsNullOrEmpty(word))
-            {
-                listOfAllWords.Add(word);
-            }
+            CreateFoundWordListing(currentWordScrambleLevel.foundWords[i]);
         }
+
+        UpdateWordFoundText();
     }
+
+
     private void TileClicked(Signal signal)
     {
         int index = tiles.FindIndex(x => x == signal.GetValueUnsafe<WordScrambleTileController>());
@@ -192,12 +189,30 @@ public class WordScrambleController : MonoBehaviour
 
     private void FoundWord(string word)
     {
-        foundWords.Add(word);
+        currentWordScrambleLevel.foundWords.Add(word);
+        currentWordScrambleLevel.hiddenWords.Remove(word);
 
+        CreateFoundWordListing(word);
+
+        UpdateWordFoundText();
+    }
+
+    private void CreateFoundWordListing(string word)
+    {
         GameObject go = Instantiate(foundWordPrefab);
         go.transform.SetParent(foundWordList.transform);
         go.transform.localScale = Vector3.one;
 
         go.GetComponent<TextMeshProUGUI>().text = word;
+    }
+
+    private void UpdateWordFoundText()
+    {
+        wordCountFoundText.text     = currentWordScrambleLevel.foundWords.Count.ToString();
+        wordCountGoalText.text      = currentWordScrambleLevel.foundWords.Count <= currentWordScrambleLevel.goalWordCount ?
+                                      currentWordScrambleLevel.goalWordCount.ToString() :
+                                      currentWordScrambleLevel.secondGoalWordCount.ToString();
+
+        finishButton.SetActive(currentWordScrambleLevel.foundWords.Count >= currentWordScrambleLevel.goalWordCount);
     }
 }

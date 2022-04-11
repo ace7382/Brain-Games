@@ -23,6 +23,8 @@ MonoBehaviour:
     - Category: Trivia
       Name: TriviaSetup
     - Category: WordScramble
+      Name: EndGame
+    - Category: WordScramble
       Name: TileClicked
     - Category: WordScramble
       Name: WordScrambleSetup
