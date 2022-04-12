@@ -7,10 +7,6 @@ using UnityEngine.UI;
 
 public class WordScrambleController : MonoBehaviour
 {
-    //TODO: When finding words that will overflow the found words box, figure out how to
-    //      increase the content box's size so that it's fully scrollable. I think I figured
-    //      it out in Achievement Hunter's shop code? maybe on the word search somewhere too??
-
     public TextAsset                            FullWordList;
     public WordScrambleLevel                    currentWordScrambleLevel;
 
@@ -35,6 +31,8 @@ public class WordScrambleController : MonoBehaviour
     private SignalReceiver                      wordscramble_tileclicked_receiver;
     private SignalStream                        wordscramble_tileclicked_stream;
 
+    private const float                         FOUND_WORD_COLUMN_WIDTH_PER_LETTER = 35f;
+    private const float                         FOUND_WORD_COLUMN_HEIGHT = 50f;
     private void Awake()
     {
         wordscramble_wordscramblesetup_stream = SignalStream.Get("WordScramble", "WordScrambleSetup");
@@ -115,13 +113,13 @@ public class WordScrambleController : MonoBehaviour
         foreach (Transform child in foundWordList.transform)
             Destroy(child.gameObject);
 
-        foundWordList.GetComponent<GridLayoutGroup>().cellSize = new Vector2(40 * currentWordScrambleLevel.letters.Length, 50);
+        foundWordList.GetComponent<GridLayoutGroup>().cellSize 
+            = new Vector2(FOUND_WORD_COLUMN_WIDTH_PER_LETTER * currentWordScrambleLevel.letters.Length, FOUND_WORD_COLUMN_HEIGHT);
 
         selectedWord = "";
 
         if (tiles == null)
         {
-            Debug.Log("new tile list created");
             tiles = new List<WordScrambleTileController>();
         }
 
@@ -129,32 +127,22 @@ public class WordScrambleController : MonoBehaviour
 
         for (int i = 0; i < currentWordScrambleLevel.letters.Length; i++) //9 is max tiles
         {
-            //Debug.Log(i);
-
             if (tiles.Count > i)
             {
-                //Debug.Log("aa");
-
                 tiles[i].Clear();
 
                 if (i < currentWordScrambleLevel.letters.Length)
                 {
-                    //Debug.Log("bb");
-
                     tiles[i].SetUp(currentWordScrambleLevel.letters[i]);
                     tiles[i].gameObject.SetActive(true);
                 }
                 else
                 {
-                    //Debug.Log("cc");
-
                     tiles[i].gameObject.SetActive(false);
                 }
             }
             else //if there is no tile yet
             {
-                //Debug.Log("dd");
-
                 char letter = currentWordScrambleLevel.letters[i];
 
                 GameObject go = Instantiate(letterTilePrefab);
@@ -167,11 +155,7 @@ public class WordScrambleController : MonoBehaviour
 
                 control.SetUp(letter);
                 tiles.Add(control);
-
-                //Debug.Log("ee");
             }
-
-            //Debug.Log("ff");
 
             tiles[i].childIndex = i;
         }
@@ -191,6 +175,7 @@ public class WordScrambleController : MonoBehaviour
         }
 
         UpdateWordFoundText();
+        ResizeFoundWordScroll();
     }
 
 
@@ -273,6 +258,29 @@ public class WordScrambleController : MonoBehaviour
         go.transform.localScale = Vector3.one;
 
         go.GetComponent<TextMeshProUGUI>().text = word;
+
+        ResizeFoundWordScroll();
+    }
+
+    private void ResizeFoundWordScroll()
+    {
+        int colCount =  currentWordScrambleLevel.foundWords.Count / 4 + 
+                        (currentWordScrambleLevel.foundWords.Count % 4 > 0 ? 1 : 0);
+
+        LayoutElement le = foundWordList.GetComponent<LayoutElement>();
+        GridLayoutGroup g = foundWordList.GetComponent<GridLayoutGroup>();
+
+        le.preferredWidth =
+            g.padding.left + g.padding.right
+            + (g.spacing.x * (colCount - 1))
+            + (colCount * FOUND_WORD_COLUMN_WIDTH_PER_LETTER * currentWordScrambleLevel.letters.Length);
+
+        Canvas.ForceUpdateCanvases();
+
+        if (le.preferredWidth > foundWordList.transform.parent.GetComponent<RectTransform>().rect.width)
+            foundWordList.GetComponentInParent<ScrollRect>().enabled = true;
+        else
+            foundWordList.GetComponentInParent<ScrollRect>().enabled = false;
     }
 
     private void UpdateWordFoundText()

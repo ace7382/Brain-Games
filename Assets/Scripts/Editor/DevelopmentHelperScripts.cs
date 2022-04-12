@@ -44,9 +44,9 @@ public class DevelopmentHelperScripts : MonoBehaviour
                 a.unlocked = false;
             }
 
-            a.completed = false;
-            a.allQuestionsCorrect = false;
-            a.underParTime = false;
+            a.completed             = false;
+            a.allQuestionsCorrect   = false;
+            a.underParTime          = false;
         }
     }
 
