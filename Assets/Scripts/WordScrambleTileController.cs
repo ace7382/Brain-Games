@@ -12,7 +12,7 @@ public class WordScrambleTileController : MonoBehaviour
     public TextMeshProUGUI  letText;
     public Image            tileBackground;
 
-    public int              childIndex;
+    public Vector3          trayPosition;
 
     public void SetUp(char c)
     {
@@ -28,6 +28,8 @@ public class WordScrambleTileController : MonoBehaviour
         letText.text = "";
         selected = false;
         selectedPlace = -1;
+
+        trayPosition = Vector3.zero;
     }
 
     //Used by the WordScramble Tile Prefab's CLick callbaack

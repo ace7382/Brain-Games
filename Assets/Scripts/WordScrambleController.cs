@@ -4,54 +4,61 @@ using UnityEngine;
 using Doozy.Runtime.Signals;
 using TMPro;
 using UnityEngine.UI;
+using Doozy.Runtime.UIManager.Containers;
 
 public class WordScrambleController : MonoBehaviour
 {
-    public TextAsset                            FullWordList;
-    public WordScrambleLevel                    currentWordScrambleLevel;
+    public WordScrambleLevel    currentWordScrambleLevel;
 
-    public GameObject                           letterTray;
-    public GameObject                           selectedLettersTray;
-    public GameObject                           foundWordList;
-    public GameObject                           letterTilePrefab;
-    public GameObject                           foundWordPrefab;
-    public TextMeshProUGUI                      wordCountFoundText;
-    public TextMeshProUGUI                      wordCountGoalText;
-    public GameObject                           finishButton;
+    public GameObject           letterTray;
+    public GameObject           selectedLettersTray;
+    public GameObject           foundWordList;
+    public GameObject           letterTilePrefab;
+    public GameObject           foundWordPrefab;
+    public TextMeshProUGUI      wordCountFoundText;
+    public TextMeshProUGUI      wordCountGoalText;
+    public GameObject           finishButton;
 
-    public TMP_FontAsset                        selectedFont;
-    public TMP_FontAsset                        unselectedFont;
+    public TMP_FontAsset        selectedFont;
+    public TMP_FontAsset        unselectedFont;
 
-    public string                               selectedWord;
+    public string               selectedWord;
 
-    private List<WordScrambleTileController>    tiles;
+    private List<WordScrambleTileController> tiles;
 
-    private SignalReceiver                      wordscramble_wordscramblesetup_receiver;
-    private SignalStream                        wordscramble_wordscramblesetup_stream;
-    private SignalReceiver                      wordscramble_tileclicked_receiver;
-    private SignalStream                        wordscramble_tileclicked_stream;
+    private SignalReceiver      wordscramble_wordscramblesetup_receiver;
+    private SignalStream        wordscramble_wordscramblesetup_stream;
+    private SignalReceiver      wordscramble_tileclicked_receiver;
+    private SignalStream        wordscramble_tileclicked_stream;
+    private SignalReceiver      quitconfirmation_exitlevel_receiver;
+    private SignalStream        quitconfirmation_exitlevel_stream;
 
-    private const float                         FOUND_WORD_COLUMN_WIDTH_PER_LETTER = 35f;
-    private const float                         FOUND_WORD_COLUMN_HEIGHT = 50f;
+    private const float         FOUND_WORD_COLUMN_WIDTH_PER_LETTER = 35f;
+    private const float         FOUND_WORD_COLUMN_HEIGHT = 50f;
+
     private void Awake()
     {
         wordscramble_wordscramblesetup_stream = SignalStream.Get("WordScramble", "WordScrambleSetup");
         wordscramble_tileclicked_stream = SignalStream.Get("WordScramble", "TileClicked");
+        quitconfirmation_exitlevel_stream = SignalStream.Get("QuitConfirmation", "ExitLevel");
 
         wordscramble_wordscramblesetup_receiver = new SignalReceiver().SetOnSignalCallback(SetUp);
         wordscramble_tileclicked_receiver = new SignalReceiver().SetOnSignalCallback(TileClicked);
+        quitconfirmation_exitlevel_receiver = new SignalReceiver().SetOnSignalCallback(ExitGameFromQuitConfirmationScreen);
     }
 
     private void OnEnable()
     {
         wordscramble_wordscramblesetup_stream.ConnectReceiver(wordscramble_wordscramblesetup_receiver);
         wordscramble_tileclicked_stream.ConnectReceiver(wordscramble_tileclicked_receiver);
+        quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
     }
 
     private void OnDisable()
     {
         wordscramble_wordscramblesetup_stream.DisconnectReceiver(wordscramble_wordscramblesetup_receiver);
         wordscramble_tileclicked_stream.DisconnectReceiver(wordscramble_tileclicked_receiver);
+        quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
     }
 
     //Used by the Submit Button's Click callback
@@ -66,7 +73,7 @@ public class WordScrambleController : MonoBehaviour
                 ReturnTile(tiles[i]);
         }
 
-        if (!currentWordScrambleLevel.foundWords.Contains(selectedWord) 
+        if (!currentWordScrambleLevel.foundWords.Contains(selectedWord)
             && currentWordScrambleLevel.hiddenWords.Contains(selectedWord))
             FoundWord(selectedWord);
 
@@ -113,7 +120,7 @@ public class WordScrambleController : MonoBehaviour
         foreach (Transform child in foundWordList.transform)
             Destroy(child.gameObject);
 
-        foundWordList.GetComponent<GridLayoutGroup>().cellSize 
+        foundWordList.GetComponent<GridLayoutGroup>().cellSize
             = new Vector2(FOUND_WORD_COLUMN_WIDTH_PER_LETTER * currentWordScrambleLevel.letters.Length, FOUND_WORD_COLUMN_HEIGHT);
 
         selectedWord = "";
@@ -125,7 +132,7 @@ public class WordScrambleController : MonoBehaviour
 
         letterTray.GetComponent<HorizontalLayoutGroup>().enabled = true;
 
-        for (int i = 0; i < currentWordScrambleLevel.letters.Length; i++) //9 is max tiles
+        for (int i = 0; i < currentWordScrambleLevel.letters.Length; i++)
         {
             if (tiles.Count > i)
             {
@@ -156,8 +163,6 @@ public class WordScrambleController : MonoBehaviour
                 control.SetUp(letter);
                 tiles.Add(control);
             }
-
-            tiles[i].childIndex = i;
         }
 
         for (int i = currentWordScrambleLevel.letters.Length; i < tiles.Count; i++)
@@ -168,6 +173,11 @@ public class WordScrambleController : MonoBehaviour
 
         Canvas.ForceUpdateCanvases();
         letterTray.GetComponent<HorizontalLayoutGroup>().enabled = false;
+
+        for (int i = 0; i < tiles.Count; i++) //needs to be after the canvas update above
+        {
+            tiles[i].trayPosition = tiles[i].GetComponent<RectTransform>().anchoredPosition;
+        }
 
         for (int i = 0; i < currentWordScrambleLevel.foundWords.Count; i++)
         {
@@ -197,18 +207,18 @@ public class WordScrambleController : MonoBehaviour
 
             selectedWord += tiles[index].letter.ToString();
 
-            tiles[index].selectedPlace              = selectedWord.Length;
+            tiles[index].selectedPlace = selectedWord.Length;
 
-            tiles[index].letText.font               = selectedFont;
-            tiles[index].letText.color              = Color.white;
-            tiles[index].tileBackground.enabled     = false;
+            tiles[index].letText.font = selectedFont;
+            tiles[index].letText.color = Color.white;
+            tiles[index].tileBackground.enabled = false;
         }
         else
         {
-            int removeIndex     = tiles[index].selectedPlace;
-            selectedWord        = removeIndex > 0 ? selectedWord.Substring(0, removeIndex - 1) : "";
+            int removeIndex = tiles[index].selectedPlace;
+            selectedWord = removeIndex > 0 ? selectedWord.Substring(0, removeIndex - 1) : "";
 
-            for (int i = 0; i < tiles.Count; i++ )
+            for (int i = 0; i < tiles.Count; i++)
             {
                 if (tiles[i].selected && tiles[i].selectedPlace >= removeIndex)
                 {
@@ -218,27 +228,22 @@ public class WordScrambleController : MonoBehaviour
         }
     }
 
-    //TODO: the letter tray will reorder and resize if multiple letters are returned and they are not
-    //      in the order that they would be on the tray
     private void ReturnTile(WordScrambleTileController t)
     {
-        t.transform.SetParent(letterTray.transform);
-        t.transform.localRotation   = Quaternion.identity;
-        t.transform.SetSiblingIndex(t.childIndex);
+        RectTransform r = t.GetComponent<RectTransform>();
 
-        HorizontalLayoutGroup h = letterTray.GetComponent<HorizontalLayoutGroup>();
+        r.SetParent(letterTray.transform);
+        r.localRotation = Quaternion.identity;
+        r.anchoredPosition = t.trayPosition;
 
-        h.enabled = true;
         Canvas.ForceUpdateCanvases();
-        h.enabled = false;
 
+        t.selected = false;
+        t.selectedPlace = -1;
 
-        t.selected                  = false;
-        t.selectedPlace             = -1;
-
-        t.letText.font              = unselectedFont;
-        t.tileBackground.enabled    = true;
-        t.letText.color             = Color.black;
+        t.letText.font = unselectedFont;
+        t.tileBackground.enabled = true;
+        t.letText.color = Color.black;
     }
 
     private void FoundWord(string word)
@@ -264,7 +269,7 @@ public class WordScrambleController : MonoBehaviour
 
     private void ResizeFoundWordScroll()
     {
-        int colCount =  currentWordScrambleLevel.foundWords.Count / 4 + 
+        int colCount = currentWordScrambleLevel.foundWords.Count / 4 +
                         (currentWordScrambleLevel.foundWords.Count % 4 > 0 ? 1 : 0);
 
         LayoutElement le = foundWordList.GetComponent<LayoutElement>();
@@ -285,11 +290,16 @@ public class WordScrambleController : MonoBehaviour
 
     private void UpdateWordFoundText()
     {
-        wordCountFoundText.text     = currentWordScrambleLevel.foundWords.Count.ToString();
-        wordCountGoalText.text      = currentWordScrambleLevel.foundWords.Count <= currentWordScrambleLevel.goalWordCount ?
+        wordCountFoundText.text = currentWordScrambleLevel.foundWords.Count.ToString();
+        wordCountGoalText.text = currentWordScrambleLevel.foundWords.Count <= currentWordScrambleLevel.goalWordCount ?
                                       currentWordScrambleLevel.goalWordCount.ToString() :
                                       currentWordScrambleLevel.secondGoalWordCount.ToString();
 
         finishButton.SetActive(currentWordScrambleLevel.foundWords.Count >= currentWordScrambleLevel.goalWordCount);
+    }
+
+    private void ExitGameFromQuitConfirmationScreen(Signal signal)
+    {
+        EndGame();
     }
 }

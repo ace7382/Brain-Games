@@ -16,6 +16,12 @@ MonoBehaviour:
     Items:
     - Category: None
       Name: None
+    - Category: QuitConfirmation
+      Name: BackToGame
+    - Category: QuitConfirmation
+      Name: ExitLevel
+    - Category: QuitConfirmation
+      Name: Popup
     - Category: Trivia
       Name: AnswerChosen
     - Category: Trivia
