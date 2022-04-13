@@ -61,6 +61,18 @@ public class WordScrambleController : MonoBehaviour
         quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
     }
 
+    //Called by the WordScramblePlay screen's OnHide callback
+    public void OnHide()
+    {
+        quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
+    }
+
+    //Called by the WordScramblePlay screen's OnShow callback
+    public void OnShow()
+    {
+        quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
+    }
+
     //Used by the Submit Button's Click callback
     public void SubmitWord()
     {

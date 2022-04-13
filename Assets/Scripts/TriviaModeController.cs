@@ -42,6 +42,12 @@ public class TriviaModeController : MonoBehaviour
     private SignalStream                                    trivia_triviasetup_stream;
     private SignalReceiver                                  trivia_answerchosen_receiver;
     private SignalStream                                    trivia_answerchosen_stream;
+    private SignalReceiver                                  quitconfirmation_exitlevel_receiver;
+    private SignalStream                                    quitconfirmation_exitlevel_stream;
+    private SignalReceiver                                  quitconfirmation_backtogame_receiver;
+    private SignalStream                                    quitconfirmation_backtogame_stream;
+    private SignalReceiver                                  quitconfirmation_popup_receiver;
+    private SignalStream                                    quitconfirmation_popup_stream;
 
     private int                                             currentQuestionIndex;
     private List<TriviaSet.TriviaQuestion.TriviaAnswer>     currentAnswers = new List<TriviaSet.TriviaQuestion.TriviaAnswer>();
@@ -55,23 +61,35 @@ public class TriviaModeController : MonoBehaviour
 
     private void Awake()
     {
-        trivia_triviasetup_stream = SignalStream.Get("Trivia", "TriviaSetup");
-        trivia_answerchosen_stream = SignalStream.Get("Trivia", "AnswerChosen");
+        trivia_triviasetup_stream               = SignalStream.Get("Trivia", "TriviaSetup");
+        trivia_answerchosen_stream              = SignalStream.Get("Trivia", "AnswerChosen");
+        quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
+        quitconfirmation_backtogame_stream      = SignalStream.Get("QuitConfirmation", "BackToGame");
+        quitconfirmation_popup_stream           = SignalStream.Get("QuitConfirmation", "Popup");
 
-        trivia_triviasetup_receiver = new SignalReceiver().SetOnSignalCallback(SetUp);
-        trivia_answerchosen_receiver = new SignalReceiver().SetOnSignalCallback(AnswerChosen);
+        trivia_triviasetup_receiver             = new SignalReceiver().SetOnSignalCallback(SetUp);
+        trivia_answerchosen_receiver            = new SignalReceiver().SetOnSignalCallback(AnswerChosen);
+        quitconfirmation_exitlevel_receiver     = new SignalReceiver().SetOnSignalCallback(EndGameEarly);
+        quitconfirmation_backtogame_receiver    = new SignalReceiver().SetOnSignalCallback(Unpause);
+        quitconfirmation_popup_receiver         = new SignalReceiver().SetOnSignalCallback(Pause);
     }
 
     private void OnEnable()
     {
         trivia_triviasetup_stream.ConnectReceiver(trivia_triviasetup_receiver);
         trivia_answerchosen_stream.ConnectReceiver(trivia_answerchosen_receiver);
+        quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
+        quitconfirmation_backtogame_stream.ConnectReceiver(quitconfirmation_backtogame_receiver);
+        quitconfirmation_popup_stream.ConnectReceiver(quitconfirmation_popup_receiver);
     }
 
     private void OnDisable()
     {
         trivia_triviasetup_stream.DisconnectReceiver(trivia_triviasetup_receiver);
         trivia_answerchosen_stream.DisconnectReceiver(trivia_answerchosen_receiver);
+        quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
+        quitconfirmation_backtogame_stream.DisconnectReceiver(quitconfirmation_backtogame_receiver);
+        quitconfirmation_popup_stream.DisconnectReceiver(quitconfirmation_popup_receiver);
     }
 
     private void Update()
@@ -90,6 +108,23 @@ public class TriviaModeController : MonoBehaviour
                 EndGame();
             }
         }
+    }
+
+
+    //Called by the TriviaModePlay screen's OnHide callback
+    public void OnHide()
+    {
+        quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
+        quitconfirmation_backtogame_stream.DisconnectReceiver(quitconfirmation_backtogame_receiver);
+        quitconfirmation_popup_stream.DisconnectReceiver(quitconfirmation_popup_receiver);
+    }
+
+    //Called by the TriviaModePlay screen's OnShow callback
+    public void OnShow()
+    {
+        quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
+        quitconfirmation_backtogame_stream.ConnectReceiver(quitconfirmation_backtogame_receiver);
+        quitconfirmation_popup_stream.ConnectReceiver(quitconfirmation_popup_receiver);
     }
 
     //Called by the View - Screen TriviaPlay's Show Animation Started callback
@@ -292,6 +327,30 @@ public class TriviaModeController : MonoBehaviour
         TextPopup(t, tran, center, c);
     }
 
+    private void Pause(Signal signal)
+    {
+        Debug.Log("Pause");
+        isPlaying = false;
+    }
+
+    private void Unpause(Signal signal)
+    {
+        Debug.Log("Unpause");
+        isPlaying = true;
+    }
+
+    private void EndGameEarly(Signal signal)
+    {
+        Debug.Log("Exit Game");
+
+        isPlaying                   = false;
+        won                         = false;
+        questionsAnsweredCorrectly  = 0;
+        secondsRemaining            = 0f;
+
+        EndGame();
+    }
+
     private void EndGame()
     {
         isPlaying = false;
@@ -320,6 +379,8 @@ public class TriviaModeController : MonoBehaviour
         Invoke("GoToEndScreen", 2.5f);   
     }
 
+
+    //Invoked by EndGame()
     private void GoToEndScreen()
     {
         object[] data   = new object[9];
