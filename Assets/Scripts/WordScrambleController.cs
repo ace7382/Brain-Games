@@ -38,13 +38,13 @@ public class WordScrambleController : MonoBehaviour
 
     private void Awake()
     {
-        wordscramble_wordscramblesetup_stream = SignalStream.Get("WordScramble", "WordScrambleSetup");
-        wordscramble_tileclicked_stream = SignalStream.Get("WordScramble", "TileClicked");
-        quitconfirmation_exitlevel_stream = SignalStream.Get("QuitConfirmation", "ExitLevel");
+        wordscramble_wordscramblesetup_stream   = SignalStream.Get("WordScramble", "WordScrambleSetup");
+        wordscramble_tileclicked_stream         = SignalStream.Get("WordScramble", "TileClicked");
+        quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
 
         wordscramble_wordscramblesetup_receiver = new SignalReceiver().SetOnSignalCallback(SetUp);
-        wordscramble_tileclicked_receiver = new SignalReceiver().SetOnSignalCallback(TileClicked);
-        quitconfirmation_exitlevel_receiver = new SignalReceiver().SetOnSignalCallback(ExitGameFromQuitConfirmationScreen);
+        wordscramble_tileclicked_receiver       = new SignalReceiver().SetOnSignalCallback(TileClicked);
+        quitconfirmation_exitlevel_receiver     = new SignalReceiver().SetOnSignalCallback(ExitGameFromQuitConfirmationScreen);
     }
 
     private void OnEnable()
@@ -99,13 +99,20 @@ public class WordScrambleController : MonoBehaviour
 
         selectedWord = "";
 
-        //You can only get to endgame now by winning and clicking the GO!! button
-        //TODO: maybe move this somewhere else if there's another way to "end game" like returning home etc
-        if (currentWordScrambleLevel.nextWordScrambleLevel != null)
-            currentWordScrambleLevel.nextWordScrambleLevel.unlocked = true;
-
         object[] data = new object[1];
         data[0] = currentWordScrambleLevel;
+
+        if (!currentWordScrambleLevel.objective1 && currentWordScrambleLevel.foundWords.Count >= currentWordScrambleLevel.goalWordCount)
+            currentWordScrambleLevel.objective1 = true;
+
+        if (!currentWordScrambleLevel.objective2 && currentWordScrambleLevel.foundWords.Count >= currentWordScrambleLevel.secondGoalWordCount)
+            currentWordScrambleLevel.objective2 = true;
+
+        if (!currentWordScrambleLevel.objective3 && currentWordScrambleLevel.foundWords.Contains(currentWordScrambleLevel.specialWord))
+            currentWordScrambleLevel.objective3 = true;
+
+        if (currentWordScrambleLevel.nextLevel != null && !currentWordScrambleLevel.nextLevel.unlocked && currentWordScrambleLevel.objective1)
+            currentWordScrambleLevel.nextLevel.unlocked = true;
 
         Signal.Send("WordScramble", "EndGame", data);
     }
@@ -124,7 +131,7 @@ public class WordScrambleController : MonoBehaviour
         }
         else if ((int)data[0] == 2) //Play Next Level
         {
-            currentWordScrambleLevel = currentWordScrambleLevel.nextWordScrambleLevel;
+            currentWordScrambleLevel = (WordScrambleLevel)currentWordScrambleLevel.nextLevel;
         }
         //data[0] == 1 => Replay doesn't need to update the WOrdScrambleLevel
 

@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1882a7b99f89fce4487cce0129f6b90e, type: 3}
   m_Name: Level 4
   m_EditorClassIdentifier: 
-  title: Level 4
+  levelName: Level 4
   unlocked: 0
+  nextLevel: {fileID: 11400000, guid: abca12ec63d0e6a4e8887b96f2f9a088, type: 2}
+  objective1: 0
+  objective2: 0
+  objective3: 0
   letters: cubtek
   goalWordCount: 18
   secondGoalWordCount: 30
@@ -56,4 +60,3 @@ MonoBehaviour:
   - uke
   - ute
   foundWords: []
-  nextWordScrambleLevel: {fileID: 11400000, guid: abca12ec63d0e6a4e8887b96f2f9a088, type: 2}

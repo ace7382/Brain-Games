@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc3af93001511045a7a881c2a99504e, type: 3}
   m_Name: Intro - Level 3
   m_EditorClassIdentifier: 
-  setTitle: Intro - Level 3
+  levelName: Intro - Level 3
+  unlocked: 0
+  nextLevel: {fileID: 0}
   difficulty: 5
+  objective1: 0
+  objective2: 0
+  objective3: 0
   startTimeInSeconds: 120
   secondsLostForWrongAnswer: 5
   secondsGainedForCorrectAnswer: 10
@@ -119,8 +124,3 @@ MonoBehaviour:
       correct: 0
     - answerText: Reptile
       correct: 0
-  unlocked: 0
-  nextTriviaSet: {fileID: 0}
-  completed: 0
-  allQuestionsCorrect: 0
-  underParTime: 0

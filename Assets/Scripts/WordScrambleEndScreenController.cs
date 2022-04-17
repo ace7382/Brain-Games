@@ -57,7 +57,7 @@ public class WordScrambleEndScreenController : MonoBehaviour
 
         //You shouldn't be able to get to the end screen without meeting at least the first goal of the level
         //TODO: probably just make the button active in the scene and take this line out
-        nextLevelButton.SetActive(level.nextWordScrambleLevel != null); 
+        nextLevelButton.SetActive(level.nextLevel != null); 
 
         wordsFoundText.alpha                                = 0;
         goal1DotGroup.alpha                                 = 0;

@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1882a7b99f89fce4487cce0129f6b90e, type: 3}
   m_Name: Level 6
   m_EditorClassIdentifier: 
-  title: Level 6
+  levelName: Level 6
   unlocked: 0
+  nextLevel: {fileID: 0}
+  objective1: 0
+  objective2: 0
+  objective3: 0
   letters: casrlo
   goalWordCount: 20
   secondGoalWordCount: 40
@@ -124,4 +128,3 @@ MonoBehaviour:
   - solar
   - soral
   foundWords: []
-  nextWordScrambleLevel: {fileID: 0}

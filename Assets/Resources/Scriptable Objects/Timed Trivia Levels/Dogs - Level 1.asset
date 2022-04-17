@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc3af93001511045a7a881c2a99504e, type: 3}
   m_Name: Dogs - Level 1
   m_EditorClassIdentifier: 
-  setTitle: Dogs - Level 1
+  levelName: Dogs - Level 1
+  unlocked: 1
+  nextLevel: {fileID: 11400000, guid: ac7290b48c03d434397ee6167cee6b6b, type: 2}
   difficulty: 5
+  objective1: 0
+  objective2: 0
+  objective3: 0
   startTimeInSeconds: 60
   secondsLostForWrongAnswer: 5
   secondsGainedForCorrectAnswer: 5
@@ -79,8 +84,3 @@ MonoBehaviour:
       correct: 0
     - answerText: Paisley
       correct: 0
-  unlocked: 1
-  nextTriviaSet: {fileID: 11400000, guid: ac7290b48c03d434397ee6167cee6b6b, type: 2}
-  completed: 0
-  allQuestionsCorrect: 0
-  underParTime: 0

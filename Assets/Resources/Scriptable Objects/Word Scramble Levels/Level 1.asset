@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1882a7b99f89fce4487cce0129f6b90e, type: 3}
   m_Name: Level 1
   m_EditorClassIdentifier: 
-  title: Level 1
-  unlocked: 1
+  levelName: Level 1
+  unlocked: 0
+  nextLevel: {fileID: 11400000, guid: c09a5e4de2c7db74fb59732f712fa19e, type: 2}
+  objective1: 0
+  objective2: 0
+  objective3: 0
   letters: stac
   goalWordCount: 4
   secondGoalWordCount: 8
@@ -29,4 +33,3 @@ MonoBehaviour:
   - scat
   - tas
   foundWords: []
-  nextWordScrambleLevel: {fileID: 11400000, guid: c09a5e4de2c7db74fb59732f712fa19e, type: 2}

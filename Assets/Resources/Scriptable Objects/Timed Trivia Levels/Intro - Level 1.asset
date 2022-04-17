@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc3af93001511045a7a881c2a99504e, type: 3}
   m_Name: Intro - Level 1
   m_EditorClassIdentifier: 
-  setTitle: Intro - Level 1
+  levelName: Intro - Level 1
+  unlocked: 1
+  nextLevel: {fileID: 11400000, guid: d5f3299fcbc682f45be803d47b22cfd1, type: 2}
   difficulty: 5
+  objective1: 0
+  objective2: 0
+  objective3: 0
   startTimeInSeconds: 180
   secondsLostForWrongAnswer: 0
   secondsGainedForCorrectAnswer: 30
@@ -69,8 +74,3 @@ MonoBehaviour:
       correct: 0
     - answerText: Mars
       correct: 0
-  unlocked: 1
-  nextTriviaSet: {fileID: 11400000, guid: d5f3299fcbc682f45be803d47b22cfd1, type: 2}
-  completed: 0
-  allQuestionsCorrect: 0
-  underParTime: 0

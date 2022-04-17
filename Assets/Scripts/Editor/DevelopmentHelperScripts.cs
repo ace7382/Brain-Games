@@ -6,16 +6,25 @@ using System.Linq;
 
 public class DevelopmentHelperScripts : MonoBehaviour
 {
+    [MenuItem("Dev Commands/Rename Level Buttons")]
+    public static void SetLevelButtonNames()
+    {
+        MainMenuController m = GameObject.FindObjectOfType<MainMenuController>();
+
+        for (int i = 0; i < m.levelButtons.Count; i++)
+        {
+            m.levelButtons[i].name = m.levelButtons[i].level.levelName + " - Button";
+        }
+    }
+
     [MenuItem("Dev Commands/Link all Level Buttons to Main Menu Controller")]
     public static void LinkLevelButtonsToMainMenuController()
     {
         MainMenuController m = GameObject.FindObjectOfType<MainMenuController>();
 
-        TriviaModeLevelButtonController[] triviaButtons = FindObjectsOfType<TriviaModeLevelButtonController>();
-        WordScrambleLevelButtonController[] wordScrambleButtons = FindObjectsOfType<WordScrambleLevelButtonController>();
+        LevelSelectButtonController[] levelButtons = FindObjectsOfType<LevelSelectButtonController>();
 
-        m.triviaLevelButtons = triviaButtons.ToList();
-        m.wordScrambleLevelButtons = wordScrambleButtons.ToList();
+        m.levelButtons = levelButtons.ToList();
     }
 
     [MenuItem("Dev Commands/Reset all Levels")]
@@ -28,12 +37,12 @@ public class DevelopmentHelperScripts : MonoBehaviour
     [MenuItem("Dev Commands/Reset Trivia Levels")]
     public static void ResetTriviaLevels()
     {
-        List<TriviaSet> triviasets = new List<TriviaSet>(Resources.LoadAll<TriviaSet>("Scriptable Objects/Trivia Sets"));
+        List<TimedTriviaLevel> triviasets = new List<TimedTriviaLevel>(Resources.LoadAll<TimedTriviaLevel>("Scriptable Objects/Timed Trivia Levels"));
 
         if (triviasets == null)
             return;
 
-        foreach (TriviaSet a in triviasets)
+        foreach (TimedTriviaLevel a in triviasets)
         {
             if (a.name.Contains("Level 1"))
             {
@@ -44,9 +53,7 @@ public class DevelopmentHelperScripts : MonoBehaviour
                 a.unlocked = false;
             }
 
-            a.completed             = false;
-            a.allQuestionsCorrect   = false;
-            a.underParTime          = false;
+            a.ResetObjectives();
         }
     }
 
@@ -96,6 +103,8 @@ public class DevelopmentHelperScripts : MonoBehaviour
                 level.unlocked = true;
             else
                 level.unlocked = false;
+
+            level.ResetObjectives();
         }
     }
 

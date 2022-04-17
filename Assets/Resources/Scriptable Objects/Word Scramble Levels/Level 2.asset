@@ -12,21 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1882a7b99f89fce4487cce0129f6b90e, type: 3}
   m_Name: Level 2
   m_EditorClassIdentifier: 
-  title: Level 2
+  levelName: Level 2
   unlocked: 1
+  nextLevel: {fileID: 11400000, guid: a194140110ba7b341b9ebd8a94dd9ccb, type: 2}
+  objective1: 1
+  objective2: 0
+  objective3: 0
   letters: gosd
   goalWordCount: 4
   secondGoalWordCount: 8
   specialWord: dogs
   hiddenWords:
+  - dogs
   - gos
   - ods
   - sod
   - sog
   foundWords:
-  - dogs
-  - dos
   - dog
+  - dos
   - god
   - gods
-  nextWordScrambleLevel: {fileID: 11400000, guid: a194140110ba7b341b9ebd8a94dd9ccb, type: 2}

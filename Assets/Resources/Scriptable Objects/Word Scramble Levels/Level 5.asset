@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1882a7b99f89fce4487cce0129f6b90e, type: 3}
   m_Name: Level 5
   m_EditorClassIdentifier: 
-  title: Level 5
+  levelName: Level 5
   unlocked: 0
+  nextLevel: {fileID: 11400000, guid: e7f53546919d0a44c91539a0d1d2d0f7, type: 2}
+  objective1: 0
+  objective2: 0
+  objective3: 0
   letters: rriab
   goalWordCount: 10
   secondGoalWordCount: 15
@@ -40,4 +44,3 @@ MonoBehaviour:
   - rib
   - rabi
   foundWords: []
-  nextWordScrambleLevel: {fileID: 11400000, guid: e7f53546919d0a44c91539a0d1d2d0f7, type: 2}

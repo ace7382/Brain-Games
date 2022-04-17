@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Word Scramble Level", menuName = "New Word Scramble Level", order = 53)]
-public class WordScrambleLevel : ScriptableObject
+public class WordScrambleLevel : LevelBase
 {
-    public string               title;
-    public bool                 unlocked;
+    //Objective 1 - low word count (goalWordCount)
+    //Objective 2 - high word count (secondGoalWordCount)
+    //Objective 3 - Find special word (specialWord)
+
     public string               letters;
 
     [Space]
@@ -17,10 +19,4 @@ public class WordScrambleLevel : ScriptableObject
     public string               specialWord;
     public List<string>         hiddenWords;
     public List<string>         foundWords;
-
-    [Space]
-    [Space]
-
-    public WordScrambleLevel    nextWordScrambleLevel;
-
 }

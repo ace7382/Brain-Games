@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc3af93001511045a7a881c2a99504e, type: 3}
   m_Name: Intro - Level 2
   m_EditorClassIdentifier: 
-  setTitle: Intro - Level 2
+  levelName: Intro - Level 2
+  unlocked: 0
+  nextLevel: {fileID: 11400000, guid: 509eb574736793546a483474d9934686, type: 2}
   difficulty: 5
+  objective1: 0
+  objective2: 0
+  objective3: 0
   startTimeInSeconds: 150
   secondsLostForWrongAnswer: 2
   secondsGainedForCorrectAnswer: 10
@@ -89,8 +94,3 @@ MonoBehaviour:
       correct: 0
     - answerText: 10 minutes
       correct: 0
-  unlocked: 0
-  nextTriviaSet: {fileID: 11400000, guid: 509eb574736793546a483474d9934686, type: 2}
-  completed: 0
-  allQuestionsCorrect: 0
-  underParTime: 0

@@ -36,7 +36,7 @@ public class TriviaModeController : MonoBehaviour
     public TextMeshProUGUI                                  timeDisplay;
     public Color                                            clockMidColor;
 
-    [HideInInspector] public TriviaSet                      currentTriviaSet;
+    [HideInInspector] public TimedTriviaLevel                      currentTriviaSet;
 
     private SignalReceiver                                  trivia_triviasetup_receiver;
     private SignalStream                                    trivia_triviasetup_stream;
@@ -50,7 +50,7 @@ public class TriviaModeController : MonoBehaviour
     private SignalStream                                    quitconfirmation_popup_stream;
 
     private int                                             currentQuestionIndex;
-    private List<TriviaSet.TriviaQuestion.TriviaAnswer>     currentAnswers = new List<TriviaSet.TriviaQuestion.TriviaAnswer>();
+    private List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>     currentAnswers = new List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>();
     private int                                             questionsAnsweredCorrectly = 0;
 
     private float                                           secondsRemaining;
@@ -144,15 +144,15 @@ public class TriviaModeController : MonoBehaviour
 
         if ((int)data[0] == 0) //Level was defined by call
         {
-            currentTriviaSet = (TriviaSet)data[1];
+            currentTriviaSet = (TimedTriviaLevel)data[1];
         }
         else if ((int)data[0] == 2) //Play Next Level
         {
-            currentTriviaSet = currentTriviaSet.nextTriviaSet;
+            currentTriviaSet = (TimedTriviaLevel)currentTriviaSet.nextLevel;
         }
         //data[0] == 1 => Replay doesn't need to update the TriviaSet
 
-        title.text              = currentTriviaSet.setTitle;
+        title.text              = currentTriviaSet.levelName;
         difficultyText.text     = currentTriviaSet.difficulty.ToString();
         numOfQuestions.text     = currentTriviaSet.questions.Count.ToString() + " Questions";
         timeModsText.text       = string.Format("Correct +{0}s  Wrong -{1}s", currentTriviaSet.secondsGainedForCorrectAnswer
@@ -161,9 +161,9 @@ public class TriviaModeController : MonoBehaviour
         System.TimeSpan ts      = System.TimeSpan.FromSeconds(currentTriviaSet.startTimeInSeconds);
         startTimeText.text      = ts.Minutes + ":" + ts.Seconds.ToString("00");
 
-        completedDot.SetActive(currentTriviaSet.completed);
-        parTimeDot.SetActive(currentTriviaSet.underParTime);
-        allQuestionsDot.SetActive(currentTriviaSet.allQuestionsCorrect);
+        completedDot.SetActive(currentTriviaSet.objective1);
+        parTimeDot.SetActive(currentTriviaSet.objective2);
+        allQuestionsDot.SetActive(currentTriviaSet.objective3);
 
         answer0.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
         answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
@@ -238,7 +238,7 @@ public class TriviaModeController : MonoBehaviour
         {
             questionCount.text = string.Format("Question\n{0} of {1}", currentQuestionIndex + 1, currentTriviaSet.questions.Count);
 
-            currentAnswers  = new List<TriviaSet.TriviaQuestion.TriviaAnswer>(currentTriviaSet.questions[currentQuestionIndex].Answers);
+            currentAnswers  = new List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>(currentTriviaSet.questions[currentQuestionIndex].Answers);
 
             question.text   = currentTriviaSet.questions[currentQuestionIndex].Question;
 
@@ -249,7 +249,7 @@ public class TriviaModeController : MonoBehaviour
             {
                 n--;
                 int k = rng.Next(n + 1);
-                TriviaSet.TriviaQuestion.TriviaAnswer value = currentAnswers[k];
+                TimedTriviaLevel.TriviaQuestion.TriviaAnswer value = currentAnswers[k];
                 currentAnswers[k] = currentAnswers[n];
                 currentAnswers[n] = value;
             }
@@ -363,17 +363,17 @@ public class TriviaModeController : MonoBehaviour
 
         if (won)
         {
-            if (!currentTriviaSet.completed)
-                currentTriviaSet.completed = true;
+            if (!currentTriviaSet.objective1)
+                currentTriviaSet.objective1 = true;
             
-            if (currentTriviaSet.nextTriviaSet != null && !currentTriviaSet.nextTriviaSet.unlocked)
-                currentTriviaSet.nextTriviaSet.unlocked = true;
+            if (currentTriviaSet.nextLevel != null && !currentTriviaSet.nextLevel.unlocked)
+                currentTriviaSet.nextLevel.unlocked = true;
 
-            if (!currentTriviaSet.underParTime && secondsRemaining >= currentTriviaSet.parTimeRemainingInSeconds)
-                currentTriviaSet.underParTime = true;
+            if (!currentTriviaSet.objective2 && secondsRemaining >= currentTriviaSet.parTimeRemainingInSeconds)
+                currentTriviaSet.objective2 = true;
 
-            if (!currentTriviaSet.allQuestionsCorrect && questionsAnsweredCorrectly == currentTriviaSet.questions.Count)
-                currentTriviaSet.allQuestionsCorrect = true;
+            if (!currentTriviaSet.objective3 && questionsAnsweredCorrectly == currentTriviaSet.questions.Count)
+                currentTriviaSet.objective3 = true;
         }
 
         Invoke("GoToEndScreen", 2.5f);   
@@ -389,13 +389,13 @@ public class TriviaModeController : MonoBehaviour
         data[2]         = currentTriviaSet.questions.Count;
         data[3]         = secondsRemaining;
         data[4]         = false;
-        data[5]         = currentTriviaSet.completed;
-        data[6]         = currentTriviaSet.underParTime;
-        data[7]         = currentTriviaSet.allQuestionsCorrect;
+        data[5]         = currentTriviaSet.objective1;
+        data[6]         = currentTriviaSet.objective2;
+        data[7]         = currentTriviaSet.objective3;
         data[8]         = currentTriviaSet.parTimeRemainingInSeconds;
 
-        if (currentTriviaSet.nextTriviaSet != null)
-            data[4] = currentTriviaSet.nextTriviaSet.unlocked;
+        if (currentTriviaSet.nextLevel != null)
+            data[4] = currentTriviaSet.nextLevel.unlocked;
 
         Signal.Send("Trivia", "EndGame", data);
     }
