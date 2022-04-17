@@ -18,6 +18,8 @@ MonoBehaviour:
       Name: LeaveTitleScreen
     - Category: None
       Name: None
+    - Category: PathPuzzle
+      Name: TileRotated
     - Category: QuitConfirmation
       Name: BackToGame
     - Category: QuitConfirmation

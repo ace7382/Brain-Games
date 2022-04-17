@@ -1,13 +1,60 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using UnityEngine.UI;
+using Doozy.Runtime.Signals;
 
 public class PathPuzzleController : MonoBehaviour
 {
-    public List<PathPuzzleTileController> tiles;
+    public PathPuzzleLevel                  currentPPLevel;
+    public int                              currentBoardNum;
+    public GameObject                       gameBoard;
 
-    public void CheckTiles()
+    public List<PathPuzzleTileController>   tiles;
+
+    private SignalReceiver                  pathpuzzle_tilerotated_receiver;
+    private SignalStream                    pathpuzzle_tilerotated_stream;
+
+    private void Awake()
+    {
+        pathpuzzle_tilerotated_stream = SignalStream.Get("PathPuzzle", "TileRotated");
+
+        pathpuzzle_tilerotated_receiver = new SignalReceiver().SetOnSignalCallback(CheckTiles);
+    }
+
+    private void OnEnable()
+    {
+        pathpuzzle_tilerotated_stream.ConnectReceiver(pathpuzzle_tilerotated_receiver);
+    }
+
+    private void OnDisable()
+    {
+        pathpuzzle_tilerotated_stream.DisconnectReceiver(pathpuzzle_tilerotated_receiver);
+    }
+
+    public void Setup()
+    {
+        gameBoard.GetComponent<GridLayoutGroup>().constraintCount = currentPPLevel.boards[0].columns;
+
+        for (int i = 0; i < currentPPLevel.boards[0].tiles.Count; i++)
+        {
+            GameObject go = Instantiate(currentPPLevel.boards[0].tiles[i]);
+            
+            go.transform.SetParent(gameBoard.transform);
+            go.transform.localScale = Vector3.one;
+
+            PathPuzzleTileController control = go.GetComponent<PathPuzzleTileController>();
+
+            control.gridPosition = new Vector2(i % currentPPLevel.boards[0].columns, i / currentPPLevel.boards[0].columns);
+            control.SetInitialRotation(Random.Range(0, 4));
+
+            tiles.Add(control);
+        }
+
+        CheckTiles(null);
+    }
+
+    public void CheckTiles(Signal signal)
     {
         for (int i = 0; i < tiles.Count; i++)
             tiles[i].partOfPath = false;
@@ -87,5 +134,8 @@ public class PathPuzzleController : MonoBehaviour
 
         foreach (PathPuzzleTileController t in checkedSet)
             t.partOfPath = true;
+
+        for (int i = 0; i < tiles.Count; i++)
+            tiles[i].MarkTileAsConnectedToStart();
     }
 }
