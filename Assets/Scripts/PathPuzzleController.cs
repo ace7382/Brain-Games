@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.Reactor;
+using Doozy.Runtime.UIManager.Components;
 
 public class PathPuzzleController : MonoBehaviour
 {
@@ -30,25 +31,60 @@ public class PathPuzzleController : MonoBehaviour
     private SignalReceiver                  pathpuzzle_pathpuzzlesetup_receiver;
     private SignalStream                    pathpuzzle_pathpuzzlesetup_stream;
 
+    private SignalReceiver                  quitconfirmation_exitlevel_receiver;
+    private SignalStream                    quitconfirmation_exitlevel_stream;
+    private SignalReceiver                  quitconfirmation_backtogame_receiver;
+    private SignalStream                    quitconfirmation_backtogame_stream;
+    private SignalReceiver                  quitconfirmation_popup_receiver;
+    private SignalStream                    quitconfirmation_popup_stream;
+
     private void Awake()
     {
-        pathpuzzle_tilerotated_stream = SignalStream.Get("PathPuzzle", "TileRotated");
-        pathpuzzle_pathpuzzlesetup_stream = SignalStream.Get("PathPuzzle", "PathPuzzleSetup");
+        pathpuzzle_tilerotated_stream           = SignalStream.Get("PathPuzzle", "TileRotated");
+        pathpuzzle_pathpuzzlesetup_stream       = SignalStream.Get("PathPuzzle", "PathPuzzleSetup");
+        quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
+        quitconfirmation_backtogame_stream      = SignalStream.Get("QuitConfirmation", "BackToGame");
+        quitconfirmation_popup_stream           = SignalStream.Get("QuitConfirmation", "Popup");
 
-        pathpuzzle_tilerotated_receiver = new SignalReceiver().SetOnSignalCallback(CheckTiles);
-        pathpuzzle_pathpuzzlesetup_receiver = new SignalReceiver().SetOnSignalCallback(Setup);
+        pathpuzzle_tilerotated_receiver         = new SignalReceiver().SetOnSignalCallback(CheckTiles);
+        pathpuzzle_pathpuzzlesetup_receiver     = new SignalReceiver().SetOnSignalCallback(Setup);
+        quitconfirmation_exitlevel_receiver     = new SignalReceiver().SetOnSignalCallback(EndGameEarly);
+        quitconfirmation_backtogame_receiver    = new SignalReceiver().SetOnSignalCallback(Unpause);
+        quitconfirmation_popup_receiver         = new SignalReceiver().SetOnSignalCallback(Pause);
     }
 
     private void OnEnable()
     {
         pathpuzzle_tilerotated_stream.ConnectReceiver(pathpuzzle_tilerotated_receiver);
         pathpuzzle_pathpuzzlesetup_stream.ConnectReceiver(pathpuzzle_pathpuzzlesetup_receiver);
+        quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
+        quitconfirmation_backtogame_stream.ConnectReceiver(quitconfirmation_backtogame_receiver);
+        quitconfirmation_popup_stream.ConnectReceiver(quitconfirmation_popup_receiver);
     }
 
     private void OnDisable()
     {
         pathpuzzle_tilerotated_stream.DisconnectReceiver(pathpuzzle_tilerotated_receiver);
         pathpuzzle_pathpuzzlesetup_stream.DisconnectReceiver(pathpuzzle_pathpuzzlesetup_receiver);
+        quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
+        quitconfirmation_backtogame_stream.DisconnectReceiver(quitconfirmation_backtogame_receiver);
+        quitconfirmation_popup_stream.DisconnectReceiver(quitconfirmation_popup_receiver);
+    }
+
+    //Called by the PathPuzzlePlay screen's OnHide callback
+    public void OnHide()
+    {
+        quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
+        quitconfirmation_backtogame_stream.DisconnectReceiver(quitconfirmation_backtogame_receiver);
+        quitconfirmation_popup_stream.DisconnectReceiver(quitconfirmation_popup_receiver);
+    }
+
+    //Called by the PathPuzzlePlay screen's OnShow callback
+    public void OnShow()
+    {
+        quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
+        quitconfirmation_backtogame_stream.ConnectReceiver(quitconfirmation_backtogame_receiver);
+        quitconfirmation_popup_stream.ConnectReceiver(quitconfirmation_popup_receiver);
     }
 
     public void Setup(Signal signal)
@@ -72,14 +108,14 @@ public class PathPuzzleController : MonoBehaviour
         won                 = false;
         pathPiecesConnected = 0;
 
+        Signal.Send("GameManagement", "DisableExitLevelButton", true);
+
         SetConnectionCounter();
 
         countdownClock.SetupTimer(currentPPLevel.timeLimitInSeconds, currentPPLevel.parTimeInSeconds);
         countdownClock.StartTimer();
 
         LoadNextBoard();
-
-        //CheckTiles(new Signal());
     }
 
     public void CheckTiles(Signal signal)
@@ -172,6 +208,8 @@ public class PathPuzzleController : MonoBehaviour
             if (signal.sourceGameObject == null) //if it's the setup phase
             {
                 //TODO: This can potentially cause an infinite loop I think
+                //      For instance, if there are 2 paths to the end and a T Tile spins between them?
+                //      idk for sure but look into it bitch
 
                 Debug.Log("Loaded solved, changing tile");
 
@@ -195,6 +233,36 @@ public class PathPuzzleController : MonoBehaviour
                 StartCoroutine(AnimateBoardEnding());
             }
         }
+    }
+
+    //Invoked by the countdownClock's onOutOfTime event
+    public void OutOfTime()
+    {
+        won = false;
+        EndGame();
+    }
+
+    private void Pause(Signal signal)
+    {
+        countdownClock.Pause();
+    }
+
+    private void Unpause(Signal signal)
+    {
+        countdownClock.Unpause();
+    }
+
+    private void EndGameEarly(Signal signal)
+    {
+        won = false;
+
+        pathPiecesConnected = 0;
+        SetConnectionCounter();
+
+        countdownClock.Pause();
+        countdownClock.SetTime(0f);
+
+        EndGame();
     }
 
     private IEnumerator AnimateBoardEnding()
@@ -271,8 +339,21 @@ public class PathPuzzleController : MonoBehaviour
     {
         countdownClock.Pause();
 
-        if (won && !currentPPLevel.objective1)
-            currentPPLevel.objective1 = true;
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            tiles[i].GetComponent<UIButton>().interactable = false;
+        }
+
+        Signal.Send("GameManagement", "DisableExitLevelButton", false);
+
+        if (won)
+        {
+            if (!currentPPLevel.objective1)
+                currentPPLevel.objective1 = true;
+
+            if (currentPPLevel.nextLevel != null && !currentPPLevel.nextLevel.unlocked)
+                currentPPLevel.nextLevel.unlocked = true;
+        }
 
         if (countdownClock.SecondsRemaining >= currentPPLevel.parTimeInSeconds && !currentPPLevel.objective2)
             currentPPLevel.objective2 = true;

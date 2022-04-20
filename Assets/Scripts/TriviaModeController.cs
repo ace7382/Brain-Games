@@ -47,8 +47,8 @@ public class TriviaModeController : MonoBehaviour
 
     private int                                             currentQuestionIndex;
     private List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>     currentAnswers = new List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>();
+    
     private int                                             questionsAnsweredCorrectly = 0;
-
     private bool                                            won = false;
 
     private void Awake()
@@ -141,6 +141,8 @@ public class TriviaModeController : MonoBehaviour
         answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
         answer2.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
         answer3.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
+
+        Signal.Send("GameManagement", "DisableExitLevelButton", true);
 
         currentQuestionIndex = -1;
         questionsAnsweredCorrectly = 0;
@@ -280,20 +282,16 @@ public class TriviaModeController : MonoBehaviour
 
     private void Pause(Signal signal)
     {
-        Debug.Log("Pause");
         countdownClock.Pause();
     }
 
     private void Unpause(Signal signal)
     {
-        Debug.Log("Unpause");
         countdownClock.Unpause();
     }
 
     private void EndGameEarly(Signal signal)
     {
-        Debug.Log("Exit Game");
-
         won                         = false;
         questionsAnsweredCorrectly  = 0;
 
@@ -312,6 +310,8 @@ public class TriviaModeController : MonoBehaviour
         answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = false;
         answer2.transform.parent.gameObject.GetComponent<UIButton>().interactable = false;
         answer3.transform.parent.gameObject.GetComponent<UIButton>().interactable = false;
+
+        Signal.Send("GameManagement", "DisableExitLevelButton", false);
 
         if (won)
         {
@@ -335,22 +335,6 @@ public class TriviaModeController : MonoBehaviour
     //Invoked by EndGame()
     private void GoToEndScreen()
     {
-        //object[] data   = new object[9];
-        //data[0]         = won;
-        //data[1]         = questionsAnsweredCorrectly;
-        //data[2]         = currentTriviaSet.questions.Count;
-        //data[3]         = countdownClock.SecondsRemaining;
-        //data[4]         = false;
-        //data[5]         = currentTriviaSet.objective1;
-        //data[6]         = currentTriviaSet.objective2;
-        //data[7]         = currentTriviaSet.objective3;
-        //data[8]         = currentTriviaSet.parTimeRemainingInSeconds;
-
-        //if (currentTriviaSet.nextLevel != null)
-        //    data[4] = currentTriviaSet.nextLevel.unlocked;
-
-        //Signal.Send("Trivia", "EndGame", data);
-
         System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining);
 
         object[] data   = new object[3];

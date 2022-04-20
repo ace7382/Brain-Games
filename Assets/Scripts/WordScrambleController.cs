@@ -111,10 +111,7 @@ public class WordScrambleController : MonoBehaviour
         if (currentWordScrambleLevel.nextLevel != null && !currentWordScrambleLevel.nextLevel.unlocked && currentWordScrambleLevel.objective1)
             currentWordScrambleLevel.nextLevel.unlocked = true;
 
-        //object[] data = new object[1];
-        //data[0] = currentWordScrambleLevel;
-
-        //Signal.Send("WordScramble", "EndGame", data);
+        Signal.Send("GameManagement", "DisableExitLevelButton", false);
 
         object[] data   = new object[3];
         data[0]         = currentWordScrambleLevel;
@@ -209,6 +206,8 @@ public class WordScrambleController : MonoBehaviour
         {
             CreateFoundWordListing(currentWordScrambleLevel.foundWords[i]);
         }
+
+        Signal.Send("GameManagement", "DisableExitLevelButton", true);
 
         UpdateWordFoundText();
         ResizeFoundWordScroll();

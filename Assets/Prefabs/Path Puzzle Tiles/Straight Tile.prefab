@@ -175,7 +175,9 @@ MonoBehaviour:
   west: 0
   start: 0
   finish: 0
+  nonpath: 0
   partOfPath: 0
+  endAnimation: 0
   rectTran: {fileID: 2084608020935869993}
 --- !u!114 &2084608020935869973
 MonoBehaviour:
@@ -315,4 +317,4 @@ MonoBehaviour:
   Id:
     Category: None
     Name: None
-    Custom: 1
+    Custom: 0

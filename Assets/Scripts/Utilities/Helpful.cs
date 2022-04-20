@@ -64,7 +64,9 @@ public static class Helpful
             }
             else if (objectiveNumber == 3)
             {
-                return "Special Word Found";
+                return string.Format("{0} Found", ((WordScrambleLevel)level).objective3 ? 
+                    "\"" + ((WordScrambleLevel)level).specialWord.ToUpperInvariant() + "\""
+                    : "Special Word");
             }
         }
         else if (level.GetType() == typeof(PathPuzzleLevel))

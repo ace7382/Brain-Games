@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Level 1
   unlocked: 1
-  nextLevel: {fileID: 0}
-  difficulty: 0
-  objective1: 0
-  objective2: 0
-  objective3: 0
+  nextLevel: {fileID: 11400000, guid: 1585de463d45f1442b3cb5a346ceb089, type: 2}
+  difficulty: 5
+  objective1: 1
+  objective2: 1
+  objective3: 1
   timeLimitInSeconds: 60
   parTimeInSeconds: 30
   piecesConnectedGoal: 5
@@ -27,7 +27,7 @@ MonoBehaviour:
     columns: 3
     rows: 2
     initialStartTileRotations: 0
-    initialFinishTileRotations: 0
+    initialFinishTileRotations: 3
     tiles:
     - {fileID: 3915713706132804377, guid: 487a3b511c5ef644b81a6375c13154f1, type: 3}
     - {fileID: 3915713706132804377, guid: 1047c45c05d2af847b25e338152215a1, type: 3}
@@ -39,7 +39,7 @@ MonoBehaviour:
     columns: 3
     rows: 2
     initialStartTileRotations: 3
-    initialFinishTileRotations: 1
+    initialFinishTileRotations: 0
     tiles:
     - {fileID: 3915713706132804377, guid: 61e75aa83b41b5f499386e3a54d47532, type: 3}
     - {fileID: 6116122766573467787, guid: fd81791e39134934aa58a6164a508df2, type: 3}
@@ -54,7 +54,7 @@ MonoBehaviour:
     columns: 6
     rows: 5
     initialStartTileRotations: 3
-    initialFinishTileRotations: 1
+    initialFinishTileRotations: 0
     tiles:
     - {fileID: 3915713706132804377, guid: 61e75aa83b41b5f499386e3a54d47532, type: 3}
     - {fileID: 2084608020935869992, guid: 092a2ddbadc14bf4289535dc93d0596b, type: 3}

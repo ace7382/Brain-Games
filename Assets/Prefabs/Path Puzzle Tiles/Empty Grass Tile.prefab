@@ -63,6 +63,7 @@ MonoBehaviour:
   finish: 0
   nonpath: 1
   partOfPath: 0
+  endAnimation: 0
   rectTran: {fileID: 3915713706132804376}
 --- !u!114 &3915713706132804383
 MonoBehaviour:
@@ -240,4 +241,4 @@ MonoBehaviour:
   Id:
     Category: None
     Name: None
-    Custom: 1
+    Custom: 0

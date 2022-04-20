@@ -103,6 +103,9 @@ public class CountdownClockController : MonoBehaviour
 
     private void UpdateTimerDisplay()
     {
+        //TODO: Add 1 to the display/remaining seconds. Currently the last second shows 0:00 on the clock.
+        //      It's just a visual issue
+
         float percentFill = Mathf.Clamp((secondsRemaining / clockMaxSeconds), 0f, float.MaxValue);
 
         clockProgressor.SetProgressAt(percentFill);
