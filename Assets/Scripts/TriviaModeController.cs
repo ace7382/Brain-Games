@@ -166,8 +166,8 @@ public class TriviaModeController : MonoBehaviour
             if (currentQuestionIndex < currentTriviaSet.questions.Count - 1)
             {
                 countdownClock.AddTime(currentTriviaSet.secondsGainedForCorrectAnswer);
-                TextPopup(string.Format("+{0}s", currentTriviaSet.secondsGainedForCorrectAnswer.ToString())
-                    , countdownClock.timeDisplay.transform, Vector2.zero, Color.green);
+                Helpful.TextPopup(string.Format("+{0}s", currentTriviaSet.secondsGainedForCorrectAnswer.ToString())
+                    , countdownClock.timeDisplay.transform, Vector2.zero, Color.green, responsePopupFont);
             }
         }
         else
@@ -176,8 +176,8 @@ public class TriviaModeController : MonoBehaviour
             
             //Getting the last question incorrect will make you lose time though, so you can lose on the last question
             countdownClock.SubtractTime(currentTriviaSet.secondsLostForWrongAnswer);
-            TextPopup(string.Format("-{0}s", currentTriviaSet.secondsLostForWrongAnswer.ToString())
-                , countdownClock.timeDisplay.transform, Vector2.zero, Color.red);
+            Helpful.TextPopup(string.Format("-{0}s", currentTriviaSet.secondsLostForWrongAnswer.ToString())
+                , countdownClock.timeDisplay.transform, Vector2.zero, Color.red, responsePopupFont);
         }
 
         if (countdownClock.SecondsRemaining <= 0f)
@@ -275,7 +275,7 @@ public class TriviaModeController : MonoBehaviour
 
         center = new Vector2(0f, 40f);
 
-        TextPopup(t, tran, center, c);
+        Helpful.TextPopup(t, tran, center, c, responsePopupFont);
     }
 
     private void Pause(Signal signal)
@@ -335,49 +335,30 @@ public class TriviaModeController : MonoBehaviour
     //Invoked by EndGame()
     private void GoToEndScreen()
     {
-        object[] data   = new object[9];
-        data[0]         = won;
-        data[1]         = questionsAnsweredCorrectly;
-        data[2]         = currentTriviaSet.questions.Count;
-        data[3]         = countdownClock.SecondsRemaining;
-        data[4]         = false;
-        data[5]         = currentTriviaSet.objective1;
-        data[6]         = currentTriviaSet.objective2;
-        data[7]         = currentTriviaSet.objective3;
-        data[8]         = currentTriviaSet.parTimeRemainingInSeconds;
+        //object[] data   = new object[9];
+        //data[0]         = won;
+        //data[1]         = questionsAnsweredCorrectly;
+        //data[2]         = currentTriviaSet.questions.Count;
+        //data[3]         = countdownClock.SecondsRemaining;
+        //data[4]         = false;
+        //data[5]         = currentTriviaSet.objective1;
+        //data[6]         = currentTriviaSet.objective2;
+        //data[7]         = currentTriviaSet.objective3;
+        //data[8]         = currentTriviaSet.parTimeRemainingInSeconds;
 
-        if (currentTriviaSet.nextLevel != null)
-            data[4] = currentTriviaSet.nextLevel.unlocked;
+        //if (currentTriviaSet.nextLevel != null)
+        //    data[4] = currentTriviaSet.nextLevel.unlocked;
 
-        Signal.Send("Trivia", "EndGame", data);
-    }
+        //Signal.Send("Trivia", "EndGame", data);
 
-    private void TextPopup(string word, Transform par, Vector2 center, Color col)
-    {
-        GameObject floatingTextObject = new GameObject("found_word_floating_text", typeof(Shadow));
-        RectTransform floatingTextRectT = floatingTextObject.AddComponent<RectTransform>();
-        Text floatingText = floatingTextObject.AddComponent<Text>();
-        floatingText.font = responsePopupFont;
-        floatingText.fontSize = 80;
+        System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining);
 
-        floatingText.text = word;
-        floatingText.color = col;
+        object[] data   = new object[3];
+        data[0]         = currentTriviaSet;
+        data[1]         = won;
+        data[2]         = string.Format("Time Remaining {0}:{1}\n{2}/{3} Questions Correct", ts.Minutes.ToString(),
+                            ts.Seconds.ToString("00"), questionsAnsweredCorrectly.ToString(), currentTriviaSet.questions.Count.ToString());
 
-        floatingText.transform.SetParent(par, false);
-        floatingTextRectT.anchoredPosition = center;
-        floatingTextRectT.localScale = Vector3.one;
-        floatingTextRectT.anchorMin = new Vector2(.5f, .5f);
-        floatingTextRectT.anchorMax = new Vector2(.5f, .5f);
-        floatingTextRectT.pivot = new Vector2(.5f, .5f);
-
-        ContentSizeFitter csf = floatingTextObject.AddComponent<ContentSizeFitter>();
-        csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-        csf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-        UIAnimation anim;
-        anim = UIAnimation.PositionY(floatingText.rectTransform, center.y, center.y + 200f, .75f);
-        anim.Play();
-        anim = UIAnimation.Color(floatingText, new Color(floatingText.color.r, floatingText.color.g, floatingText.color.b, 0f), 1f);
-        anim.OnAnimationFinished = (GameObject obj) => { GameObject.Destroy(obj); };
-        anim.Play();
+        Signal.Send("GameManagement", "LevelEnded", data);
     }
 }

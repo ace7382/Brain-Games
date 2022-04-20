@@ -23,6 +23,8 @@ public class PathPuzzleTileController : MonoBehaviour
     public bool                                 nonpath;
     public bool                                 partOfPath;
 
+    public bool                                 endAnimation = false;
+
     [SerializeField] private RectTransform      rectTran;
 
     private IEnumerator                         rotCo;
@@ -130,11 +132,35 @@ public class PathPuzzleTileController : MonoBehaviour
             GetComponent<Image>().color = Color.white;
     }
 
+    public IEnumerator SpinShrink()
+    {
+        endAnimation = true;
+
+        Vector3 startMarker = transform.localScale;
+        float journeyLength = Vector3.Distance(startMarker, Vector3.zero);
+        float startTime     = Time.time;
+
+        while (transform.localScale.x > 0)
+        {
+            float distCovered = (Time.time - startTime) * 4;
+            float fractionOfJourney = distCovered / journeyLength;
+
+            transform.localScale = Vector3.Lerp(startMarker, Vector3.zero, fractionOfJourney);
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z + 8);
+
+            yield return null;
+        }
+
+        transform.localScale = Vector3.zero;
+
+        endAnimation = false;
+    }
+
     private IEnumerator AnimateRotation(Vector3 target)
     {
         Vector3 startMarker = rectTran.eulerAngles;
         float journeyLength = Vector3.Distance(startMarker, target);
-        float startTime = Time.time;
+        float startTime     = Time.time;
 
         while (rectTran.eulerAngles.z != target.z && rectTran.eulerAngles.z + 360 != target.z && rectTran.eulerAngles.z - 360 != target.z)
         {
@@ -150,7 +176,7 @@ public class PathPuzzleTileController : MonoBehaviour
 
         rotCo = null;
 
-        Signal.Send("PathPuzzle", "TileRotated");
+        Signal.Send("PathPuzzle", "TileRotated", gameObject);
 
         yield return new WaitForSeconds(.1f);
 

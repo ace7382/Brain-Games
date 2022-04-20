@@ -21,6 +21,7 @@ MonoBehaviour:
   objective3: 0
   timeLimitInSeconds: 60
   parTimeInSeconds: 30
+  piecesConnectedGoal: 5
   boards:
   - cellSize: 200
     columns: 3

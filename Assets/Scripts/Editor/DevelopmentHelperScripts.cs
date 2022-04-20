@@ -32,6 +32,7 @@ public class DevelopmentHelperScripts : MonoBehaviour
     {
         ResetTriviaLevels();
         ResetWordScrambleLevels();
+        ResetPathPuzzleLevels();
     }
 
     [MenuItem("Dev Commands/Reset Trivia Levels")]
@@ -103,6 +104,27 @@ public class DevelopmentHelperScripts : MonoBehaviour
                 level.unlocked = true;
             else
                 level.unlocked = false;
+
+            level.ResetObjectives();
+        }
+    }
+
+    [MenuItem("Dev Commands/Reset Path Puzzle Levels")]
+    public static void ResetPathPuzzleLevels()
+    {
+        List<PathPuzzleLevel> levels =
+            new List<PathPuzzleLevel>(Resources.LoadAll<PathPuzzleLevel>("Scriptable Objects/Path Puzzle Levels"));
+
+        foreach (PathPuzzleLevel level in levels)
+        {
+            if (level.name.Contains("Level 1"))
+            {
+                level.unlocked = true;
+            }
+            else
+            {
+                level.unlocked = false;
+            }
 
             level.ResetObjectives();
         }

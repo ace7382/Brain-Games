@@ -13,4 +13,12 @@ MonoBehaviour:
   m_Name: UIButtonIdDatabase
   m_EditorClassIdentifier: 
   Database:
-    Items: []
+    Items:
+    - Category: EndLevelScreen
+      Name: NextLevel
+    - Category: EndLevelScreen
+      Name: ReplayLevel
+    - Category: EndLevelScreen
+      Name: ReturnHome
+    - Category: None
+      Name: None

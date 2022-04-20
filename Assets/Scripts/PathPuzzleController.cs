@@ -16,8 +16,14 @@ public class PathPuzzleController : MonoBehaviour
 
     public GameObject                       gameBoard;
     public CountdownClockController         countdownClock;
+    public TextMeshProUGUI                  connectionCounterTitle;
+    public TextMeshProUGUI                  connectionCounter;
+    public Font                             popupFont;
 
     public List<PathPuzzleTileController>   tiles;
+
+    private int                             pathPiecesConnected;
+    private bool                            won;
 
     private SignalReceiver                  pathpuzzle_tilerotated_receiver;
     private SignalStream                    pathpuzzle_tilerotated_stream;
@@ -62,17 +68,21 @@ public class PathPuzzleController : MonoBehaviour
             currentPPLevel = (PathPuzzleLevel)currentPPLevel.nextLevel;
         }
 
-        currentBoardNum = -1;
+        currentBoardNum     = -1;
+        won                 = false;
+        pathPiecesConnected = 0;
+
+        SetConnectionCounter();
 
         countdownClock.SetupTimer(currentPPLevel.timeLimitInSeconds, currentPPLevel.parTimeInSeconds);
         countdownClock.StartTimer();
 
         LoadNextBoard();
 
-        CheckTiles(null);
+        //CheckTiles(new Signal());
     }
 
-    public void CheckTiles(Signal signal) //Signal isn't used
+    public void CheckTiles(Signal signal)
     {
         for (int i = 0; i < tiles.Count; i++)
             tiles[i].partOfPath = false;
@@ -159,9 +169,48 @@ public class PathPuzzleController : MonoBehaviour
 
         if (checkedSet.Contains(startTile) && checkedSet.Contains(finishTile))
         {
-            Debug.Log("Puzzle Finished");
-            LoadNextBoard();
+            if (signal.sourceGameObject == null) //if it's the setup phase
+            {
+                //TODO: This can potentially cause an infinite loop I think
+
+                Debug.Log("Loaded solved, changing tile");
+
+                tiles.Find(x => !x.start && !x.finish && !x.nonpath && x.partOfPath).SetInitialRotation(1);
+                CheckTiles(new Signal());
+            }
+            else
+            {
+                Debug.Log("Puzzle Finished");
+
+                pathPiecesConnected += checkedSet.Count;
+                SetConnectionCounter();
+
+                Helpful.TextPopup(string.Format("+{0}", checkedSet.Count.ToString())
+                    , connectionCounter.transform
+                    , Vector2.zero
+                    , Color.green, popupFont);
+
+                Debug.Log(pathPiecesConnected);
+
+                StartCoroutine(AnimateBoardEnding());
+            }
         }
+    }
+
+    private IEnumerator AnimateBoardEnding()
+    {
+        countdownClock.Pause();
+
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            StartCoroutine(tiles[i].SpinShrink());
+        }
+
+        while (tiles.FindIndex(x => x.endAnimation) >= 0)
+            yield return null;
+
+        countdownClock.Unpause();
+        LoadNextBoard();
     }
 
     private void LoadNextBoard()
@@ -209,16 +258,57 @@ public class PathPuzzleController : MonoBehaviour
                 tiles.Add(control);
             }
 
-            CheckTiles(null);
+            CheckTiles(new Signal());
         }
         else
         {
+            won = true;
             EndGame();
         }
     }
 
     private void EndGame()
     {
+        countdownClock.Pause();
+
+        if (won && !currentPPLevel.objective1)
+            currentPPLevel.objective1 = true;
+
+        if (countdownClock.SecondsRemaining >= currentPPLevel.parTimeInSeconds && !currentPPLevel.objective2)
+            currentPPLevel.objective2 = true;
+
+        if (pathPiecesConnected >= currentPPLevel.piecesConnectedGoal && !currentPPLevel.objective3)
+            currentPPLevel.objective3 = true;
+
+        Invoke("GoToEndScreen", 2.5f);
+
         Debug.Log("Game End");
+    }
+    
+    //Invoked by EndGame() funtion
+    private void GoToEndScreen()
+    {
+        //Signal Data should be object[9]
+        //  index 0 =>  LevelBase       - The level that was just completed/exited
+        //  index 1 =>  bool            - true = success, false = exit early/fail
+        //  index 2 =>  string          - subtitle text
+
+        object[] data = new object[3];
+        data[0] = currentPPLevel;
+        data[1] = won;
+        data[2] = string.Format("{0} pieces traversed!", pathPiecesConnected.ToString());
+
+        Signal.Send("GameManagement", "LevelEnded", data);
+    }
+
+    private void SetConnectionCounter()
+    {
+        connectionCounter.text = pathPiecesConnected.ToString();
+
+        if (pathPiecesConnected >= currentPPLevel.piecesConnectedGoal)
+        {
+            connectionCounter.color         = Color.green;
+            connectionCounterTitle.color    = Color.green;
+        }
     }
 }

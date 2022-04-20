@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: UIViewIdDatabase
   m_EditorClassIdentifier: 
   Database:
-    Items: []
+    Items:
+    - Category: GameManagement
+      Name: EndLevel
+    - Category: None
+      Name: None

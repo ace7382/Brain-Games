@@ -99,9 +99,6 @@ public class WordScrambleController : MonoBehaviour
 
         selectedWord = "";
 
-        object[] data = new object[1];
-        data[0] = currentWordScrambleLevel;
-
         if (!currentWordScrambleLevel.objective1 && currentWordScrambleLevel.foundWords.Count >= currentWordScrambleLevel.goalWordCount)
             currentWordScrambleLevel.objective1 = true;
 
@@ -114,7 +111,17 @@ public class WordScrambleController : MonoBehaviour
         if (currentWordScrambleLevel.nextLevel != null && !currentWordScrambleLevel.nextLevel.unlocked && currentWordScrambleLevel.objective1)
             currentWordScrambleLevel.nextLevel.unlocked = true;
 
-        Signal.Send("WordScramble", "EndGame", data);
+        //object[] data = new object[1];
+        //data[0] = currentWordScrambleLevel;
+
+        //Signal.Send("WordScramble", "EndGame", data);
+
+        object[] data   = new object[3];
+        data[0]         = currentWordScrambleLevel;
+        data[1]         = true; //Anytime you leave this mode it's a "Success" since progress is maintained
+        data[2]         = string.Format("{0} Words Found", currentWordScrambleLevel.foundWords.Count.ToString());
+
+        Signal.Send("GameManagement", "LevelEnded", data);
     }
 
     private void SetUp(Signal signal)

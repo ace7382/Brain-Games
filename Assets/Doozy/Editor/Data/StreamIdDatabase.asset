@@ -16,6 +16,8 @@ MonoBehaviour:
     Items:
     - Category: GameManagement
       Name: LeaveTitleScreen
+    - Category: GameManagement
+      Name: LevelEnded
     - Category: None
       Name: None
     - Category: PathPuzzle
