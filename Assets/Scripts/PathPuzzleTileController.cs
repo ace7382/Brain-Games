@@ -69,8 +69,8 @@ public class PathPuzzleTileController : MonoBehaviour
 
     public void SetInitialRotation(int numberOfClockwiseTurnsFromInitial)
     {
-        if (start || finish || nonpath || numberOfClockwiseTurnsFromInitial == 0)
-            return;
+        //if (start || finish || nonpath || numberOfClockwiseTurnsFromInitial == 0)
+        //    return;
 
         if (numberOfClockwiseTurnsFromInitial == 1)
         {

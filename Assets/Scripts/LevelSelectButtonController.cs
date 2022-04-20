@@ -24,6 +24,8 @@ public class LevelSelectButtonController : MonoBehaviour
         data[0] = 0; //Code for game controllers to start a new Level
         data[1] = level;
 
+        Debug.Log(level.GetType());
+
         if (level.GetType() == typeof(WordScrambleLevel))
         {
             Signal.Send("WordScramble", "WordScrambleSetup", data);
@@ -32,10 +34,10 @@ public class LevelSelectButtonController : MonoBehaviour
         {
             Signal.Send("Trivia", "TriviaSetup", data);
         }
-
-        //Add new level types here
-        //else if (level.GetType() == typeof(PathPuzzleLevel))
-
+        else if (level.GetType() == typeof(PathPuzzleLevel))
+        {
+            Signal.Send("PathPuzzle", "PathPuzzleSetup", data);
+        }
     }
 
     public void ShowLockedStatus()

@@ -19,6 +19,8 @@ MonoBehaviour:
     - Category: None
       Name: None
     - Category: PathPuzzle
+      Name: PathPuzzleSetup
+    - Category: PathPuzzle
       Name: TileRotated
     - Category: QuitConfirmation
       Name: BackToGame

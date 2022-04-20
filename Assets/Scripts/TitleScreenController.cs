@@ -5,17 +5,35 @@ using Doozy.Runtime.Signals;
 
 public class TitleScreenController : MonoBehaviour
 {
-    public float timeBetweenFlashes = .1f;
-    public List<RainbowFlash> flashers;
+    public float                timeBetweenFlashes = .1f;
+    public List<RainbowFlash>   flashers;
+
+    private IEnumerator         flashingCoroutine;
 
     private void Awake()
     {
         flashers = new List<RainbowFlash>(GetComponentsInChildren<RainbowFlash>());
+
+        flashingCoroutine = null;
     }
 
+    //Called By the Title Screen's Go To Main Button's Click (the invisible button)
     public void StartFlash()
     {
-        StartCoroutine(FlashEveryone());
+        if (flashingCoroutine == null)
+        {
+            flashingCoroutine = FlashEveryone();
+
+            StartCoroutine(flashingCoroutine);
+        }
+        else
+        {
+            StopCoroutine(flashingCoroutine);
+
+            flashingCoroutine = null;
+
+            SendSignalToLeaveTitle();
+        }
     }
 
     private IEnumerator FlashEveryone()
@@ -31,6 +49,11 @@ public class TitleScreenController : MonoBehaviour
 
         yield return new WaitForSeconds(.7f);
 
+        SendSignalToLeaveTitle();
+    }
+
+    private void SendSignalToLeaveTitle()
+    {
         Signal.Send("GameManagement", "LeaveTitleScreen");
     }
 }

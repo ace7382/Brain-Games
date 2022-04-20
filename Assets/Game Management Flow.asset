@@ -206,6 +206,72 @@ MonoBehaviour:
     Name: None
     Custom: 0
   CommandShowHide: 0
+--- !u!114 &-3024731202756194118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b2479a69f56cf54c96de81c44e8ad1a, type: 3}
+  m_Name: Portal
+  m_EditorClassIdentifier: 
+  FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
+  NodeId: 143d3cc8-18da-408b-94fe-c201ac533daa
+  NodeType: 1
+  NodeName: Path Puzzle Setup
+  NodeDescription: 
+  InputPorts: []
+  OutputPorts:
+  - NodeId: 143d3cc8-18da-408b-94fe-c201ac533daa
+    PortId: 8f8f3ed6-574a-4595-b074-0a62b7498fa5
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 0fa87dbb-f079-4e35-a28e-20f9cee6f48f
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 156.99997, y: 178.00002}
+  Trigger: 0
+  SignalPayload:
+    StreamId:
+      Category: PathPuzzle
+      Name: PathPuzzleSetup
+      Custom: 0
+    SignalValueType: 0
+    IntegerValue: 0
+    BooleanValue: 0
+    FloatValue: 0
+    StringValue: 
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+    Vector4Value: {x: 0, y: 0, z: 0, w: 0}
+  ButtonId:
+    Category: None
+    Name: None
+    Custom: 0
+  ToggleId:
+    Category: None
+    Name: None
+    Custom: 0
+  CommandToggle: 2
+  ViewId:
+    Category: None
+    Name: None
+    Custom: 0
+  CommandShowHide: 0
 --- !u!114 &-2819881898719066116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,6 +470,8 @@ MonoBehaviour:
   - {fileID: 8239184231873523030}
   - {fileID: -5446649114305400559}
   - {fileID: 8317416955230002128}
+  - {fileID: -3024731202756194118}
+  - {fileID: 6687859522671565184}
   RootNode: {fileID: -2819881898719066116}
   ActiveNode: {fileID: 0}
 --- !u!114 &3660787409783741022
@@ -537,6 +605,70 @@ MonoBehaviour:
     Name: None
     Custom: 0
   CommandShowHide: 0
+--- !u!114 &6687859522671565184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
+  NodeId: 0f3bb4b5-5849-49c8-b64d-c50baf3a1f9c
+  NodeType: 0
+  NodeName: Path Puzzle Play
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 0f3bb4b5-5849-49c8-b64d-c50baf3a1f9c
+    PortId: 0fa87dbb-f079-4e35-a28e-20f9cee6f48f
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 8f8f3ed6-574a-4595-b074-0a62b7498fa5
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 0f3bb4b5-5849-49c8-b64d-c50baf3a1f9c
+    PortId: ec2bcf7b-b07a-41b9-9a62-ec4be8a09a14
+    Direction: 1
+    Capacity: 0
+    Connections: []
+    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 0
+  Position: {x: 367.87253, y: 178.00002}
+  OnEnterShowViews:
+  - Id:
+      Category: Screen
+      Name: PathPuzzlePlay
+      Custom: 1
+    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: Screen
+      Name: PathPuzzlePlay
+      Custom: 1
+    Mode: 0
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
 --- !u!114 &8239184231873523030
 MonoBehaviour:
   m_ObjectHideFlags: 0

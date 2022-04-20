@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Dogs - Level 2
   m_EditorClassIdentifier: 
   levelName: Dogs - Level 2
-  unlocked: 0
+  unlocked: 1
   nextLevel: {fileID: 0}
-  difficulty: 5
-  objective1: 0
+  difficulty: 15
+  objective1: 1
   objective2: 0
   objective3: 0
-  startTimeInSeconds: 60
+  startTimeInSeconds: 30
   secondsLostForWrongAnswer: 5
   secondsGainedForCorrectAnswer: 5
-  parTimeRemainingInSeconds: 25
+  parTimeRemainingInSeconds: 20
   questions:
   - Question: What do you call Corsair when he is dyed blue?
     Answers:

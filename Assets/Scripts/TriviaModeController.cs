@@ -28,15 +28,11 @@ public class TriviaModeController : MonoBehaviour
     public TextMeshProUGUI                                  answer2;
     public TextMeshProUGUI                                  answer3;
     public TextMeshProUGUI                                  questionCount;
-    public Image                                            clockFill;
 
     public Font                                             responsePopupFont;
+    public CountdownClockController                         countdownClock;
 
-    public Progressor                                       clockProgressor;
-    public TextMeshProUGUI                                  timeDisplay;
-    public Color                                            clockMidColor;
-
-    [HideInInspector] public TimedTriviaLevel                      currentTriviaSet;
+    [HideInInspector] public TimedTriviaLevel               currentTriviaSet;
 
     private SignalReceiver                                  trivia_triviasetup_receiver;
     private SignalStream                                    trivia_triviasetup_stream;
@@ -53,10 +49,6 @@ public class TriviaModeController : MonoBehaviour
     private List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>     currentAnswers = new List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>();
     private int                                             questionsAnsweredCorrectly = 0;
 
-    private float                                           secondsRemaining;
-    private float                                           clockMaxSeconds = 60f;
-
-    private bool                                            isPlaying = false;
     private bool                                            won = false;
 
     private void Awake()
@@ -92,25 +84,6 @@ public class TriviaModeController : MonoBehaviour
         quitconfirmation_popup_stream.DisconnectReceiver(quitconfirmation_popup_receiver);
     }
 
-    private void Update()
-    {
-        if (isPlaying)
-        {
-            secondsRemaining = Mathf.Clamp(secondsRemaining - Time.deltaTime, 0f, float.MaxValue);
-
-            float percentFill = Mathf.Clamp((secondsRemaining / clockMaxSeconds), 0f, float.MaxValue);
-
-            UpdateTimerDisplay(percentFill);
-
-            if (secondsRemaining <= 0.0f)
-            {
-                won = false;
-                EndGame();
-            }
-        }
-    }
-
-
     //Called by the TriviaModePlay screen's OnHide callback
     public void OnHide()
     {
@@ -130,8 +103,7 @@ public class TriviaModeController : MonoBehaviour
     //Called by the View - Screen TriviaPlay's Show Animation Started callback
     public void StartGame()
     {
-        isPlaying = true;
-        secondsRemaining = currentTriviaSet.startTimeInSeconds;
+        countdownClock.StartTimer();
     }
 
     public void SetUp(Signal signal)
@@ -172,7 +144,9 @@ public class TriviaModeController : MonoBehaviour
 
         currentQuestionIndex = -1;
         questionsAnsweredCorrectly = 0;
-        clockMaxSeconds = currentTriviaSet.startTimeInSeconds;
+
+        countdownClock.SetupTimer(currentTriviaSet.startTimeInSeconds, currentTriviaSet.parTimeRemainingInSeconds);
+
         LoadNextQuestion();
     }
 
@@ -191,9 +165,9 @@ public class TriviaModeController : MonoBehaviour
             //Getting the Last Question correct won't give you more time
             if (currentQuestionIndex < currentTriviaSet.questions.Count - 1)
             {
-                secondsRemaining += currentTriviaSet.secondsGainedForCorrectAnswer;
+                countdownClock.AddTime(currentTriviaSet.secondsGainedForCorrectAnswer);
                 TextPopup(string.Format("+{0}s", currentTriviaSet.secondsGainedForCorrectAnswer.ToString())
-                    , timeDisplay.transform, Vector2.zero, Color.green);
+                    , countdownClock.timeDisplay.transform, Vector2.zero, Color.green);
             }
         }
         else
@@ -201,26 +175,17 @@ public class TriviaModeController : MonoBehaviour
             ResponsePopup(false, selection);
             
             //Getting the last question incorrect will make you lose time though, so you can lose on the last question
-            secondsRemaining -= currentTriviaSet.secondsLostForWrongAnswer;
+            countdownClock.SubtractTime(currentTriviaSet.secondsLostForWrongAnswer);
             TextPopup(string.Format("-{0}s", currentTriviaSet.secondsLostForWrongAnswer.ToString())
-                , timeDisplay.transform, Vector2.zero, Color.red);
+                , countdownClock.timeDisplay.transform, Vector2.zero, Color.red);
         }
 
-        if (secondsRemaining <= 0f)
+        if (countdownClock.SecondsRemaining <= 0f)
         {
-            won = false;
-
-            secondsRemaining = 0;
-            clockProgressor.SetProgressAt(0);
-            UpdateTimerDisplay(0);
-
-            EndGame();
+            countdownClock.SetTime(0f);
         }
         else
         {
-            float percentFill = Mathf.Clamp((secondsRemaining / clockMaxSeconds), 0f, float.MaxValue);
-            UpdateTimerDisplay(percentFill);
-
             LoadNextQuestion();
         }
     }
@@ -266,25 +231,11 @@ public class TriviaModeController : MonoBehaviour
         }
     }
 
-    private void UpdateTimerDisplay(float percentFill)
+    //Invoked by the countdownClock's onOutOfTime event
+    public void OutOfTime()
     {
-        clockProgressor.SetProgressAt(percentFill);
-
-        if (percentFill >= 1)
-        {
-            clockFill.color = Color.green;
-        }
-        else if (secondsRemaining <= currentTriviaSet.parTimeRemainingInSeconds)
-        {
-            clockFill.color = Color.red;
-        }
-        else
-        {
-            clockFill.color = clockMidColor;
-        }
-
-        System.TimeSpan ts = System.TimeSpan.FromSeconds(secondsRemaining);
-        timeDisplay.text = ts.Minutes + ":" + ts.Seconds.ToString("00");
+        won = false;
+        EndGame();
     }
 
     private void ResponsePopup(bool correct, int selection)
@@ -330,30 +281,31 @@ public class TriviaModeController : MonoBehaviour
     private void Pause(Signal signal)
     {
         Debug.Log("Pause");
-        isPlaying = false;
+        countdownClock.Pause();
     }
 
     private void Unpause(Signal signal)
     {
         Debug.Log("Unpause");
-        isPlaying = true;
+        countdownClock.Unpause();
     }
 
     private void EndGameEarly(Signal signal)
     {
         Debug.Log("Exit Game");
 
-        isPlaying                   = false;
         won                         = false;
         questionsAnsweredCorrectly  = 0;
-        secondsRemaining            = 0f;
+
+        countdownClock.Pause();
+        countdownClock.SetTime(0f);
 
         EndGame();
     }
 
     private void EndGame()
     {
-        isPlaying = false;
+        countdownClock.Pause();
 
         //Disable Buttons
         answer0.transform.parent.gameObject.GetComponent<UIButton>().interactable = false;
@@ -369,7 +321,7 @@ public class TriviaModeController : MonoBehaviour
             if (currentTriviaSet.nextLevel != null && !currentTriviaSet.nextLevel.unlocked)
                 currentTriviaSet.nextLevel.unlocked = true;
 
-            if (!currentTriviaSet.objective2 && secondsRemaining >= currentTriviaSet.parTimeRemainingInSeconds)
+            if (!currentTriviaSet.objective2 && countdownClock.SecondsRemaining >= currentTriviaSet.parTimeRemainingInSeconds)
                 currentTriviaSet.objective2 = true;
 
             if (!currentTriviaSet.objective3 && questionsAnsweredCorrectly == currentTriviaSet.questions.Count)
@@ -387,7 +339,7 @@ public class TriviaModeController : MonoBehaviour
         data[0]         = won;
         data[1]         = questionsAnsweredCorrectly;
         data[2]         = currentTriviaSet.questions.Count;
-        data[3]         = secondsRemaining;
+        data[3]         = countdownClock.SecondsRemaining;
         data[4]         = false;
         data[5]         = currentTriviaSet.objective1;
         data[6]         = currentTriviaSet.objective2;
