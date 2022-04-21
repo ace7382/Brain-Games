@@ -38,6 +38,8 @@ public class LevelSelectButtonController : MonoBehaviour
         {
             Signal.Send("PathPuzzle", "PathPuzzleSetup", data);
         }
+
+        AudioManager.instance.Play("Button Click");
     }
 
     public void ShowLockedStatus()

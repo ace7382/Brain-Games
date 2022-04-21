@@ -74,22 +74,11 @@ public class WordScrambleController : MonoBehaviour
     }
 
     //Used by the Submit Button's Click callback
-    public void SubmitWord()
+    public void SubmitButtonClicked()
     {
-        if (selectedWord == "")
-            return;
+        AudioManager.instance.Play("Button Click");
 
-        for (int i = 0; i < tiles.Count; i++)
-        {
-            if (tiles[i].selected)
-                ReturnTile(tiles[i]);
-        }
-
-        if (!currentWordScrambleLevel.foundWords.Contains(selectedWord)
-            && currentWordScrambleLevel.hiddenWords.Contains(selectedWord))
-            FoundWord(selectedWord);
-
-        selectedWord = "";
+        SubmitWord();
     }
 
     public void EndGame()
@@ -311,6 +300,24 @@ public class WordScrambleController : MonoBehaviour
             foundWordList.GetComponentInParent<ScrollRect>().enabled = true;
         else
             foundWordList.GetComponentInParent<ScrollRect>().enabled = false;
+    }
+
+    private void SubmitWord()
+    {
+        if (selectedWord == "")
+            return;
+
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            if (tiles[i].selected)
+                ReturnTile(tiles[i]);
+        }
+
+        if (!currentWordScrambleLevel.foundWords.Contains(selectedWord)
+            && currentWordScrambleLevel.hiddenWords.Contains(selectedWord))
+            FoundWord(selectedWord);
+
+        selectedWord = "";
     }
 
     private void UpdateWordFoundText()

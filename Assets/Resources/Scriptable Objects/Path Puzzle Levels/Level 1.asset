@@ -19,7 +19,7 @@ MonoBehaviour:
   objective1: 1
   objective2: 1
   objective3: 1
-  timeLimitInSeconds: 60
+  timeLimitInSeconds: 30
   parTimeInSeconds: 30
   piecesConnectedGoal: 5
   boards:

@@ -121,6 +121,8 @@ public class EndLevelScreenContoller : MonoBehaviour
     //Called by the Reply Level button's Click
     public void ReplayLevel()
     {
+        AudioManager.instance.Play("Button Click");
+
         object[] data = new object[1];
         data[0] = 1;
 
@@ -143,6 +145,8 @@ public class EndLevelScreenContoller : MonoBehaviour
     //Called by the Next Level button's Click
     public void NextLevel()
     {
+        AudioManager.instance.Play("Button Click");
+
         object[] data = new object[1];
         data[0] = 2;
 

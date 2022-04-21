@@ -1,19 +1,19 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Doozy.Runtime.Signals;
 using Doozy.Runtime.Reactor;
-using Doozy.Runtime.UIManager.Components;
 using UnityEngine.Events;
 
 public class CountdownClockController : MonoBehaviour
 {
-    private bool                isCountingDown;
+    private bool                notifiedOutOfTime;
     private float               clockMaxSeconds;
     private float               secondsRemaining;
     private float               midPointSeconds;
+
+    private IEnumerator         countingDown;
+    private IEnumerator         pulsing;
 
     public Image                clockFill;
     public Progressor           clockProgressor;
@@ -23,29 +23,24 @@ public class CountdownClockController : MonoBehaviour
 
     public float                SecondsRemaining { get { return secondsRemaining; } }
 
-    private void Update()
-    {
-        if (isCountingDown)
-        {
-            secondsRemaining = Mathf.Clamp(secondsRemaining - Time.deltaTime, 0f, float.MaxValue);
-
-            UpdateTimerDisplay();
-
-            if (secondsRemaining <= 0.0f)
-            {
-                if (onOutOfTime != null)
-                {
-                    onOutOfTime.Invoke();
-                }
-            }
-        }
-    }
+    // pulse parameters
+    public float                approachSpeed = 0.0015f;
+    public float                growthBound = 1.1f;
+    public float                shrinkBound = 0.9f;
+    private float               currentRatio = 1;
 
     public void SetupTimer(float startingSeconds, float midSeconds)
     {
+        notifiedOutOfTime   = false;
         clockMaxSeconds     = startingSeconds;
         secondsRemaining    = startingSeconds;
         midPointSeconds     = midSeconds;
+        countingDown        = null;
+        pulsing             = null;
+
+        StopAllCoroutines();
+
+        transform.localScale = Vector3.one;
 
         UpdateTimerDisplay();
     }
@@ -58,47 +53,71 @@ public class CountdownClockController : MonoBehaviour
             return;
         }
 
-        isCountingDown = true;
+        Unpause();
+    }
+
+    public IEnumerator Tick()
+    {
+        WaitForSeconds w = new WaitForSeconds(1f);
+
+        while (secondsRemaining > 0f)
+        {
+            Debug.Log(secondsRemaining);
+            SubtractTime(1);
+
+            yield return w;
+        }
+
+        if (pulsing != null)
+        {
+            StopCoroutine(pulsing);
+            pulsing = null;
+        }
+
+        if (onOutOfTime != null && !notifiedOutOfTime)
+        {
+            onOutOfTime.Invoke();
+        }
+        
+        notifiedOutOfTime = true;
     }
 
     public void AddTime(float timeToAdd)
     {
         secondsRemaining += timeToAdd;
 
-        if (isCountingDown)
-            return;
-        else
-            UpdateTimerDisplay();
+        UpdateTimerDisplay();
     }
 
     public void SubtractTime(float timeToSubtract)
     {
         AddTime(timeToSubtract * -1);
 
-        if (isCountingDown)
-            return;
-        else
-            UpdateTimerDisplay();
+        UpdateTimerDisplay();
     }
 
     public void SetTime(float secondsToSetTo)
     {
         secondsRemaining = secondsToSetTo;
 
-        if (isCountingDown)
-            return;
-        else
-            UpdateTimerDisplay();
+        UpdateTimerDisplay();
     }
 
     public void Pause()
     {
-        isCountingDown = false;
+        if (countingDown != null)
+        {
+            StopCoroutine(countingDown);
+        }
+
+        countingDown = null;
     }
 
     public void Unpause()
     {
-        isCountingDown = true;
+        countingDown = Tick();
+
+        StartCoroutine(countingDown);
     }
 
     private void UpdateTimerDisplay()
@@ -123,7 +142,57 @@ public class CountdownClockController : MonoBehaviour
             clockFill.color = clockMidColor;
         }
 
+        if (secondsRemaining <= 15f)
+        {
+            AudioManager.instance.Play("Countdown Tick");
+        }
+
+        if (secondsRemaining <= 5f && pulsing == null)
+        {
+            pulsing = Pulse();
+            StartCoroutine(pulsing);
+        }
+
+        if (pulsing != null && secondsRemaining > 5f)
+        {
+            StopCoroutine(pulsing);
+            pulsing = null;
+        }
+
         System.TimeSpan ts = System.TimeSpan.FromSeconds(secondsRemaining);
         timeDisplay.text = ts.Minutes + ":" + ts.Seconds.ToString("00");
+    }
+
+
+
+    private IEnumerator Pulse()
+    {
+        // Run this indefinitely
+        while (true)
+        {
+            // Get bigger for a few seconds
+            while (currentRatio != growthBound)
+            {
+                // Determine the new ratio to use
+                currentRatio = Mathf.MoveTowards(currentRatio, growthBound, approachSpeed);
+
+                // Update scale
+                transform.localScale = Vector3.one * currentRatio;
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            // Shrink for a few seconds
+            while (currentRatio != shrinkBound)
+            {
+                // Determine the new ratio to use
+                currentRatio = Mathf.MoveTowards(currentRatio, shrinkBound, approachSpeed);
+
+                // Update scale
+                transform.localScale = Vector3.one * currentRatio;
+
+                yield return new WaitForEndOfFrame();
+            }
+        }
     }
 }

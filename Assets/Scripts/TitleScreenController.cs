@@ -6,8 +6,8 @@ using Doozy.Runtime.Signals;
 public class TitleScreenController : MonoBehaviour
 {
     public float                timeBetweenFlashes = .1f;
-    public List<RainbowFlash>   flashers;
 
+    private List<RainbowFlash>  flashers;
     private IEnumerator         flashingCoroutine;
 
     private void Awake()

@@ -11,6 +11,7 @@ public class PathPuzzleController : MonoBehaviour
 {
     public PathPuzzleLevel                  currentPPLevel;
     public int                              currentBoardNum;
+    public int                              gameLostCoroutineCounter = 0;
 
     [Space]
     [Space]
@@ -218,8 +219,6 @@ public class PathPuzzleController : MonoBehaviour
             }
             else
             {
-                Debug.Log("Puzzle Finished");
-
                 pathPiecesConnected += checkedSet.Count;
                 SetConnectionCounter();
 
@@ -227,8 +226,6 @@ public class PathPuzzleController : MonoBehaviour
                     , connectionCounter.transform
                     , Vector2.zero
                     , Color.green, popupFont);
-
-                Debug.Log(pathPiecesConnected);
 
                 StartCoroutine(AnimateBoardEnding());
             }
@@ -239,7 +236,10 @@ public class PathPuzzleController : MonoBehaviour
     public void OutOfTime()
     {
         won = false;
-        EndGame();
+
+        StartCoroutine(GameLostAnimation());
+
+        //EndGame();
     }
 
     private void Pause(Signal signal)
@@ -262,12 +262,14 @@ public class PathPuzzleController : MonoBehaviour
         countdownClock.Pause();
         countdownClock.SetTime(0f);
 
-        EndGame();
+        StartCoroutine(GameLostAnimation());
+        //EndGame();
     }
 
     private IEnumerator AnimateBoardEnding()
     {
         countdownClock.Pause();
+        FreezeButtons(false);
 
         for (int i = 0; i < tiles.Count; i++)
         {
@@ -331,20 +333,26 @@ public class PathPuzzleController : MonoBehaviour
         else
         {
             won = true;
+
+            FreezeButtons(true);
             EndGame();
         }
     }
 
-    private void EndGame()
+    private void FreezeButtons(bool includeExitButton)
     {
-        countdownClock.Pause();
-
         for (int i = 0; i < tiles.Count; i++)
         {
             tiles[i].GetComponent<UIButton>().interactable = false;
         }
 
-        Signal.Send("GameManagement", "DisableExitLevelButton", false);
+        if (includeExitButton)
+            Signal.Send("GameManagement", "DisableExitLevelButton", false);
+    }
+
+    private void EndGame()
+    {
+        countdownClock.Pause();
 
         if (won)
         {
@@ -361,12 +369,9 @@ public class PathPuzzleController : MonoBehaviour
         if (pathPiecesConnected >= currentPPLevel.piecesConnectedGoal && !currentPPLevel.objective3)
             currentPPLevel.objective3 = true;
 
-        Invoke("GoToEndScreen", 2.5f);
-
-        Debug.Log("Game End");
+        StartCoroutine(ShrinkBoard());
     }
     
-    //Invoked by EndGame() funtion
     private void GoToEndScreen()
     {
         //Signal Data should be object[9]
@@ -391,5 +396,50 @@ public class PathPuzzleController : MonoBehaviour
             connectionCounter.color         = Color.green;
             connectionCounterTitle.color    = Color.green;
         }
+    }
+
+    private IEnumerator GameLostAnimation()
+    {
+        FreezeButtons(true);
+
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            gameLostCoroutineCounter++;
+            StartCoroutine(tiles[i].ShakeAndFall());
+        }
+
+        while (gameLostCoroutineCounter > 0)
+            yield return null;
+
+        EndGame();
+    }
+
+    private IEnumerator ShrinkBoard()
+    {
+        foreach (Image i in gameBoard.GetComponentsInChildren<Image>())
+            if (i.gameObject != gameBoard)
+                i.enabled = false;
+
+        GridLayoutGroup g = gameBoard.GetComponent<GridLayoutGroup>();
+
+        float startTime = Time.time;
+
+        while (g.cellSize.x > 0)
+        {
+            float distCovered = (Time.time - startTime) * 10f;
+
+            g.cellSize = new Vector2(g.cellSize.x - distCovered, g.cellSize.x - distCovered);
+
+            yield return null;
+        }
+
+        g.cellSize = Vector2.zero;
+
+        foreach (Transform child in gameBoard.transform)
+            Destroy(child.gameObject);
+
+        tiles.Clear();
+
+        GoToEndScreen();
     }
 }

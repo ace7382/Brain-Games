@@ -134,7 +134,11 @@ public class PathPuzzleTileController : MonoBehaviour
 
     public IEnumerator SpinShrink()
     {
-        endAnimation = true;
+        if (rotCo != null)
+            StopCoroutine(rotCo);
+
+        queueRotation   = false;
+        endAnimation    = true;
 
         Vector3 startMarker = transform.localScale;
         float journeyLength = Vector3.Distance(startMarker, Vector3.zero);
@@ -146,7 +150,7 @@ public class PathPuzzleTileController : MonoBehaviour
             float fractionOfJourney = distCovered / journeyLength;
 
             transform.localScale = Vector3.Lerp(startMarker, Vector3.zero, fractionOfJourney);
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z + 8);
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z + 4.5f);
 
             yield return null;
         }
@@ -216,5 +220,40 @@ public class PathPuzzleTileController : MonoBehaviour
         rectTran.eulerAngles = new Vector3(0, 0, startingZ);
 
         rotCo = null;
+    }
+
+    public IEnumerator ShakeAndFall()
+    {
+        if (rotCo != null)
+            StopCoroutine(rotCo);
+
+        queueRotation = false;
+
+        rotationSpeed   = 2f;
+        shakeTime       = 5f;
+        shakeMagnitude  = 5f;
+        StartCoroutine(Shake());
+
+        yield return new WaitForSeconds(Random.Range(.5f, 1.8f));
+
+        Vector3 startMarker = transform.localPosition;
+        Vector3 target = new Vector3(transform.localPosition.x, transform.localPosition.y - Random.Range(1000, 1350), transform.localPosition.z);
+        float journeyLength = Vector3.Distance(startMarker, target);
+        float startTime = Time.time;
+        float fallSpeed = Random.Range(1000f, 1500f);
+
+        while (transform.localPosition.y > target.y)
+        {
+            float distCovered = (Time.time - startTime) * fallSpeed;
+            float fractionOfJourney = distCovered / journeyLength;
+
+            rectTran.localPosition = Vector3.Lerp(startMarker, target, fractionOfJourney);
+
+            yield return null;
+        }
+
+        rectTran.localPosition = target;
+
+        FindObjectOfType<PathPuzzleController>().gameLostCoroutineCounter--;
     }
 }

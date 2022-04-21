@@ -35,6 +35,8 @@ public class WordScrambleTileController : MonoBehaviour
     //Used by the WordScramble Tile Prefab's CLick callbaack
     public void Click()
     {
+        AudioManager.instance.Play("Chalkboard Writing");
+
         Signal.Send("WordScramble", "TileClicked", this);
     }
 }

@@ -178,7 +178,7 @@ MonoBehaviour:
           m_Calls:
           - m_Target: {fileID: 2742330848412023309}
             m_TargetAssemblyTypeName: ExitLevelButtonController, Assembly-CSharp
-            m_MethodName: ExitLevelSignal
+            m_MethodName: Click
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}

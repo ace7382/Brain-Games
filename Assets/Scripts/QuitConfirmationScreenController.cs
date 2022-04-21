@@ -33,6 +33,8 @@ public class QuitConfirmationScreenController : MonoBehaviour
         GetComponent<UIView>().Hide();
 
         Signal.Send("QuitConfirmation", "BackToGame");
+
+        AudioManager.instance.Play("Button Click");
     }
 
     //Called by the Quit Confirmation Screen's Exit Button's OnClick
@@ -42,6 +44,8 @@ public class QuitConfirmationScreenController : MonoBehaviour
         GetComponent<UIView>().Hide();
 
         Signal.Send("QuitConfirmation", "ExitLevel");
+
+        AudioManager.instance.Play("Button Click");
     }
 
     private void ShowExitPopup(Signal signal)

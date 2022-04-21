@@ -192,9 +192,12 @@ public class TriviaModeController : MonoBehaviour
         }
     }
 
+    //Caled by the 4 answer buttons' on click event
     public void SubmitAnswer(int answerNum)
     {
         Signal.Send("Trivia", "AnswerChosen", answerNum);
+
+        AudioManager.instance.Play("Button Click");
     }
 
     public void LoadNextQuestion()

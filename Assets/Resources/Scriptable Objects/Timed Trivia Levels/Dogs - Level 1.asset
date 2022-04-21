@@ -16,10 +16,10 @@ MonoBehaviour:
   unlocked: 1
   nextLevel: {fileID: 11400000, guid: ac7290b48c03d434397ee6167cee6b6b, type: 2}
   difficulty: 5
-  objective1: 0
+  objective1: 1
   objective2: 0
   objective3: 0
-  startTimeInSeconds: 60
+  startTimeInSeconds: 25
   secondsLostForWrongAnswer: 5
   secondsGainedForCorrectAnswer: 5
   parTimeRemainingInSeconds: 25

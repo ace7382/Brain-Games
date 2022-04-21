@@ -26,8 +26,10 @@ public class ExitLevelButtonController : MonoBehaviour
     }
 
     //Called by the Exit Button's OnClick
-    public void ExitLevelSignal()
+    public void Click()
     {
+        AudioManager.instance.Play("Button Click");
+
         Signal.Send("QuitConfirmation", "Popup");
     }
 
