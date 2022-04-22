@@ -2358,7 +2358,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 965713464}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &124275099
 MonoBehaviour:
@@ -2786,6 +2786,42 @@ MonoBehaviour:
   - name: Countdown Tick
     audioClip: {fileID: 8300000, guid: 48aabebf0ae789e45bee0737553f6972, type: 3}
     volume: 0.075
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: 1
+    audioClip: {fileID: 8300000, guid: 9d84125802914f742b6feb8ae32337c2, type: 3}
+    volume: 0.075
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: 2
+    audioClip: {fileID: 8300000, guid: eb976df02099cb84b9278eba8eae6b80, type: 3}
+    volume: 0.075
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Go
+    audioClip: {fileID: 8300000, guid: 9b58115957a04764a8a126851574160a, type: 3}
+    volume: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: No
+    audioClip: {fileID: 8300000, guid: c191d603e3ae42a4aa3042c361b1f0e3, type: 3}
+    volume: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Chalkboard Erasing
+    audioClip: {fileID: 8300000, guid: ffaf4362bd700f248953452108b310ba, type: 3}
+    volume: 0.75
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Out of Time
+    audioClip: {fileID: 8300000, guid: e837855ee13f0bc4fa5dbc42dd74d719, type: 3}
+    volume: 0.2
     loop: 0
     playOnAwake: 0
     source: {fileID: 0}
@@ -36114,8 +36150,8 @@ RectTransform:
   - {fileID: 1529957288}
   - {fileID: 841507494}
   - {fileID: 2095057886}
-  - {fileID: 124275098}
   - {fileID: 1360659637}
+  - {fileID: 124275098}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -48082,6 +48118,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1360659637}
+  - component: {fileID: 1360659643}
   - component: {fileID: 1360659642}
   - component: {fileID: 1360659641}
   - component: {fileID: 1360659640}
@@ -48107,7 +48144,7 @@ RectTransform:
   m_Children:
   - {fileID: 2013850653}
   m_Father: {fileID: 965713464}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -48194,7 +48231,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 0
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -48464,7 +48501,7 @@ MonoBehaviour:
       FromValue: {x: 0, y: 0, z: 0}
       ToValue: {x: 0, y: 0, z: 0}
       CurrentValue: {x: 0, y: 0, z: 0}
-      Enabled: 1
+      Enabled: 0
       AnimationType: 1
       StartPosition: {x: 0, y: 0, z: 0}
       FromReferenceValue: 0
@@ -48680,7 +48717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplayerInfo: {fileID: 0}
-  OnStartBehaviour: 0
+  OnStartBehaviour: 1
   OnShowCallback:
     Enabled: 0
     EventName: OnShowCallback
@@ -48689,12 +48726,24 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   OnVisibleCallback:
-    Enabled: 0
+    Enabled: 1
     EventName: OnVisibleCallback
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1360659643}
+          m_TargetAssemblyTypeName: CountdownScreenController, Assembly-CSharp
+          m_MethodName: StartCountdown
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnHideCallback:
     Enabled: 0
     EventName: OnHideCallback
@@ -48727,8 +48776,8 @@ MonoBehaviour:
   AutoSelectAfterShow: 0
   AutoSelectTarget: {fileID: 0}
   Id:
-    Category: None
-    Name: None
+    Category: GameManagement
+    Name: Countdown
     Custom: 0
 --- !u!114 &1360659640
 MonoBehaviour:
@@ -48780,6 +48829,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1360659643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360659636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e6dba37ae3308944a735409f80b023c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  t: {fileID: 2013850654}
 --- !u!1 &1362984407
 GameObject:
   m_ObjectHideFlags: 0

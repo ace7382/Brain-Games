@@ -19,10 +19,10 @@ MonoBehaviour:
   objective1: 1
   objective2: 0
   objective3: 0
-  startTimeInSeconds: 25
+  startTimeInSeconds: 20
   secondsLostForWrongAnswer: 5
   secondsGainedForCorrectAnswer: 5
-  parTimeRemainingInSeconds: 25
+  parTimeRemainingInSeconds: 5
   questions:
   - Question: Who is the Best Dog?
     Answers:

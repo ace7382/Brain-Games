@@ -226,11 +226,15 @@ public class WordScrambleController : MonoBehaviour
             tiles[index].letText.font = selectedFont;
             tiles[index].letText.color = Color.white;
             tiles[index].tileBackground.enabled = false;
+
+            AudioManager.instance.Play("Chalkboard Writing");
         }
         else
         {
             int removeIndex = tiles[index].selectedPlace;
             selectedWord = removeIndex > 0 ? selectedWord.Substring(0, removeIndex - 1) : "";
+
+            AudioManager.instance.Play("Chalkboard Erasing");
 
             for (int i = 0; i < tiles.Count; i++)
             {

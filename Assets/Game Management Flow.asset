@@ -23,7 +23,7 @@ MonoBehaviour:
     Direction: 0
     Capacity: 1
     Connections:
-    - 1877ec11-103e-452c-9113-6f29d5ebf7dd
+    - 29c39ed3-ecf3-431b-bffe-e8ca3ea33b0d
     Value: '{"CanGoBack":false}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -47,7 +47,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 1
-  Position: {x: 1177, y: 0}
+  Position: {x: 1609.9984, y: 0.0000026226044}
   OnEnterShowViews:
   - Id:
       Category: Screen
@@ -175,7 +175,7 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections:
-    - f86a291a-89a8-4e2e-876a-74e7a753793c
+    - 29d0094c-f6e0-478b-bc8e-d080f112a8e3
     Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"TriviaStartScreenButtons","Name":"Go","Custom":true},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -203,6 +203,71 @@ MonoBehaviour:
       Name: Trivia Start
       Custom: 1
     Mode: 0
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
+--- !u!114 &-4589344447737999731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
+  NodeId: de894dca-5e8d-47b6-91f6-c5b77cbc7cdc
+  NodeType: 0
+  NodeName: Countdown Screen
+  NodeDescription: 
+  InputPorts:
+  - NodeId: de894dca-5e8d-47b6-91f6-c5b77cbc7cdc
+    PortId: 29d0094c-f6e0-478b-bc8e-d080f112a8e3
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 1877ec11-103e-452c-9113-6f29d5ebf7dd
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: de894dca-5e8d-47b6-91f6-c5b77cbc7cdc
+    PortId: 29c39ed3-ecf3-431b-bffe-e8ca3ea33b0d
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - f86a291a-89a8-4e2e-876a-74e7a753793c
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"GameManagement","Name":"CountdownEnded","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 1
+  Position: {x: 1226.7906, y: -0.000001647195}
+  OnEnterShowViews:
+  - Id:
+      Category: GameManagement
+      Name: Countdown
+      Custom: 0
+    Mode: 1
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: GameManagement
+      Name: Countdown
+      Custom: 0
+    Mode: 1
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
 --- !u!114 &-3074201800672149744
@@ -295,7 +360,7 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections:
-    - 0fa87dbb-f079-4e35-a28e-20f9cee6f48f
+    - 6d884566-5608-48fa-9a50-b9c8ca23abdb
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0
@@ -375,6 +440,76 @@ MonoBehaviour:
   ClearGraphHistory: 1
   Position: {x: 0, y: 0}
   SystemNodeType: 0
+--- !u!114 &-1588401938057929455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
+  NodeId: cdf1bd97-1da5-4ee2-a49e-eef5b5dee728
+  NodeType: 0
+  NodeName: Countdown Screen
+  NodeDescription: "\t\t"
+  InputPorts:
+  - NodeId: cdf1bd97-1da5-4ee2-a49e-eef5b5dee728
+    PortId: 6d884566-5608-48fa-9a50-b9c8ca23abdb
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 8f8f3ed6-574a-4595-b074-0a62b7498fa5
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: cdf1bd97-1da5-4ee2-a49e-eef5b5dee728
+    PortId: 7e4d06f3-a626-42dd-baa4-053b84cc0660
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 0fa87dbb-f079-4e35-a28e-20f9cee6f48f
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"GameManagement","Name":"CountdownEnded","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 1
+  Position: {x: 1227, y: 336}
+  OnEnterShowViews:
+  - Id:
+      Category: GameManagement
+      Name: Countdown
+      Custom: 0
+    Mode: 1
+  OnEnterHideViews:
+  - Id:
+      Category: 
+      Name: 
+      Custom: 1
+    Mode: 0
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: GameManagement
+      Name: Countdown
+      Custom: 0
+    Mode: 1
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
 --- !u!114 &-1382395410250154497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,6 +670,8 @@ MonoBehaviour:
   - {fileID: 6687859522671565184}
   - {fileID: -3074201800672149744}
   - {fileID: -5856619963789730153}
+  - {fileID: -4589344447737999731}
+  - {fileID: -1588401938057929455}
   RootNode: {fileID: -2819881898719066116}
   ActiveNode: {fileID: 0}
 --- !u!114 &6488737627170364709
@@ -626,7 +763,7 @@ MonoBehaviour:
     Direction: 0
     Capacity: 1
     Connections:
-    - 8f8f3ed6-574a-4595-b074-0a62b7498fa5
+    - 7e4d06f3-a626-42dd-baa4-053b84cc0660
     Value: '{"CanGoBack":false}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -650,7 +787,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 0
-  Position: {x: 1184, y: 336}
+  Position: {x: 1610, y: 336}
   OnEnterShowViews:
   - Id:
       Category: Screen
@@ -714,7 +851,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 0
   ClearGraphHistory: 1
-  Position: {x: 1177, y: 169}
+  Position: {x: 1610, y: 157.02196}
   OnEnterShowViews:
   - Id:
       Category: Screen

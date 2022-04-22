@@ -1,4 +1,6 @@
 using BizzyBeeGames;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -90,5 +92,36 @@ public static class Helpful
         Debug.Log("Something went wrong when grabbing a level's objective names");
 
         return "";
+    }
+
+    public static IEnumerator Pulse(Transform transform, float currentRatio, float growthBound, float shrinkBound, float approachSpeed)
+    {
+        // Run this indefinitely
+        while (true)
+        {
+            // Get bigger for a few seconds
+            while (currentRatio != growthBound)
+            {
+                // Determine the new ratio to use
+                currentRatio = Mathf.MoveTowards(currentRatio, growthBound, approachSpeed);
+
+                // Update scale
+                transform.localScale = Vector3.one * currentRatio;
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            // Shrink for a few seconds
+            while (currentRatio != shrinkBound)
+            {
+                // Determine the new ratio to use
+                currentRatio = Mathf.MoveTowards(currentRatio, shrinkBound, approachSpeed);
+
+                // Update scale
+                transform.localScale = Vector3.one * currentRatio;
+
+                yield return new WaitForEndOfFrame();
+            }
+        }
     }
 }

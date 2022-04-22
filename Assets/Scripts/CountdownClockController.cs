@@ -62,11 +62,15 @@ public class CountdownClockController : MonoBehaviour
 
         while (secondsRemaining > 0f)
         {
-            Debug.Log(secondsRemaining);
             SubtractTime(1);
 
             yield return w;
         }
+
+        secondsRemaining = -1;
+        UpdateTimerDisplay();
+
+        AudioManager.instance.Play("Out of Time", .5f);
 
         if (pulsing != null)
         {
@@ -125,7 +129,9 @@ public class CountdownClockController : MonoBehaviour
         //TODO: Add 1 to the display/remaining seconds. Currently the last second shows 0:00 on the clock.
         //      It's just a visual issue
 
-        float percentFill = Mathf.Clamp((secondsRemaining / clockMaxSeconds), 0f, float.MaxValue);
+        float fakeSecondsRemaining = secondsRemaining + 1;
+
+        float percentFill = Mathf.Clamp((fakeSecondsRemaining / clockMaxSeconds), 0f, float.MaxValue);
 
         clockProgressor.SetProgressAt(percentFill);
 
@@ -133,7 +139,7 @@ public class CountdownClockController : MonoBehaviour
         {
             clockFill.color = Color.green;
         }
-        else if (secondsRemaining <= midPointSeconds)
+        else if (fakeSecondsRemaining <= midPointSeconds)
         {
             clockFill.color = Color.red;
         }
@@ -142,57 +148,54 @@ public class CountdownClockController : MonoBehaviour
             clockFill.color = clockMidColor;
         }
 
-        if (secondsRemaining <= 15f)
+        if (fakeSecondsRemaining <= 10f && fakeSecondsRemaining > 0)
         {
-            AudioManager.instance.Play("Countdown Tick");
+            if (fakeSecondsRemaining <= 3f)
+                StartCoroutine(HellaTick());
+            else if (fakeSecondsRemaining <= 5f)
+                StartCoroutine(DoubleTick());
+            else
+                AudioManager.instance.Play("Countdown Tick");
         }
 
-        if (secondsRemaining <= 5f && pulsing == null)
+        if (fakeSecondsRemaining <= 5f && pulsing == null)
         {
-            pulsing = Pulse();
+            pulsing = Helpful.Pulse(transform, currentRatio, growthBound, shrinkBound, approachSpeed);
             StartCoroutine(pulsing);
         }
 
-        if (pulsing != null && secondsRemaining > 5f)
+        if (pulsing != null && (fakeSecondsRemaining > 5f || fakeSecondsRemaining == 0))
         {
             StopCoroutine(pulsing);
             pulsing = null;
         }
 
-        System.TimeSpan ts = System.TimeSpan.FromSeconds(secondsRemaining);
+        System.TimeSpan ts = System.TimeSpan.FromSeconds(fakeSecondsRemaining);
         timeDisplay.text = ts.Minutes + ":" + ts.Seconds.ToString("00");
+
+        if (secondsRemaining < 0f)
+            secondsRemaining = 0f;
     }
 
-
-
-    private IEnumerator Pulse()
+    private IEnumerator DoubleTick()
     {
-        // Run this indefinitely
-        while (true)
-        {
-            // Get bigger for a few seconds
-            while (currentRatio != growthBound)
-            {
-                // Determine the new ratio to use
-                currentRatio = Mathf.MoveTowards(currentRatio, growthBound, approachSpeed);
+        AudioManager.instance.Play("Countdown Tick", 2f);
+        yield return new WaitForSeconds(.5f);
+        AudioManager.instance.Play("Countdown Tick", 2f);
+    }
 
-                // Update scale
-                transform.localScale = Vector3.one * currentRatio;
+    private IEnumerator HellaTick()
+    {
+        //Max pitch is three, and the last 3 seconds should get more and more urgent
+        //5 through 3 secs left pitch is 2
+        float pitch = 3f - ((SecondsRemaining + 1f) * .33f);
 
-                yield return new WaitForEndOfFrame();
-            }
-
-            // Shrink for a few seconds
-            while (currentRatio != shrinkBound)
-            {
-                // Determine the new ratio to use
-                currentRatio = Mathf.MoveTowards(currentRatio, shrinkBound, approachSpeed);
-
-                // Update scale
-                transform.localScale = Vector3.one * currentRatio;
-
-                yield return new WaitForEndOfFrame();
-            }
-        }
+        AudioManager.instance.Play("Countdown Tick", pitch);
+        yield return new WaitForSeconds(.25f);
+        AudioManager.instance.Play("Countdown Tick", pitch);
+        yield return new WaitForSeconds(.25f);
+        AudioManager.instance.Play("Countdown Tick", pitch);
+        yield return new WaitForSeconds(.25f);
+        AudioManager.instance.Play("Countdown Tick", pitch);
     }
 }
