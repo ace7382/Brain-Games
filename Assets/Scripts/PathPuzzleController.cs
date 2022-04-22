@@ -114,9 +114,14 @@ public class PathPuzzleController : MonoBehaviour
         SetConnectionCounter();
 
         countdownClock.SetupTimer(currentPPLevel.timeLimitInSeconds, currentPPLevel.parTimeInSeconds);
-        countdownClock.StartTimer();
 
         LoadNextBoard();
+    }
+
+    //Called by the PathPuzzle view's OnShow animation complete callback
+    public void StartGame()
+    {
+        countdownClock.StartTimer();
     }
 
     public void CheckTiles(Signal signal)
@@ -238,8 +243,6 @@ public class PathPuzzleController : MonoBehaviour
         won = false;
 
         StartCoroutine(GameLostAnimation());
-
-        //EndGame();
     }
 
     private void Pause(Signal signal)
@@ -260,10 +263,11 @@ public class PathPuzzleController : MonoBehaviour
         SetConnectionCounter();
 
         countdownClock.Pause();
-        countdownClock.SetTime(0f);
+        countdownClock.SetTime(-1f);
+
+        AudioManager.instance.Play("Out of Time", .5f);
 
         StartCoroutine(GameLostAnimation());
-        //EndGame();
     }
 
     private IEnumerator AnimateBoardEnding()
@@ -275,6 +279,8 @@ public class PathPuzzleController : MonoBehaviour
         {
             StartCoroutine(tiles[i].SpinShrink());
         }
+
+        AudioManager.instance.Play("Go");
 
         while (tiles.FindIndex(x => x.endAnimation) >= 0)
             yield return null;
@@ -374,15 +380,18 @@ public class PathPuzzleController : MonoBehaviour
     
     private void GoToEndScreen()
     {
-        //Signal Data should be object[9]
+        //Signal Data should be object[3]
         //  index 0 =>  LevelBase       - The level that was just completed/exited
         //  index 1 =>  bool            - true = success, false = exit early/fail
         //  index 2 =>  string          - subtitle text
 
+        System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining);
+
         object[] data = new object[3];
         data[0] = currentPPLevel;
         data[1] = won;
-        data[2] = string.Format("{0} pieces traversed!", pathPiecesConnected.ToString());
+        data[2] = string.Format("Time Remaining {0}:{1}\n{2} pieces traversed!", ts.Minutes.ToString(),
+                    ts.Seconds.ToString("00"),pathPiecesConnected.ToString());
 
         Signal.Send("GameManagement", "LevelEnded", data);
     }

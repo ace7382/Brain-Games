@@ -200,6 +200,8 @@ public class WordScrambleController : MonoBehaviour
 
         UpdateWordFoundText();
         ResizeFoundWordScroll();
+
+        foundWordList.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
     }
 
 
@@ -280,7 +282,14 @@ public class WordScrambleController : MonoBehaviour
         go.transform.SetParent(foundWordList.transform);
         go.transform.localScale = Vector3.one;
 
-        go.GetComponent<TextMeshProUGUI>().text = word;
+        TextMeshProUGUI t = go.GetComponent<TextMeshProUGUI>();
+        t.text = word;
+
+        if (word == currentWordScrambleLevel.specialWord)
+        {
+            t.color = Color.yellow;
+            AudioManager.instance.Play("Go");
+        }
 
         ResizeFoundWordScroll();
     }

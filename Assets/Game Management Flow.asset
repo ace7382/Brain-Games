@@ -495,12 +495,7 @@ MonoBehaviour:
       Name: Countdown
       Custom: 0
     Mode: 1
-  OnEnterHideViews:
-  - Id:
-      Category: 
-      Name: 
-      Custom: 1
-    Mode: 0
+  OnEnterHideViews: []
   OnExitShowViews: []
   OnExitHideViews:
   - Id:

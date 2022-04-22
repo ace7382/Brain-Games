@@ -24,8 +24,6 @@ public class LevelSelectButtonController : MonoBehaviour
         data[0] = 0; //Code for game controllers to start a new Level
         data[1] = level;
 
-        Debug.Log(level.GetType());
-
         if (level.GetType() == typeof(WordScrambleLevel))
         {
             Signal.Send("WordScramble", "WordScrambleSetup", data);

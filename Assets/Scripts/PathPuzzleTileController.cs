@@ -39,6 +39,8 @@ public class PathPuzzleTileController : MonoBehaviour
                 rotCo = Shake();
 
                 StartCoroutine(rotCo);
+
+                AudioManager.instance.Play("No");
             }
 
             return;
@@ -59,6 +61,8 @@ public class PathPuzzleTileController : MonoBehaviour
 
         StartCoroutine(rotCo);
 
+        AudioManager.instance.Play("Button Click");
+
         bool oldNorth   = north;
         bool oldSouth   = south;
         bool oldEast    = east;
@@ -71,9 +75,6 @@ public class PathPuzzleTileController : MonoBehaviour
 
     public void SetInitialRotation(int numberOfClockwiseTurnsFromInitial)
     {
-        //if (start || finish || nonpath || numberOfClockwiseTurnsFromInitial == 0)
-        //    return;
-
         if (numberOfClockwiseTurnsFromInitial == 1)
         {
             rectTran.eulerAngles = new Vector3(

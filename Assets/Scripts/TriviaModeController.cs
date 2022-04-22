@@ -301,6 +301,8 @@ public class TriviaModeController : MonoBehaviour
         countdownClock.Pause();
         countdownClock.SetTime(-1f); //To make the game end at the same time the timer visually ends, we feed it a negative value
 
+        AudioManager.instance.Play("Out of Time", .5f);
+
         EndGame();
     }
 
