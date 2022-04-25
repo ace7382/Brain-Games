@@ -22,6 +22,16 @@ MonoBehaviour:
       Name: LeaveTitleScreen
     - Category: GameManagement
       Name: LevelEnded
+    - Category: GameManagement
+      Name: LoadLevelScene
+    - Category: GameManagement
+      Name: PlayNextLevel
+    - Category: GameManagement
+      Name: ReplayCurrentLevel
+    - Category: GameManagement
+      Name: StartLevel
+    - Category: GameManagement
+      Name: UnloadGameScenes
     - Category: None
       Name: None
     - Category: PathPuzzle

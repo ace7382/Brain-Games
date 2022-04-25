@@ -1,31 +1,12 @@
 using UnityEngine;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Containers;
+using UnityEngine.SceneManagement;
 
 public class QuitConfirmationScreenController : MonoBehaviour
 {
     //NOTES:    To add custom pause/exit behavior to certain games
     //          just add a stream listener for the popup/return to game streams
-
-    private SignalReceiver  quitconfirmation_popup_receiver;
-    private SignalStream    quitconfirmation_popup_stream;
-
-    private void Awake()
-    {
-        quitconfirmation_popup_stream = SignalStream.Get("QuitConfirmation", "Popup");
-
-        quitconfirmation_popup_receiver = new SignalReceiver().SetOnSignalCallback(ShowExitPopup);
-    }
-
-    private void OnEnable()
-    {
-        quitconfirmation_popup_stream.ConnectReceiver(quitconfirmation_popup_receiver);
-    }
-
-    private void OnDisable()
-    {
-        quitconfirmation_popup_stream.DisconnectReceiver(quitconfirmation_popup_receiver);
-    }
 
     //Called by the QUitConfirmation Screen's Return to Game Button's OnClick
     public void ReturnToGame()
@@ -46,6 +27,12 @@ public class QuitConfirmationScreenController : MonoBehaviour
         Signal.Send("QuitConfirmation", "ExitLevel");
 
         AudioManager.instance.Play("Button Click");
+    }
+
+    //Called by Quit Confirmation Screen's OnHidden callback (after hide animation is finished)
+    public void UnloadScene()
+    {
+        SceneManager.UnloadSceneAsync("ExitConfirmationScreen");
     }
 
     private void ShowExitPopup(Signal signal)

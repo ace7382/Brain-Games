@@ -115,6 +115,16 @@ public class CountdownClockController : MonoBehaviour
         }
 
         countingDown = null;
+
+        //TODO: See if i should pause pulsing when paused.
+        //      probably should; i just don't feel like testing it rn lollll
+
+        //if (pulsing != null)
+        //{
+        //    StopCoroutine(pulsing);
+        //}
+
+        //pulsing = null;
     }
 
     public void Unpause()
@@ -122,6 +132,17 @@ public class CountdownClockController : MonoBehaviour
         countingDown = Tick();
 
         StartCoroutine(countingDown);
+    }
+
+    public void Stop()
+    {
+        StopAllCoroutines();
+
+        pulsing                 = null;
+        countingDown            = null;
+
+        secondsRemaining        = 0f;
+        transform.localScale    = Vector3.one;
     }
 
     private void UpdateTimerDisplay()

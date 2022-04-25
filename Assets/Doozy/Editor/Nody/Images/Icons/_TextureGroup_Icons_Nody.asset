@@ -17,8 +17,6 @@ MonoBehaviour:
   RemovePrefixFromTextureName: 
   IgnoreTextureSettings: 0
   Textures:
-  - TextureName: ActivateLoadedScenesNode
-    TextureReference: {fileID: 2800000, guid: 1153988de200696438b2562e977ac4f6, type: 3}
   - TextureName: ApplicationQuitNode
     TextureReference: {fileID: 2800000, guid: f763f607f3e4c884397dbb7efa19d4d0, type: 3}
   - TextureName: BackButtonNode
@@ -41,8 +39,6 @@ MonoBehaviour:
     TextureReference: {fileID: 2800000, guid: 759aaabddbf3fa2479ea8c8823672e02, type: 3}
   - TextureName: Infinity
     TextureReference: {fileID: 2800000, guid: 840e0e2ca204c724bb3e50c518d0ce60, type: 3}
-  - TextureName: LoadSceneNode
-    TextureReference: {fileID: 2800000, guid: d63da1e8650e5ef42956d8144633bb19, type: 3}
   - TextureName: MarkerNode
     TextureReference: {fileID: 2800000, guid: 9a3a4941a362b8a40bbb47467d997f9c, type: 3}
   - TextureName: Minimap
@@ -71,7 +67,5 @@ MonoBehaviour:
     TextureReference: {fileID: 2800000, guid: 7ff7bb8964de0484e8e19f381eef2fa6, type: 3}
   - TextureName: UINode
     TextureReference: {fileID: 2800000, guid: 262aa926471ea004590defa045e431b4, type: 3}
-  - TextureName: UnloadSceneNode
-    TextureReference: {fileID: 2800000, guid: 12ebf93db73ff7e4fa5c4fca6664fcf1, type: 3}
   - TextureName: WaitNode
     TextureReference: {fileID: 2800000, guid: 204616f3a5c88be43b0c44fefad9fa9d, type: 3}

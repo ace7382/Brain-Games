@@ -19,25 +19,14 @@ public class LevelSelectButtonController : MonoBehaviour
         if (!level.unlocked)
             return;
 
-        object[] data = new object[2];
+        GameManager.instance.currentLevel = level;
 
-        data[0] = 0; //Code for game controllers to start a new Level
-        data[1] = level;
-
-        if (level.GetType() == typeof(WordScrambleLevel))
-        {
-            Signal.Send("WordScramble", "WordScrambleSetup", data);
-        }
-        else if (level.GetType() == typeof(TimedTriviaLevel))
-        {
-            Signal.Send("Trivia", "TriviaSetup", data);
-        }
-        else if (level.GetType() == typeof(PathPuzzleLevel))
-        {
-            Signal.Send("PathPuzzle", "PathPuzzleSetup", data);
-        }
+        int gameID = Helpful.GetGameID(level.GetType());
 
         AudioManager.instance.Play("Button Click");
+
+        if (gameID >= 0)
+            Signal.Send("GameManagement", "LoadLevelScene", gameID);
     }
 
     public void ShowLockedStatus()

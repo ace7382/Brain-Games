@@ -42,7 +42,7 @@ public class WordScrambleController : MonoBehaviour
         wordscramble_tileclicked_stream         = SignalStream.Get("WordScramble", "TileClicked");
         quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
 
-        wordscramble_wordscramblesetup_receiver = new SignalReceiver().SetOnSignalCallback(SetUp);
+        wordscramble_wordscramblesetup_receiver = new SignalReceiver().SetOnSignalCallback(Setup);
         wordscramble_tileclicked_receiver       = new SignalReceiver().SetOnSignalCallback(TileClicked);
         quitconfirmation_exitlevel_receiver     = new SignalReceiver().SetOnSignalCallback(ExitGameFromQuitConfirmationScreen);
     }
@@ -110,23 +110,9 @@ public class WordScrambleController : MonoBehaviour
         Signal.Send("GameManagement", "LevelEnded", data);
     }
 
-    private void SetUp(Signal signal)
+    private void Setup(Signal signal)
     {
-        //Signal Data should be object[2]
-        //  index 0 =>  int                 - 0 == new level, 1 == replay current level, 2 == play next level
-        //  index 1 =>  WordScrambleLevel   - the info for the current level (only needed if 0 above)
-
-        object[] data = signal.GetValueUnsafe<object[]>();
-
-        if ((int)data[0] == 0) //Level was defined by call
-        {
-            currentWordScrambleLevel = (WordScrambleLevel)data[1];
-        }
-        else if ((int)data[0] == 2) //Play Next Level
-        {
-            currentWordScrambleLevel = (WordScrambleLevel)currentWordScrambleLevel.nextLevel;
-        }
-        //data[0] == 1 => Replay doesn't need to update the WOrdScrambleLevel
+        currentWordScrambleLevel = (WordScrambleLevel)GameManager.instance.currentLevel;
 
         //TODO: Pool these too
         foreach (Transform child in foundWordList.transform)
@@ -203,7 +189,6 @@ public class WordScrambleController : MonoBehaviour
 
         foundWordList.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
     }
-
 
     private void TileClicked(Signal signal)
     {

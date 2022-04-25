@@ -94,6 +94,18 @@ public static class Helpful
         return "";
     }
 
+    public static int GetGameID(System.Type t)
+    {
+        if (t == typeof(WordScrambleLevel))
+            return 0;
+        else if (t == typeof(TimedTriviaLevel))
+            return 1;
+        else if (t == typeof(PathPuzzleLevel))
+            return 2;
+
+        return -1;
+    }
+
     public static IEnumerator Pulse(Transform transform, float currentRatio, float growthBound, float shrinkBound, float approachSpeed)
     {
         // Run this indefinitely

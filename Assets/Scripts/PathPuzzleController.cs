@@ -90,20 +90,7 @@ public class PathPuzzleController : MonoBehaviour
 
     public void Setup(Signal signal)
     {
-        //Signal Data should be object[2]
-        //  index 0 =>  int                 - 0 == new level, 1 == replay current level, 2 == play next level
-        //  index 1 =>  PathPuzzleLevel     - the info for the current level (only needed if 0 above)
-
-        object[] data = signal.GetValueUnsafe<object[]>();
-
-        if ((int)data[0] == 0) //Level was defined by call
-        {
-            currentPPLevel = (PathPuzzleLevel)data[1];
-        }
-        else if ((int)data[0] == 2) //Play Next Level
-        {
-            currentPPLevel = (PathPuzzleLevel)currentPPLevel.nextLevel;
-        }
+        currentPPLevel      = (PathPuzzleLevel)GameManager.instance.currentLevel;
 
         currentBoardNum     = -1;
         won                 = false;
@@ -287,7 +274,7 @@ public class PathPuzzleController : MonoBehaviour
 
         LoadNextBoard();
 
-        countdownClock.Unpause();
+        //countdownClock.Unpause();
     }
 
     private void LoadNextBoard()
@@ -336,6 +323,9 @@ public class PathPuzzleController : MonoBehaviour
             }
 
             CheckTiles(new Signal());
+
+            if (currentBoardNum > 0) //Don't unpause on setup, but unpause after each new board is generated in game
+                countdownClock.Unpause();
         }
         else
         {
@@ -388,7 +378,7 @@ public class PathPuzzleController : MonoBehaviour
         //  index 1 =>  bool            - true = success, false = exit early/fail
         //  index 2 =>  string          - subtitle text
 
-        System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining == 0 ? 0 : countdownClock.SecondsRemaining + 1);
+        System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining <= 0 ? 0 : countdownClock.SecondsRemaining + 1);
 
         object[] data = new object[3];
         data[0] = currentPPLevel;
