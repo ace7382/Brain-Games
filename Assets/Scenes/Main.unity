@@ -24901,33 +24901,42 @@ MonoBehaviour:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 9
         Curve:
           serializedVersion: 2
           m_Curve:
           - serializedVersion: 3
             time: 0
             value: 0
-            inSlope: 0
-            outSlope: 1
+            inSlope: -0.5398274
+            outSlope: -0.5398274
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
-            outWeight: 0
+            outWeight: 0.024151811
+          - serializedVersion: 3
+            time: 0.5360872
+            value: 0.4861448
+            inSlope: -2.2521195
+            outSlope: -2.2521195
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.020654876
+            outWeight: 0.33333334
           - serializedVersion: 3
             time: 1
             value: 1
-            inSlope: 1
-            outSlope: 0
+            inSlope: 0.04207796
+            outSlope: 0.04207796
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0
+            inWeight: 0.5248393
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.4
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -24962,39 +24971,39 @@ MonoBehaviour:
       ToCustomValue: {x: 0, y: 0, z: 0}
       FromOffset: {x: 0, y: 0, z: 0}
       ToOffset: {x: 0, y: 0, z: 0}
-      FromDirection: 0
+      FromDirection: 1
       ToDirection: 13
     Rotate:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 15
         Curve:
           serializedVersion: 2
           m_Curve:
           - serializedVersion: 3
             time: 0
             value: 0
-            inSlope: 0
-            outSlope: 1
+            inSlope: -1.5918956
+            outSlope: -1.5918956
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
-            outWeight: 0
+            outWeight: 0.027026983
           - serializedVersion: 3
             time: 1
             value: 1
-            inSlope: 1
-            outSlope: 0
+            inSlope: -2.2672713
+            outSlope: -2.2672713
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0
+            inWeight: 0.04600376
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.5
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -25026,13 +25035,13 @@ MonoBehaviour:
       ToReferenceValue: 0
       FromCustomValue: {x: 0, y: 0, z: 0}
       ToCustomValue: {x: 0, y: 0, z: 0}
-      FromOffset: {x: 0, y: 0, z: 0}
+      FromOffset: {x: 0, y: 0, z: 240}
       ToOffset: {x: 0, y: 0, z: 0}
     Scale:
       Settings:
         PlayMode: 0
         EaseMode: 0
-        Ease: 1
+        Ease: 27
         Curve:
           serializedVersion: 2
           m_Curve:
@@ -25040,7 +25049,7 @@ MonoBehaviour:
             time: 0
             value: 0
             inSlope: 0
-            outSlope: 1
+            outSlope: 0
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
@@ -25048,17 +25057,17 @@ MonoBehaviour:
           - serializedVersion: 3
             time: 1
             value: 1
-            inSlope: 1
-            outSlope: 0
+            inSlope: 5.9879365
+            outSlope: 5.9879365
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0
+            inWeight: 0.022426665
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.4
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -25086,11 +25095,11 @@ MonoBehaviour:
       CurrentValue: {x: 0, y: 0, z: 0}
       Enabled: 0
       StartScale: {x: 1, y: 1, z: 1}
-      FromReferenceValue: 0
+      FromReferenceValue: 2
       ToReferenceValue: 0
-      FromCustomValue: {x: 1, y: 1, z: 1}
-      ToCustomValue: {x: 1, y: 1, z: 1}
-      FromOffset: {x: 0, y: 0, z: 0}
+      FromCustomValue: {x: 0, y: 0, z: 0}
+      ToCustomValue: {x: 1, y: 1, z: 0}
+      FromOffset: {x: 0.1, y: 0.1, z: 0}
       ToOffset: {x: 0, y: 0, z: 0}
     Fade:
       Settings:
@@ -25122,7 +25131,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.3
+        Duration: 0.5
         Loops: 0
         LoopDelay: 0
         UseRandomStartDelay: 0
@@ -25148,14 +25157,14 @@ MonoBehaviour:
       FromValue: 1
       ToValue: 1
       CurrentValue: 0
-      Enabled: 0
+      Enabled: 1
       StartAlpha: 1
-      FromReferenceValue: 0
+      FromReferenceValue: 2
       ToReferenceValue: 0
-      FromCustomValue: 1
+      FromCustomValue: 0
       ToCustomValue: 1
       FromOffset: 0
-      ToOffset: 0
+      ToOffset: 1
   HideAnimation:
     OnPlayCallback:
       m_PersistentCalls:
@@ -25475,7 +25484,19 @@ MonoBehaviour:
     Runners: []
     Event:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1360659643}
+          m_TargetAssemblyTypeName: CountdownScreenController, Assembly-CSharp
+          m_MethodName: OnHidden
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   OnVisibilityChangedCallback:
     m_PersistentCalls:
       m_Calls: []

@@ -14,6 +14,12 @@ public class CountdownScreenController : MonoBehaviour
         StartCoroutine(Countdown());
     }
 
+    //Called by the GameManagement.Countdown View's End Hide Animation callback
+    public void OnHidden()
+    {
+        t.text = "3";
+    }
+
     private IEnumerator Countdown()
     {
         WaitForSeconds w = new WaitForSeconds(1);
