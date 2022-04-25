@@ -202,7 +202,7 @@ MonoBehaviour:
       Category: Screen
       Name: Trivia Start
       Custom: 1
-    Mode: 0
+    Mode: 1
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
 --- !u!114 &-4589344447737999731

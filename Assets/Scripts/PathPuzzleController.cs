@@ -285,8 +285,9 @@ public class PathPuzzleController : MonoBehaviour
         while (tiles.FindIndex(x => x.endAnimation) >= 0)
             yield return null;
 
-        countdownClock.Unpause();
         LoadNextBoard();
+
+        countdownClock.Unpause();
     }
 
     private void LoadNextBoard()
@@ -369,7 +370,9 @@ public class PathPuzzleController : MonoBehaviour
                 currentPPLevel.nextLevel.unlocked = true;
         }
 
-        if (countdownClock.SecondsRemaining >= currentPPLevel.parTimeInSeconds && !currentPPLevel.objective2)
+        //Add one to seconds remaining because the clock display is actually showing a second behind
+        if ((countdownClock.SecondsRemaining == 0 ? 0 : countdownClock.SecondsRemaining + 1) >= currentPPLevel.parTimeInSeconds 
+            && !currentPPLevel.objective2)
             currentPPLevel.objective2 = true;
 
         if (pathPiecesConnected >= currentPPLevel.piecesConnectedGoal && !currentPPLevel.objective3)
@@ -385,7 +388,7 @@ public class PathPuzzleController : MonoBehaviour
         //  index 1 =>  bool            - true = success, false = exit early/fail
         //  index 2 =>  string          - subtitle text
 
-        System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining);
+        System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining == 0 ? 0 : countdownClock.SecondsRemaining + 1);
 
         object[] data = new object[3];
         data[0] = currentPPLevel;

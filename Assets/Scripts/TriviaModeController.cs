@@ -326,7 +326,7 @@ public class TriviaModeController : MonoBehaviour
             if (currentTriviaSet.nextLevel != null && !currentTriviaSet.nextLevel.unlocked)
                 currentTriviaSet.nextLevel.unlocked = true;
 
-            if (!currentTriviaSet.objective2 && countdownClock.SecondsRemaining >= currentTriviaSet.parTimeRemainingInSeconds)
+            if (!currentTriviaSet.objective2 && (countdownClock.SecondsRemaining == 0 ? 0 : countdownClock.SecondsRemaining + 1) >= currentTriviaSet.parTimeRemainingInSeconds)
                 currentTriviaSet.objective2 = true;
 
             if (!currentTriviaSet.objective3 && questionsAnsweredCorrectly == currentTriviaSet.questions.Count)
@@ -340,7 +340,7 @@ public class TriviaModeController : MonoBehaviour
     //Invoked by EndGame()
     private void GoToEndScreen()
     {
-        System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining);
+        System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining == 0 ? 0 : countdownClock.SecondsRemaining + 1);
 
         object[] data   = new object[3];
         data[0]         = currentTriviaSet;
