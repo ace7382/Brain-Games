@@ -22,3 +22,5 @@ MonoBehaviour:
       Name: ReturnHome
     - Category: None
       Name: None
+    - Category: TutorialScreen
+      Name: NextPage

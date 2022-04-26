@@ -18,5 +18,7 @@ MonoBehaviour:
       Name: Countdown
     - Category: GameManagement
       Name: EndLevel
+    - Category: GameManagement
+      Name: TutorialScreen
     - Category: None
       Name: None

@@ -50,6 +50,8 @@ MonoBehaviour:
       Name: EndGame
     - Category: Trivia
       Name: TriviaSetup
+    - Category: TutorialScreen
+      Name: PageLoaded
     - Category: WordScramble
       Name: EndGame
     - Category: WordScramble

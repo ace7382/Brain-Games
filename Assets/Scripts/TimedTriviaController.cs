@@ -7,7 +7,7 @@ using Doozy.Runtime.UIManager.Components;
 using UnityEngine.UI;
 using BizzyBeeGames;
 
-public class TriviaModeController : MonoBehaviour
+public class TimedTriviaController : MonoBehaviour
 {
     [Header("Start Menu Variables")]
     public TextMeshProUGUI                                  title;
