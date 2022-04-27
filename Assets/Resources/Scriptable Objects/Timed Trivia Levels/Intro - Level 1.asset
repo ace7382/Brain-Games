@@ -16,8 +16,8 @@ MonoBehaviour:
   unlocked: 1
   nextLevel: {fileID: 11400000, guid: d5f3299fcbc682f45be803d47b22cfd1, type: 2}
   difficulty: 5
-  objective1: 0
-  objective2: 0
+  objective1: 1
+  objective2: 1
   objective3: 0
   startTimeInSeconds: 180
   secondsLostForWrongAnswer: 0

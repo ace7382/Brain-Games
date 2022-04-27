@@ -12,9 +12,11 @@ public class TutorialScreenController : MonoBehaviour
     public GameObject           previousButton;
     public GameObject           nextButton;
 
-    private int                 currentPageIndex;
-    private List<UIContainer>   currentPages;
-    private bool                pagebuttonsClickable;
+    //TODO: These should all be private
+    public int                 currentPageIndex;
+    public List<UIContainer>   currentInfoPages;
+    public List<UIContainer>   currentDisplayPages;
+    public bool                pagebuttonsClickable;
 
     private SignalReceiver      tutorialscreen_pageloaded_receiver;
     private SignalStream        tutorialscreen_pageloaded_stream;
@@ -38,45 +40,76 @@ public class TutorialScreenController : MonoBehaviour
 
     public void Setup()
     {
-        pagebuttonsClickable    = false;
+        pagebuttonsClickable            = true;
 
-        currentPages            = new List<UIContainer>();
-        currentPageIndex        = 0;
+        currentInfoPages                = new List<UIContainer>();
+        currentDisplayPages             = new List<UIContainer>();
+        currentPageIndex                = 0;
 
-        Transform parentTrans   = info.pagesOnRight ? rightPanel.transform : leftPanel.transform;
+        Transform infoParentTrans       = info.pagesOnRight ? rightPanel.transform : leftPanel.transform;
+        Transform displayParentTrans    = info.pagesOnRight ? leftPanel.transform : rightPanel.transform;
 
         for (int i = 0; i < info.pages.Count; i++)
         {
-            GameObject go       = Instantiate(info.pages[i].instructionPage);
-            RectTransform rt    = (RectTransform)go.transform;
+            GameObject go               = Instantiate(info.pages[i].instructionPage);
+            RectTransform rt            = (RectTransform)go.transform;
 
-            rt.SetParent(parentTrans);
+            rt.SetParent(infoParentTrans);
 
-            rt.localScale       = Vector3.one;
-            rt.localPosition    = Vector3.zero;
-            rt.offsetMax        = Vector2.zero;
-            rt.offsetMin        = Vector2.zero;
+            rt.localScale               = Vector3.one;
+            rt.localPosition            = Vector3.zero;
+            rt.offsetMax                = Vector2.zero;
+            rt.offsetMin                = Vector2.zero;
 
-            currentPages.Add(go.GetComponent<UIContainer>());
+            currentInfoPages.Add(go.GetComponent<UIContainer>());
+
+            if (info.pages[i].displayPage != null)
+            {
+                GameObject displayGO    = Instantiate(info.pages[i].displayPage);
+                RectTransform drt       = (RectTransform)displayGO.transform;
+
+                drt.SetParent(displayParentTrans);
+
+                drt.localScale          = Vector3.one;
+                drt.localPosition       = Vector3.zero;
+                drt.offsetMax           = Vector2.zero;
+                drt.offsetMin           = Vector2.zero;
+
+                currentDisplayPages.Add(displayGO.GetComponent<UIContainer>());
+            }
+            else
+            {
+                currentDisplayPages.Add(null);
+            }
 
             if (i == 0)
-                currentPages[i].InstantShow();
+            {
+                currentInfoPages[i].InstantShow();
+                currentDisplayPages[i].InstantShow(); //the starting page will always have a display page
+            }
             else
-                currentPages[i].InstantHide();
+            {
+                currentInfoPages[i].InstantHide();
+
+                if (currentDisplayPages[i] != null)
+                    currentDisplayPages[i].InstantHide();
+            }
         }
 
-        RectTransform prevTran      = (RectTransform)previousButton.transform;
-        RectTransform nextTran      = (RectTransform)nextButton.transform;
+        RectTransform prevTran          = (RectTransform)previousButton.transform;
+        RectTransform nextTran          = (RectTransform)nextButton.transform;
 
-        prevTran.SetParent(parentTrans);
-        prevTran.localScale         = Vector3.one;
-        prevTran.anchoredPosition   = new Vector3(100, 100, 0);
+        prevTran.SetParent(infoParentTrans);
+        prevTran.localScale             = Vector3.one;
+        prevTran.anchoredPosition       = new Vector3(100, 100, 0);
+        prevTran.SetSiblingIndex(50);
 
-        nextTran.SetParent(parentTrans);
-        nextTran.localScale         = Vector3.one;
-        nextTran.anchoredPosition   = new Vector3(-100, 100, 0);
+        nextTran.SetParent(infoParentTrans);
+        nextTran.localScale             = Vector3.one;
+        nextTran.anchoredPosition       = new Vector3(-100, 100, 0);
+        nextTran.SetSiblingIndex(50);
 
-        if (currentPages.Count <= 1)
+        if (currentInfoPages.Count <= 1)
         {
             previousButton.SetActive(false);
             nextButton.SetActive(false);
@@ -96,11 +129,27 @@ public class TutorialScreenController : MonoBehaviour
 
         pagebuttonsClickable = false;
 
-        currentPages[currentPageIndex].Hide();
+        currentInfoPages[currentPageIndex].Hide();
 
-        currentPageIndex = currentPageIndex + 1 >= currentPages.Count ? 0 : currentPageIndex + 1;
+        currentPageIndex = currentPageIndex + 1 >= currentInfoPages.Count ? 0 : currentPageIndex + 1;
 
-        currentPages[currentPageIndex].Show();
+        currentInfoPages[currentPageIndex].Show();
+
+        if (currentDisplayPages[currentPageIndex] != null)
+        {
+            for (int i = 0; i < currentDisplayPages.Count; i++)
+            {
+                if (currentDisplayPages[i] != null
+                    && i != currentPageIndex
+                    && (currentDisplayPages[i].visibilityState == Doozy.Runtime.UIManager.VisibilityState.Visible
+                    || currentDisplayPages[i].visibilityState == Doozy.Runtime.UIManager.VisibilityState.IsShowing))
+                {
+                    currentDisplayPages[i].Hide();
+                }
+            }
+
+            currentDisplayPages[currentPageIndex].Show();
+        }
     }
 
     //Called by the Previous Page Button's OnClick event
@@ -111,17 +160,50 @@ public class TutorialScreenController : MonoBehaviour
 
         pagebuttonsClickable = false;
 
-        currentPages[currentPageIndex].Hide();
+        currentInfoPages[currentPageIndex].Hide();
 
-        currentPageIndex = currentPageIndex - 1 < 0 ? currentPages.Count - 1 : currentPageIndex - 1;
+        currentPageIndex = currentPageIndex - 1 < 0 ? currentInfoPages.Count - 1 : currentPageIndex - 1;
 
-        currentPages[currentPageIndex].Show();
+        currentInfoPages[currentPageIndex].Show();
+
+        if (currentDisplayPages[currentPageIndex] != null)
+        {
+            for (int i = 0; i < currentDisplayPages.Count; i++)
+            {
+                if (currentDisplayPages[i] != null
+                    && i != currentPageIndex
+                    && (currentDisplayPages[i].visibilityState == Doozy.Runtime.UIManager.VisibilityState.Visible
+                    || currentDisplayPages[i].visibilityState == Doozy.Runtime.UIManager.VisibilityState.IsShowing))
+                {
+                    currentDisplayPages[i].Hide();
+                }
+            }
+
+            currentDisplayPages[currentPageIndex].Show();
+        }
+    }
+
+    //TODO: Maybe move this to on return to main menu? If it shows between each level might want to keeep it loaded?
+    //      Might not need to show between levels though? Depends on if I want to have the level progress info on it
+    //Called by the Tutorial Screen's OnHidden callback
+    public void OnHide()
+    {
+        //TODO: Pool these
+        foreach (Transform child in leftPanel.transform)
+        {
+            if (child.gameObject != previousButton && child.gameObject != nextButton)
+                Destroy(child.gameObject);
+        }
+
+        foreach (Transform child in rightPanel.transform)
+        {
+            if (child.gameObject != previousButton && child.gameObject != nextButton)
+                Destroy(child.gameObject);
+        }
     }
 
     private void AllowPageMovement(Signal signal)
     {
-        Debug.Log("page should be clickable now");
-
         pagebuttonsClickable = true;
     }
 }

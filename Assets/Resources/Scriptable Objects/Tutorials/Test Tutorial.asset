@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Test Tutorial
   m_EditorClassIdentifier: 
   pages:
-  - instructionPage: {fileID: 5323467574387504974, guid: 893170992a39fc84cacd591d01901c84, type: 3}
+  - instructionPage: {fileID: 4787047687346424706, guid: 1dc82ae89757341489e074dd079de373, type: 3}
+    displayPage: {fileID: 4787047687346424706, guid: e04db1f482d8f2940829551c9a91f9d8, type: 3}
+  - instructionPage: {fileID: 4787047687346424706, guid: f54caac1cb3fdd44fb858e20ac08f227, type: 3}
+    displayPage: {fileID: 5323467574387504974, guid: d12b906418669374c8f54a33e6218aa5, type: 3}
+  - instructionPage: {fileID: 4787047687346424706, guid: 7549ce66582cfe340aec7735fb6e6283, type: 3}
     displayPage: {fileID: 0}
-  - instructionPage: {fileID: 4787047687346424706, guid: 97795c71c19f3dd47a3ef9e398144e5c, type: 3}
-    displayPage: {fileID: 0}
-  pagesOnRight: 0
+  pagesOnRight: 1
