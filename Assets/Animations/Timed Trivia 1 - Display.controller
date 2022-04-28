@@ -6,7 +6,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Test Page 1 - Display
+  m_Name: Timed Trivia 1 - Display
   serializedVersion: 5
   m_AnimatorParameters: []
   m_AnimatorLayers:

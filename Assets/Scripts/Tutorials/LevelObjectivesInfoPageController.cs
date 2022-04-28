@@ -13,6 +13,11 @@ public class LevelObjectivesInfoPageController : MonoBehaviour
     [SerializeField] private GameObject         objective2CompleteMark;
     [SerializeField] private GameObject         objective3CompleteMark;
 
+    private void Start()
+    {
+        Setup();
+    }
+
     //Called by the page's OnShow Callback
     public void Setup()
     {
