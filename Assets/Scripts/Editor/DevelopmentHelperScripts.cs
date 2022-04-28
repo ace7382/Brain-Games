@@ -31,8 +31,13 @@ public class DevelopmentHelperScripts : MonoBehaviour
     public static void ResetAllLevels()
     {
         ResetTriviaLevels();
+        Debug.Log("Timed Trivia Levels Reset");
+
         ResetWordScrambleLevels();
+        Debug.Log("Word Scramble Levels Reset");
+
         ResetPathPuzzleLevels();
+        Debug.Log("Path Puzzle Levels Reset");
     }
 
     [MenuItem("Dev Commands/Reset Trivia Levels")]

@@ -21,6 +21,8 @@ MonoBehaviour:
     - Category: GameManagement
       Name: LeaveTitleScreen
     - Category: GameManagement
+      Name: LeaveTutorialScreen
+    - Category: GameManagement
       Name: LevelEnded
     - Category: GameManagement
       Name: LoadLevelScene

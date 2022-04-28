@@ -6,20 +6,19 @@ using UnityEngine;
 
 public class TutorialScreenController : MonoBehaviour
 {
-    public TutorialInfoObject   info;
-    public GameObject           leftPanel;
-    public GameObject           rightPanel;
-    public GameObject           previousButton;
-    public GameObject           nextButton;
+    [SerializeField] private GameObject             leftPanel;
+    [SerializeField] private GameObject             rightPanel;
+    [SerializeField] private GameObject             previousButton;
+    [SerializeField] private GameObject             nextButton;
 
-    //TODO: These should all be private
-    public int                 currentPageIndex;
-    public List<UIContainer>   currentInfoPages;
-    public List<UIContainer>   currentDisplayPages;
-    public bool                pagebuttonsClickable;
+    public  TutorialInfoObject                      info;
+    private int                                     currentPageIndex;
+    private List<UIContainer>                       currentInfoPages;
+    private List<UIContainer>                       currentDisplayPages;
+    private bool                                    pagebuttonsClickable;
 
-    private SignalReceiver      tutorialscreen_pageloaded_receiver;
-    private SignalStream        tutorialscreen_pageloaded_stream;
+    private SignalReceiver                          tutorialscreen_pageloaded_receiver;
+    private SignalStream                            tutorialscreen_pageloaded_stream;
 
     private void Awake()
     {
@@ -38,8 +37,11 @@ public class TutorialScreenController : MonoBehaviour
         tutorialscreen_pageloaded_stream.DisconnectReceiver(tutorialscreen_pageloaded_receiver);
     }
 
+    //Called by the Tutorial Screen's OnShow Callback;
     public void Setup()
     {
+        info                            = GameManager.instance.currentLevel.tutorial;
+
         pagebuttonsClickable            = true;
 
         currentInfoPages                = new List<UIContainer>();
@@ -200,6 +202,11 @@ public class TutorialScreenController : MonoBehaviour
             if (child.gameObject != previousButton && child.gameObject != nextButton)
                 Destroy(child.gameObject);
         }
+    }
+
+    public void LeaveTutorialScreen()
+    {
+        Signal.Send("GameManagement", "LeaveTutorialScreen", Helpful.GetGameID(GameManager.instance.currentLevel.GetType()));
     }
 
     private void AllowPageMovement(Signal signal)

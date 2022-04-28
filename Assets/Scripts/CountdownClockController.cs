@@ -70,20 +70,20 @@ public class CountdownClockController : MonoBehaviour
         secondsRemaining = -1;
         UpdateTimerDisplay();
 
-        AudioManager.instance.Play("Out of Time", .5f);
+        //AudioManager.instance.Play("Out of Time", .5f);
 
-        if (pulsing != null)
-        {
-            StopCoroutine(pulsing);
-            pulsing = null;
-        }
+        //if (pulsing != null)
+        //{
+        //    StopCoroutine(pulsing);
+        //    pulsing = null;
+        //}
 
-        if (onOutOfTime != null && !notifiedOutOfTime)
-        {
-            onOutOfTime.Invoke();
-        }
+        //if (onOutOfTime != null && !notifiedOutOfTime)
+        //{
+        //    onOutOfTime.Invoke();
+        //}
         
-        notifiedOutOfTime = true;
+        //notifiedOutOfTime = true;
     }
 
     public void AddTime(float timeToAdd)
@@ -97,7 +97,7 @@ public class CountdownClockController : MonoBehaviour
     {
         AddTime(timeToSubtract * -1);
 
-        UpdateTimerDisplay();
+        //UpdateTimerDisplay();
     }
 
     public void SetTime(float secondsToSetTo)
@@ -145,12 +145,32 @@ public class CountdownClockController : MonoBehaviour
         transform.localScale    = Vector3.one;
     }
 
+    private void RanOutOfTime()
+    {
+        Pause();
+
+        AudioManager.instance.Play("Out of Time", .5f);
+
+        if (pulsing != null)
+        {
+            StopCoroutine(pulsing);
+            pulsing = null;
+        }
+
+        if (onOutOfTime != null && !notifiedOutOfTime)
+        {
+            onOutOfTime.Invoke();
+        }
+
+        notifiedOutOfTime = true;
+    }
+
     private void UpdateTimerDisplay()
     {
         //TODO: Add 1 to the display/remaining seconds. Currently the last second shows 0:00 on the clock.
         //      It's just a visual issue
 
-        float fakeSecondsRemaining = secondsRemaining + 1;
+        float fakeSecondsRemaining = Mathf.Clamp(secondsRemaining + 1, 0f, float.MaxValue);
 
         float percentFill = Mathf.Clamp((fakeSecondsRemaining / clockMaxSeconds), 0f, float.MaxValue);
 
@@ -195,7 +215,10 @@ public class CountdownClockController : MonoBehaviour
         timeDisplay.text = ts.Minutes + ":" + ts.Seconds.ToString("00");
 
         if (secondsRemaining < 0f)
+        {
             secondsRemaining = 0f;
+            RanOutOfTime();
+        }
     }
 
     private IEnumerator DoubleTick()

@@ -9,47 +9,34 @@ using BizzyBeeGames;
 
 public class TimedTriviaController : MonoBehaviour
 {
-    [Header("Start Menu Variables")]
-    public TextMeshProUGUI                                  title;
-    public TextMeshProUGUI                                  numOfQuestions;
-    public TextMeshProUGUI                                  difficultyText;
-    public TextMeshProUGUI                                  startTimeText;
-    public TextMeshProUGUI                                  timeModsText;
-    public GameObject                                       completedDot;
-    public GameObject                                       parTimeDot;
-    public GameObject                                       allQuestionsDot;
+    public TextMeshProUGUI                                      question;
+    public TextMeshProUGUI                                      answer0;
+    public TextMeshProUGUI                                      answer1;
+    public TextMeshProUGUI                                      answer2;
+    public TextMeshProUGUI                                      answer3;
+    public TextMeshProUGUI                                      questionCount;
 
-    [Space]
-    [Space]
+    public Font                                                 responsePopupFont;
+    public CountdownClockController                             countdownClock;
 
-    public TextMeshProUGUI                                  question;
-    public TextMeshProUGUI                                  answer0;
-    public TextMeshProUGUI                                  answer1;
-    public TextMeshProUGUI                                  answer2;
-    public TextMeshProUGUI                                  answer3;
-    public TextMeshProUGUI                                  questionCount;
+    private TimedTriviaLevel                                     currentTimedTriviaLevel;
 
-    public Font                                             responsePopupFont;
-    public CountdownClockController                         countdownClock;
+    private SignalReceiver                                      trivia_triviasetup_receiver;
+    private SignalStream                                        trivia_triviasetup_stream;
+    private SignalReceiver                                      trivia_answerchosen_receiver;
+    private SignalStream                                        trivia_answerchosen_stream;
+    private SignalReceiver                                      quitconfirmation_exitlevel_receiver;
+    private SignalStream                                        quitconfirmation_exitlevel_stream;
+    private SignalReceiver                                      quitconfirmation_backtogame_receiver;
+    private SignalStream                                        quitconfirmation_backtogame_stream;
+    private SignalReceiver                                      quitconfirmation_popup_receiver;
+    private SignalStream                                        quitconfirmation_popup_stream;
 
-    public TimedTriviaLevel                                 currentTimedTriviaLevel;
-
-    private SignalReceiver                                  trivia_triviasetup_receiver;
-    private SignalStream                                    trivia_triviasetup_stream;
-    private SignalReceiver                                  trivia_answerchosen_receiver;
-    private SignalStream                                    trivia_answerchosen_stream;
-    private SignalReceiver                                  quitconfirmation_exitlevel_receiver;
-    private SignalStream                                    quitconfirmation_exitlevel_stream;
-    private SignalReceiver                                  quitconfirmation_backtogame_receiver;
-    private SignalStream                                    quitconfirmation_backtogame_stream;
-    private SignalReceiver                                  quitconfirmation_popup_receiver;
-    private SignalStream                                    quitconfirmation_popup_stream;
-
-    private int                                             currentQuestionIndex;
-    private List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>     currentAnswers = new List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>();
+    private int                                                 currentQuestionIndex;
+    private List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>  currentAnswers = new List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>();
     
-    private int                                             questionsAnsweredCorrectly = 0;
-    private bool                                            won = false;
+    private int                                                 questionsAnsweredCorrectly = 0;
+    private bool                                                won = false;
 
     private void Awake()
     {
@@ -109,19 +96,6 @@ public class TimedTriviaController : MonoBehaviour
     public void SetUp(Signal signal)
     {
         currentTimedTriviaLevel = (TimedTriviaLevel)GameManager.instance.currentLevel;
-
-        title.text              = currentTimedTriviaLevel.levelName;
-        difficultyText.text     = currentTimedTriviaLevel.difficulty.ToString();
-        numOfQuestions.text     = currentTimedTriviaLevel.questions.Count.ToString() + " Questions";
-        timeModsText.text       = string.Format("Correct +{0}s  Wrong -{1}s", currentTimedTriviaLevel.secondsGainedForCorrectAnswer
-                                    , currentTimedTriviaLevel.secondsLostForWrongAnswer);
-
-        System.TimeSpan ts      = System.TimeSpan.FromSeconds(currentTimedTriviaLevel.startTimeInSeconds);
-        startTimeText.text      = ts.Minutes + ":" + ts.Seconds.ToString("00");
-        
-        completedDot.SetActive(currentTimedTriviaLevel.objective1);
-        parTimeDot.SetActive(currentTimedTriviaLevel.objective2);
-        allQuestionsDot.SetActive(currentTimedTriviaLevel.objective3);
         
         answer0.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
         answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
@@ -168,14 +142,17 @@ public class TimedTriviaController : MonoBehaviour
                 , countdownClock.timeDisplay.transform, Vector2.zero, Color.red, responsePopupFont);
         }
 
-        if (countdownClock.SecondsRemaining <= 0f)
-        {
-            countdownClock.SetTime(0f);
-        }
-        else
-        {
+        //if (countdownClock.SecondsRemaining <= 0f)
+        //{
+        //    countdownClock.SetTime(-1f);
+        //}
+        //else
+        //{
+        //    LoadNextQuestion();
+        //}
+
+        if (countdownClock.SecondsRemaining > 0)
             LoadNextQuestion();
-        }
     }
 
     //Caled by the 4 answer buttons' on click event

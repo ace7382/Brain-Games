@@ -73,6 +73,13 @@ public class WordScrambleController : MonoBehaviour
         quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
     }
 
+    //Called by the View - WordScramblePlay's Show Animation Finished callback
+    public void StartGame()
+    {
+        //TODO: Evaluate the necesity of this
+        //      No timer or anything currently. Still linked on the callback incase something needs to be added here
+    }
+
     //Used by the Submit Button's Click callback
     public void SubmitButtonClicked()
     {

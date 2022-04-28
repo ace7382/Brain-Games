@@ -14,17 +14,18 @@ public class LevelBase : ScriptableObject
         Insane = 30
     };
 
-    public string           levelName;
-    public bool             unlocked;
-    public LevelBase        nextLevel;
-    public DifficultyLevel  difficulty;
+    public string               levelName;
+    public bool                 unlocked;
+    public TutorialInfoObject   tutorial;
+    public LevelBase            nextLevel;
+    public DifficultyLevel      difficulty;
 
     [Space]
     [Space]
 
-    public bool             objective1;
-    public bool             objective2;
-    public bool             objective3;
+    public bool                 objective1;
+    public bool                 objective2;
+    public bool                 objective3;
 
     public void ResetObjectives()
     {
