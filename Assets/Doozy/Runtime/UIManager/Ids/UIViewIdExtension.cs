@@ -28,6 +28,7 @@ namespace Doozy.Runtime.UIManager
         {
             Countdown,
             EndLevel,
+            GamePlayScreen,
             TutorialScreen
         }    
     }

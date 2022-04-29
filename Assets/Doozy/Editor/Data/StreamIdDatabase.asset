@@ -19,6 +19,8 @@ MonoBehaviour:
     - Category: GameManagement
       Name: DisableExitLevelButton
     - Category: GameManagement
+      Name: GameSetup
+    - Category: GameManagement
       Name: LeaveTitleScreen
     - Category: GameManagement
       Name: LeaveTutorialScreen

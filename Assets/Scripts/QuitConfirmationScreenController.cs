@@ -11,22 +11,22 @@ public class QuitConfirmationScreenController : MonoBehaviour
     //Called by the QUitConfirmation Screen's Return to Game Button's OnClick
     public void ReturnToGame()
     {
-        GetComponent<UIView>().Hide();
-
         Signal.Send("QuitConfirmation", "BackToGame");
 
         AudioManager.instance.Play("Button Click");
+
+        GetComponent<UIView>().Hide();
     }
 
     //Called by the Quit Confirmation Screen's Exit Button's OnClick
     //Each mode with a quit confirmation will handle ending the game by listening for this signal
     public void ExitLevel()
     {
-        GetComponent<UIView>().Hide();
-
         Signal.Send("QuitConfirmation", "ExitLevel");
 
         AudioManager.instance.Play("Button Click");
+
+        GetComponent<UIView>().Hide();
     }
 
     //Called by Quit Confirmation Screen's OnHidden callback (after hide animation is finished)

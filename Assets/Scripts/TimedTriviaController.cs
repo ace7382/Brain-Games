@@ -21,8 +21,8 @@ public class TimedTriviaController : MonoBehaviour
 
     private TimedTriviaLevel                                     currentTimedTriviaLevel;
 
-    private SignalReceiver                                      trivia_triviasetup_receiver;
-    private SignalStream                                        trivia_triviasetup_stream;
+    private SignalReceiver                                      gamemanagement_gamesetup_receiver;
+    private SignalStream                                        gamemanagement_gamesetup_stream;
     private SignalReceiver                                      trivia_answerchosen_receiver;
     private SignalStream                                        trivia_answerchosen_stream;
     private SignalReceiver                                      quitconfirmation_exitlevel_receiver;
@@ -40,13 +40,13 @@ public class TimedTriviaController : MonoBehaviour
 
     private void Awake()
     {
-        trivia_triviasetup_stream               = SignalStream.Get("Trivia", "TriviaSetup");
+        gamemanagement_gamesetup_stream         = SignalStream.Get("GameManagement", "GameSetup");
         trivia_answerchosen_stream              = SignalStream.Get("Trivia", "AnswerChosen");
         quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
         quitconfirmation_backtogame_stream      = SignalStream.Get("QuitConfirmation", "BackToGame");
         quitconfirmation_popup_stream           = SignalStream.Get("QuitConfirmation", "Popup");
 
-        trivia_triviasetup_receiver             = new SignalReceiver().SetOnSignalCallback(SetUp);
+        gamemanagement_gamesetup_receiver       = new SignalReceiver().SetOnSignalCallback(SetUp);
         trivia_answerchosen_receiver            = new SignalReceiver().SetOnSignalCallback(AnswerChosen);
         quitconfirmation_exitlevel_receiver     = new SignalReceiver().SetOnSignalCallback(EndGameEarly);
         quitconfirmation_backtogame_receiver    = new SignalReceiver().SetOnSignalCallback(Unpause);
@@ -55,7 +55,7 @@ public class TimedTriviaController : MonoBehaviour
 
     private void OnEnable()
     {
-        trivia_triviasetup_stream.ConnectReceiver(trivia_triviasetup_receiver);
+        gamemanagement_gamesetup_stream.ConnectReceiver(gamemanagement_gamesetup_receiver);
         trivia_answerchosen_stream.ConnectReceiver(trivia_answerchosen_receiver);
         quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
         quitconfirmation_backtogame_stream.ConnectReceiver(quitconfirmation_backtogame_receiver);
@@ -64,7 +64,7 @@ public class TimedTriviaController : MonoBehaviour
 
     private void OnDisable()
     {
-        trivia_triviasetup_stream.DisconnectReceiver(trivia_triviasetup_receiver);
+        gamemanagement_gamesetup_stream.DisconnectReceiver(gamemanagement_gamesetup_receiver);
         trivia_answerchosen_stream.DisconnectReceiver(trivia_answerchosen_receiver);
         quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
         quitconfirmation_backtogame_stream.DisconnectReceiver(quitconfirmation_backtogame_receiver);
@@ -97,10 +97,10 @@ public class TimedTriviaController : MonoBehaviour
     {
         currentTimedTriviaLevel = (TimedTriviaLevel)GameManager.instance.currentLevel;
         
-        answer0.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
-        answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
-        answer2.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
-        answer3.transform.parent.gameObject.GetComponent<UIButton>().interactable = true;
+        if (answer0 != null) { answer0.transform.parent.gameObject.GetComponent<UIButton>().interactable = true; }
+        if (answer1 != null) { answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = true; }
+        if (answer2 != null) { answer2.transform.parent.gameObject.GetComponent<UIButton>().interactable = true; }
+        if (answer3 != null) { answer3.transform.parent.gameObject.GetComponent<UIButton>().interactable = true; }
         
         Signal.Send("GameManagement", "DisableExitLevelButton", true);
         
@@ -142,20 +142,11 @@ public class TimedTriviaController : MonoBehaviour
                 , countdownClock.timeDisplay.transform, Vector2.zero, Color.red, responsePopupFont);
         }
 
-        //if (countdownClock.SecondsRemaining <= 0f)
-        //{
-        //    countdownClock.SetTime(-1f);
-        //}
-        //else
-        //{
-        //    LoadNextQuestion();
-        //}
-
         if (countdownClock.SecondsRemaining > 0)
             LoadNextQuestion();
     }
 
-    //Caled by the 4 answer buttons' on click event
+    //Caled by the answer buttons' on click event
     public void SubmitAnswer(int answerNum)
     {
         Signal.Send("Trivia", "AnswerChosen", answerNum);
@@ -169,11 +160,11 @@ public class TimedTriviaController : MonoBehaviour
 
         if (currentQuestionIndex < currentTimedTriviaLevel.questions.Count)
         {
-            questionCount.text = string.Format("Question\n{0} of {1}", currentQuestionIndex + 1, currentTimedTriviaLevel.questions.Count);
+            questionCount.text  = string.Format("Question\n{0} of {1}", currentQuestionIndex + 1, currentTimedTriviaLevel.questions.Count);
 
-            currentAnswers  = new List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>(currentTimedTriviaLevel.questions[currentQuestionIndex].Answers);
+            currentAnswers      = new List<TimedTriviaLevel.TriviaQuestion.TriviaAnswer>(currentTimedTriviaLevel.questions[currentQuestionIndex].Answers);
 
-            question.text   = currentTimedTriviaLevel.questions[currentQuestionIndex].Question;
+            question.text       = currentTimedTriviaLevel.questions[currentQuestionIndex].Question;
 
             //Shuffle Answers around
             int n = currentAnswers.Count;
@@ -187,10 +178,10 @@ public class TimedTriviaController : MonoBehaviour
                 currentAnswers[n] = value;
             }
 
-            answer0.text    = currentAnswers[0].answerText;
-            answer1.text    = currentAnswers[1].answerText;
-            answer2.text    = currentAnswers[2].answerText;
-            answer3.text    = currentAnswers[3].answerText;
+            if (answer0 != null) {answer0.text    = currentAnswers[0].answerText; }
+            if (answer1 != null) {answer1.text    = currentAnswers[1].answerText; }
+            if (answer2 != null) {answer2.text    = currentAnswers[2].answerText; }
+            if (answer3 != null) {answer3.text    = currentAnswers[3].answerText; }
         }
         else
         {
@@ -264,9 +255,9 @@ public class TimedTriviaController : MonoBehaviour
         countdownClock.Pause();
         countdownClock.SetTime(-1f); //To make the game end at the same time the timer visually ends, we feed it a negative value
 
-        AudioManager.instance.Play("Out of Time", .5f);
+        //AudioManager.instance.Play("Out of Time", .5f);
 
-        EndGame();
+        //EndGame();
     }
 
     private void EndGame()
@@ -274,10 +265,10 @@ public class TimedTriviaController : MonoBehaviour
         countdownClock.Pause();
 
         //Disable Buttons
-        answer0.transform.parent.gameObject.GetComponent<UIButton>().interactable = false;
-        answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = false;
-        answer2.transform.parent.gameObject.GetComponent<UIButton>().interactable = false;
-        answer3.transform.parent.gameObject.GetComponent<UIButton>().interactable = false;
+        if (answer0 != null) { answer0.transform.parent.gameObject.GetComponent<UIButton>().interactable = false; }
+        if (answer1 != null) { answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = false; }
+        if (answer2 != null) { answer2.transform.parent.gameObject.GetComponent<UIButton>().interactable = false; }
+        if (answer3 != null) { answer3.transform.parent.gameObject.GetComponent<UIButton>().interactable = false; }
 
         Signal.Send("GameManagement", "DisableExitLevelButton", false);
 
@@ -296,7 +287,7 @@ public class TimedTriviaController : MonoBehaviour
                 currentTimedTriviaLevel.objective3 = true;
         }
 
-        Invoke("GoToEndScreen", 2.5f);   
+        Invoke("GoToEndScreen", 2f);   
     }
 
 

@@ -2382,7 +2382,7 @@ GameObject:
   - component: {fileID: 698027520}
   - component: {fileID: 698027519}
   m_Layer: 5
-  m_Name: View - Screen TriviaPlay
+  m_Name: View - GamePlayScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2426,14 +2426,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac52cca2c989a9e45b980de1833ea6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  numOfQuestions: {fileID: 0}
-  difficultyText: {fileID: 0}
-  startTimeText: {fileID: 0}
-  timeModsText: {fileID: 0}
-  completedDot: {fileID: 0}
-  parTimeDot: {fileID: 0}
-  allQuestionsDot: {fileID: 0}
   question: {fileID: 1490780231}
   answer0: {fileID: 1175592481}
   answer1: {fileID: 810471518}
@@ -2442,7 +2434,6 @@ MonoBehaviour:
   questionCount: {fileID: 2090613122}
   responsePopupFont: {fileID: 12800000, guid: 532e5093b61d3c245b16b8849e0d0523, type: 3}
   countdownClock: {fileID: 1733096863}
-  currentTimedTriviaLevel: {fileID: 0}
 --- !u!114 &698027519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3097,9 +3088,9 @@ MonoBehaviour:
   AutoSelectAfterShow: 0
   AutoSelectTarget: {fileID: 0}
   Id:
-    Category: Screen
-    Name: TriviaPlay
-    Custom: 1
+    Category: GameManagement
+    Name: GamePlayScreen
+    Custom: 0
 --- !u!114 &698027521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8468,7 +8459,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2090613120}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -8477,8 +8468,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -373.6}
-  m_SizeDelta: {x: 300, y: 125}
+  m_AnchoredPosition: {x: 635, y: 200}
+  m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2090613122
 MonoBehaviour:
@@ -8500,7 +8491,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Question \n200 of 200"
+  m_text: 'Problem
+
+    200 of 200'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 78ee1c4ccccf27448b2db34e71ca92a1, type: 2}
   m_sharedMaterial: {fileID: -67380637403349598, guid: 78ee1c4ccccf27448b2db34e71ca92a1, type: 2}

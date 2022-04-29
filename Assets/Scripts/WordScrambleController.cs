@@ -26,8 +26,8 @@ public class WordScrambleController : MonoBehaviour
 
     private List<WordScrambleTileController> tiles;
 
-    private SignalReceiver      wordscramble_wordscramblesetup_receiver;
-    private SignalStream        wordscramble_wordscramblesetup_stream;
+    private SignalReceiver      gamemanagement_gamesetup_receiver;
+    private SignalStream        gamemanagement_gamesetup_stream;
     private SignalReceiver      wordscramble_tileclicked_receiver;
     private SignalStream        wordscramble_tileclicked_stream;
     private SignalReceiver      quitconfirmation_exitlevel_receiver;
@@ -38,25 +38,25 @@ public class WordScrambleController : MonoBehaviour
 
     private void Awake()
     {
-        wordscramble_wordscramblesetup_stream   = SignalStream.Get("WordScramble", "WordScrambleSetup");
+        gamemanagement_gamesetup_stream         = SignalStream.Get("GameManagement", "GameSetup");
         wordscramble_tileclicked_stream         = SignalStream.Get("WordScramble", "TileClicked");
         quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
 
-        wordscramble_wordscramblesetup_receiver = new SignalReceiver().SetOnSignalCallback(Setup);
+        gamemanagement_gamesetup_receiver       = new SignalReceiver().SetOnSignalCallback(Setup);
         wordscramble_tileclicked_receiver       = new SignalReceiver().SetOnSignalCallback(TileClicked);
         quitconfirmation_exitlevel_receiver     = new SignalReceiver().SetOnSignalCallback(ExitGameFromQuitConfirmationScreen);
     }
 
     private void OnEnable()
     {
-        wordscramble_wordscramblesetup_stream.ConnectReceiver(wordscramble_wordscramblesetup_receiver);
+        gamemanagement_gamesetup_stream.ConnectReceiver(gamemanagement_gamesetup_receiver);
         wordscramble_tileclicked_stream.ConnectReceiver(wordscramble_tileclicked_receiver);
         quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
     }
 
     private void OnDisable()
     {
-        wordscramble_wordscramblesetup_stream.DisconnectReceiver(wordscramble_wordscramblesetup_receiver);
+        gamemanagement_gamesetup_stream.DisconnectReceiver(gamemanagement_gamesetup_receiver);
         wordscramble_tileclicked_stream.DisconnectReceiver(wordscramble_tileclicked_receiver);
         quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
     }

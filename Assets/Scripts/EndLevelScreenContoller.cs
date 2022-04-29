@@ -124,23 +124,6 @@ public class EndLevelScreenContoller : MonoBehaviour
         AudioManager.instance.Play("Button Click");
 
         Signal.Send("GameManagement", "ReplayCurrentLevel");
-        //object[] data = new object[1];
-        //data[0] = 1;
-
-        //System.Type t = levelCompleted.GetType();
-
-        //if (t == typeof(PathPuzzleLevel))
-        //{
-        //    Signal.Send("PathPuzzle", "PathPuzzleSetup", data);
-        //}
-        //else if (t == typeof(TimedTriviaLevel))
-        //{
-        //    Signal.Send("Trivia", "TriviaSetup", data);
-        //}
-        //else if (t == typeof(WordScrambleLevel))
-        //{
-        //    Signal.Send("WordScramble", "WordScrambleSetup", data);
-        //}
     }
 
     //Called by the Next Level button's Click
@@ -149,24 +132,6 @@ public class EndLevelScreenContoller : MonoBehaviour
         AudioManager.instance.Play("Button Click");
 
         Signal.Send("GameManagement", "PlayNextLevel");
-
-        //object[] data = new object[1];
-        //data[0] = 2;
-
-        //System.Type t = levelCompleted.GetType();
-
-        //if (t == typeof(PathPuzzleLevel))
-        //{
-        //    Signal.Send("PathPuzzle", "PathPuzzleSetup", data);
-        //}
-        //else if (t == typeof(TimedTriviaLevel))
-        //{
-        //    Signal.Send("Trivia", "TriviaSetup", data);
-        //}
-        //else if (t == typeof(WordScrambleLevel))
-        //{
-        //    Signal.Send("WordScramble", "WordScrambleSetup", data);
-        //}
     }
 
     private IEnumerator MenuFadeIn()

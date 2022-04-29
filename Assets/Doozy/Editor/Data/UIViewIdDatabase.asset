@@ -19,6 +19,8 @@ MonoBehaviour:
     - Category: GameManagement
       Name: EndLevel
     - Category: GameManagement
+      Name: GamePlayScreen
+    - Category: GameManagement
       Name: TutorialScreen
     - Category: None
       Name: None

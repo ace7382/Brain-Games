@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PathPuzzle.unity
     guid: 23ffb9e202861bd40b9ec843f36e50e1
+  - enabled: 1
+    path: Assets/Scenes/SpeedMath.unity
+    guid: 1e7834664d0a62547971fa1ee9539a53
   m_configObjects: {}

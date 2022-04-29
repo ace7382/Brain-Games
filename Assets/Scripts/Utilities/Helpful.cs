@@ -88,6 +88,23 @@ public static class Helpful
                 return string.Format("{0} Pieces Connected", ((PathPuzzleLevel)level).piecesConnectedGoal.ToString());
             }
         }
+        else if (level.GetType() == typeof(SpeedMathLevel))
+        {
+            if (objectiveNumber == 1)
+            {
+                return "Completed";
+            }
+            else if (objectiveNumber == 2)
+            {
+                System.TimeSpan ts = System.TimeSpan.FromSeconds(((TimedTriviaLevel)level).parTimeRemainingInSeconds);
+
+                return string.Format("{0}:{1} Remaining", ts.Minutes.ToString(), ts.Seconds.ToString("00"));
+            }
+            else if (objectiveNumber == 3)
+            {
+                return "All Correct";
+            }
+        }
 
         Debug.Log("Something went wrong when grabbing a level's objective names");
 
@@ -102,6 +119,8 @@ public static class Helpful
             return 1;
         else if (t == typeof(PathPuzzleLevel))
             return 2;
+        else if (t == typeof(SpeedMathLevel))
+            return 3;
 
         return -1;
     }

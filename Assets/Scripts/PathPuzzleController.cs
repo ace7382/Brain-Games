@@ -29,8 +29,8 @@ public class PathPuzzleController : MonoBehaviour
 
     private SignalReceiver                  pathpuzzle_tilerotated_receiver;
     private SignalStream                    pathpuzzle_tilerotated_stream;
-    private SignalReceiver                  pathpuzzle_pathpuzzlesetup_receiver;
-    private SignalStream                    pathpuzzle_pathpuzzlesetup_stream;
+    private SignalReceiver                  gamemanagement_gamesetup_receiver;
+    private SignalStream                    gamemanagement_gamesetup_stream;
 
     private SignalReceiver                  quitconfirmation_exitlevel_receiver;
     private SignalStream                    quitconfirmation_exitlevel_stream;
@@ -42,13 +42,13 @@ public class PathPuzzleController : MonoBehaviour
     private void Awake()
     {
         pathpuzzle_tilerotated_stream           = SignalStream.Get("PathPuzzle", "TileRotated");
-        pathpuzzle_pathpuzzlesetup_stream       = SignalStream.Get("PathPuzzle", "PathPuzzleSetup");
+        gamemanagement_gamesetup_stream         = SignalStream.Get("GameManagement", "GameSetup");
         quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
         quitconfirmation_backtogame_stream      = SignalStream.Get("QuitConfirmation", "BackToGame");
         quitconfirmation_popup_stream           = SignalStream.Get("QuitConfirmation", "Popup");
 
         pathpuzzle_tilerotated_receiver         = new SignalReceiver().SetOnSignalCallback(CheckTiles);
-        pathpuzzle_pathpuzzlesetup_receiver     = new SignalReceiver().SetOnSignalCallback(Setup);
+        gamemanagement_gamesetup_receiver = new SignalReceiver().SetOnSignalCallback(Setup);
         quitconfirmation_exitlevel_receiver     = new SignalReceiver().SetOnSignalCallback(EndGameEarly);
         quitconfirmation_backtogame_receiver    = new SignalReceiver().SetOnSignalCallback(Unpause);
         quitconfirmation_popup_receiver         = new SignalReceiver().SetOnSignalCallback(Pause);
@@ -57,7 +57,7 @@ public class PathPuzzleController : MonoBehaviour
     private void OnEnable()
     {
         pathpuzzle_tilerotated_stream.ConnectReceiver(pathpuzzle_tilerotated_receiver);
-        pathpuzzle_pathpuzzlesetup_stream.ConnectReceiver(pathpuzzle_pathpuzzlesetup_receiver);
+        gamemanagement_gamesetup_stream.ConnectReceiver(gamemanagement_gamesetup_receiver);
         quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
         quitconfirmation_backtogame_stream.ConnectReceiver(quitconfirmation_backtogame_receiver);
         quitconfirmation_popup_stream.ConnectReceiver(quitconfirmation_popup_receiver);
@@ -66,7 +66,7 @@ public class PathPuzzleController : MonoBehaviour
     private void OnDisable()
     {
         pathpuzzle_tilerotated_stream.DisconnectReceiver(pathpuzzle_tilerotated_receiver);
-        pathpuzzle_pathpuzzlesetup_stream.DisconnectReceiver(pathpuzzle_pathpuzzlesetup_receiver);
+        gamemanagement_gamesetup_stream.DisconnectReceiver(gamemanagement_gamesetup_receiver);
         quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
         quitconfirmation_backtogame_stream.DisconnectReceiver(quitconfirmation_backtogame_receiver);
         quitconfirmation_popup_stream.DisconnectReceiver(quitconfirmation_popup_receiver);
@@ -252,9 +252,9 @@ public class PathPuzzleController : MonoBehaviour
         countdownClock.Pause();
         countdownClock.SetTime(-1f);
 
-        AudioManager.instance.Play("Out of Time", .5f);
+        //AudioManager.instance.Play("Out of Time", .5f);
 
-        StartCoroutine(GameLostAnimation());
+        //StartCoroutine(GameLostAnimation());
     }
 
     private IEnumerator AnimateBoardEnding()

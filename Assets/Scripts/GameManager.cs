@@ -58,10 +58,12 @@ public class GameManager : MonoBehaviour
 
     public void PlayCurrentLevel(Signal signal)
     {
-        int gameID = Helpful.GetGameID(currentLevel.GetType());
+        //int gameID = Helpful.GetGameID(currentLevel.GetType());
 
-        if (gameID >= 0)
-            Signal.Send("GameManagement", "StartLevel", gameID);
+        //if (gameID >= 0)
+        //    Signal.Send("GameManagement", "StartLevel", gameID);
+
+        Signal.Send("GameManagement", "StartLevel");
     }
 
     public void PlayNextLevel(Signal signal)
