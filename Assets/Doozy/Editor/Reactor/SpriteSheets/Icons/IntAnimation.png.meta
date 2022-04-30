@@ -114,6 +114,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -808,6 +809,37 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      ~IntAnimation_028: -8827866107252796956
+      ~IntAnimation_016: 2340359488063985099
+      ~IntAnimation_023: 3335692276992472103
+      ~IntAnimation_029: 2013761389349060447
+      ~IntAnimation_003: 5995615036276513443
+      ~IntAnimation_001: 2049236624067556679
+      ~IntAnimation_022: -5152461471831658031
+      ~IntAnimation_017: -6332812938171869603
+      ~IntAnimation_004: 7169737150673246962
+      ~IntAnimation_011: -6493470313283387548
+      ~IntAnimation_025: -5385930215445433916
+      ~IntAnimation_015: 433340959090096356
+      ~IntAnimation_002: -3265876381907537575
+      ~IntAnimation_010: -4501591932890745687
+      ~IntAnimation_018: 8691275546448495870
+      ~IntAnimation_007: 2308728298765294236
+      ~IntAnimation_012: -2809449347476011919
+      ~IntAnimation_024: 5597064554061426529
+      ~IntAnimation_000: 7533995433882607101
+      ~IntAnimation_013: -2503226496598597285
+      ~IntAnimation_026: -8815309231638859957
+      ~IntAnimation_009: -5472871537411879639
+      ~IntAnimation_008: 7965094805805060692
+      ~IntAnimation_019: -7909825469020373528
+      ~IntAnimation_021: -2799353022419441323
+      ~IntAnimation_020: 5471325578884370758
+      ~IntAnimation_014: 6488207023244713348
+      ~IntAnimation_005: 6078063483308350467
+      ~IntAnimation_006: 2521626181637182672
+      ~IntAnimation_027: -8143864042295720686
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

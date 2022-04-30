@@ -118,7 +118,10 @@ public class TutorialScreenController : MonoBehaviour
         }
         else
         {
-            previousButton.SetActive(true);
+            //TODO: Decide if I want to keep the previous button.
+            //      animation pages that span a couple od instruction pages
+            //      will have a weird order when going backwards. Requires more design consideration.
+            //previousButton.SetActive(true); 
             nextButton.SetActive(true);
         }
     }

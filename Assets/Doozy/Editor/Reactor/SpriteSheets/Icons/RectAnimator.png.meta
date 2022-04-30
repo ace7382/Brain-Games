@@ -114,6 +114,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -808,6 +809,37 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      ~RectAnimator_009: -5392851567200365098
+      ~RectAnimator_008: -644006893918932581
+      ~RectAnimator_006: -7837935625367296036
+      ~RectAnimator_005: -8462967348116983576
+      ~RectAnimator_023: 7596919907915188167
+      ~RectAnimator_004: -6899192066289672032
+      ~RectAnimator_020: 5507059112784148773
+      ~RectAnimator_029: -3602473398726074603
+      ~RectAnimator_002: 4125144112135032276
+      ~RectAnimator_014: 8843152270006309913
+      ~RectAnimator_018: 1112707384341278851
+      ~RectAnimator_024: 2568856483532662512
+      ~RectAnimator_012: -3946545325148209168
+      ~RectAnimator_017: 3494540388572952838
+      ~RectAnimator_000: -5602680397638723941
+      ~RectAnimator_022: -7694599626722488714
+      ~RectAnimator_013: -3333050890704581174
+      ~RectAnimator_010: -7934844438501548500
+      ~RectAnimator_001: -2699271295667306906
+      ~RectAnimator_026: 6727787595426799079
+      ~RectAnimator_015: 851063274701511516
+      ~RectAnimator_019: -7444913639151660003
+      ~RectAnimator_011: -6110114259755503088
+      ~RectAnimator_021: -2593477231940978420
+      ~RectAnimator_027: -333137234642409894
+      ~RectAnimator_003: 8509419291620230724
+      ~RectAnimator_016: -3490718773917446431
+      ~RectAnimator_025: -8060481833502769024
+      ~RectAnimator_028: -1014567039689327246
+      ~RectAnimator_007: 8045296942878651041
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -114,6 +114,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -808,6 +809,37 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      ~Vector4Animator_000: 5369355065862607524
+      ~Vector4Animator_015: 6702136301996398413
+      ~Vector4Animator_025: -1046050228085344920
+      ~Vector4Animator_026: -5001454420773886971
+      ~Vector4Animator_028: 1824217142445434484
+      ~Vector4Animator_023: 3129307754526916596
+      ~Vector4Animator_012: 5987383682830624309
+      ~Vector4Animator_002: -7401164924822414565
+      ~Vector4Animator_003: -6000899226603432741
+      ~Vector4Animator_004: -2782221690776247894
+      ~Vector4Animator_017: 8620435832606573449
+      ~Vector4Animator_019: 8641633799342339905
+      ~Vector4Animator_018: -2888668547557354156
+      ~Vector4Animator_021: -4346397544197098433
+      ~Vector4Animator_013: 5371264572805770087
+      ~Vector4Animator_001: -7131459078275497645
+      ~Vector4Animator_014: -4990268954111221295
+      ~Vector4Animator_006: 2004859850331007271
+      ~Vector4Animator_008: 7807175815429995920
+      ~Vector4Animator_010: -6076262995957309898
+      ~Vector4Animator_011: 1245169698192574615
+      ~Vector4Animator_029: -5931075238385990054
+      ~Vector4Animator_009: -7314816443704266760
+      ~Vector4Animator_020: 7782180148150487227
+      ~Vector4Animator_005: -665805758047123094
+      ~Vector4Animator_016: 9077211256747142223
+      ~Vector4Animator_022: -1255064217855953878
+      ~Vector4Animator_024: -7635977034383058008
+      ~Vector4Animator_027: 3244888463016420637
+      ~Vector4Animator_007: -4945756240514849985
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

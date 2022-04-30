@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72bf9e41f2c320b4eae93d81c2a99e17, type: 3}
+  m_Name: Speed Math Tutorial
+  m_EditorClassIdentifier: 
+  pages:
+  - instructionPage: {fileID: 4787047687346424706, guid: 1dc82ae89757341489e074dd079de373, type: 3}
+    displayPage: {fileID: 4787047687346424706, guid: e54c79da3164df841a6cacbe82d27c37, type: 3}
+  - instructionPage: {fileID: 4787047687346424706, guid: f54caac1cb3fdd44fb858e20ac08f227, type: 3}
+    displayPage: {fileID: 5323467574387504974, guid: d12b906418669374c8f54a33e6218aa5, type: 3}
+  - instructionPage: {fileID: 4787047687346424706, guid: 7549ce66582cfe340aec7735fb6e6283, type: 3}
+    displayPage: {fileID: 0}
+  pagesOnRight: 1

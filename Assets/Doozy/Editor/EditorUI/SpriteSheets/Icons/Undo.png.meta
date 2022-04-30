@@ -114,6 +114,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -832,6 +833,37 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      ~Undo_027: 8022924126720710989
+      ~Undo_008: -6043082247321477617
+      ~Undo_024: 3763198061756379017
+      ~Undo_001: 733572595005875809
+      ~Undo_014: -1491262792674754399
+      ~Undo_000: 4922918947173747763
+      ~Undo_004: 6062953199767504999
+      ~Undo_016: 6079560688499964016
+      ~Undo_023: 209386647286620323
+      ~Undo_026: 5059711653034156738
+      ~Undo_022: 728251289753275175
+      ~Undo_006: -2407255709425102333
+      ~Undo_011: 1271736385704669387
+      ~Undo_019: -2202358043118596504
+      ~Undo_029: -3175056701208273854
+      ~Undo_010: 3693957704662133815
+      ~Undo_012: 5844146646503640893
+      ~Undo_009: -8031192166057677290
+      ~Undo_013: -2930545654899034903
+      ~Undo_003: -6139131227617788869
+      ~Undo_015: -6038715268688617271
+      ~Undo_021: 3733063932593485313
+      ~Undo_028: 4026601196900220088
+      ~Undo_005: -5480696675562579461
+      ~Undo_002: 5460711651802741228
+      ~Undo_007: 3230957233486419982
+      ~Undo_020: 7340908814640655810
+      ~Undo_017: -92909945444259175
+      ~Undo_025: -4417450623793959832
+      ~Undo_018: -3166865069528365465
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

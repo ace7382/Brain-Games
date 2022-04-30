@@ -114,6 +114,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -808,6 +809,37 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      ~FloatAnimator_018: 3660636578246417589
+      ~FloatAnimator_012: 4954693721384586976
+      ~FloatAnimator_025: 6278351439375886441
+      ~FloatAnimator_009: -8667147311071295747
+      ~FloatAnimator_011: 3548126192039467026
+      ~FloatAnimator_008: 5052674287676827773
+      ~FloatAnimator_026: -7878330943623788194
+      ~FloatAnimator_013: 750939686730046980
+      ~FloatAnimator_029: 8617540307917456413
+      ~FloatAnimator_005: -2550075896769994688
+      ~FloatAnimator_021: 5760307627809876331
+      ~FloatAnimator_014: 6262089342928666456
+      ~FloatAnimator_000: 8644067591400474195
+      ~FloatAnimator_020: 7759119253998559686
+      ~FloatAnimator_002: 4577851909845073818
+      ~FloatAnimator_027: -2788726824318458741
+      ~FloatAnimator_019: 3718511779078536033
+      ~FloatAnimator_028: -8599915110641892812
+      ~FloatAnimator_001: -2006123250117409897
+      ~FloatAnimator_017: -823928221753930700
+      ~FloatAnimator_003: 8294376960417516711
+      ~FloatAnimator_023: 5081390408847077640
+      ~FloatAnimator_015: 192344096610977381
+      ~FloatAnimator_004: -7767880604577853449
+      ~FloatAnimator_007: 6602038031659536445
+      ~FloatAnimator_016: -7248211420870652290
+      ~FloatAnimator_024: 5836787820624046503
+      ~FloatAnimator_022: 6597984527689532566
+      ~FloatAnimator_010: 1446203430452536628
+      ~FloatAnimator_006: 8058749040097094166
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

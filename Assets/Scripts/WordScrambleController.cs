@@ -8,33 +8,34 @@ using Doozy.Runtime.UIManager.Containers;
 
 public class WordScrambleController : MonoBehaviour
 {
-    public WordScrambleLevel    currentWordScrambleLevel;
+    public WordScrambleLevel                    currentWordScrambleLevel;
 
-    public GameObject           letterTray;
-    public GameObject           selectedLettersTray;
-    public GameObject           foundWordList;
-    public GameObject           letterTilePrefab;
-    public GameObject           foundWordPrefab;
-    public TextMeshProUGUI      wordCountFoundText;
-    public TextMeshProUGUI      wordCountGoalText;
-    public GameObject           finishButton;
+    public GameObject                           letterTray;
+    public GameObject                           selectedLettersTray;
+    public GameObject                           foundWordList;
+    public GameObject                           letterTilePrefab;
+    public GameObject                           foundWordPrefab;
+    public TextMeshProUGUI                      wordCountFoundText;
+    public TextMeshProUGUI                      wordCountGoalText;
+    public GameObject                           finishButton;
 
-    public TMP_FontAsset        selectedFont;
-    public TMP_FontAsset        unselectedFont;
+    public TMP_FontAsset                        selectedFont;
+    public TMP_FontAsset                        unselectedFont;
 
-    public string               selectedWord;
+    public string                               selectedWord;
 
-    private List<WordScrambleTileController> tiles;
+    private List<WordScrambleTileController>    tiles;
+    private bool                                initialLoad;
 
-    private SignalReceiver      gamemanagement_gamesetup_receiver;
-    private SignalStream        gamemanagement_gamesetup_stream;
-    private SignalReceiver      wordscramble_tileclicked_receiver;
-    private SignalStream        wordscramble_tileclicked_stream;
-    private SignalReceiver      quitconfirmation_exitlevel_receiver;
-    private SignalStream        quitconfirmation_exitlevel_stream;
+    private SignalReceiver                      gamemanagement_gamesetup_receiver;
+    private SignalStream                        gamemanagement_gamesetup_stream;
+    private SignalReceiver                      wordscramble_tileclicked_receiver;
+    private SignalStream                        wordscramble_tileclicked_stream;
+    private SignalReceiver                      quitconfirmation_exitlevel_receiver;
+    private SignalStream                        quitconfirmation_exitlevel_stream;
 
-    private const float         FOUND_WORD_COLUMN_WIDTH_PER_LETTER = 35f;
-    private const float         FOUND_WORD_COLUMN_HEIGHT = 50f;
+    private const float                         FOUND_WORD_COLUMN_WIDTH_PER_LETTER = 35f;
+    private const float                         FOUND_WORD_COLUMN_HEIGHT = 50f;
 
     private void Awake()
     {
@@ -119,6 +120,8 @@ public class WordScrambleController : MonoBehaviour
 
     private void Setup(Signal signal)
     {
+        initialLoad = true;
+
         currentWordScrambleLevel = (WordScrambleLevel)GameManager.instance.currentLevel;
 
         //TODO: Pool these too
@@ -195,6 +198,7 @@ public class WordScrambleController : MonoBehaviour
         ResizeFoundWordScroll();
 
         foundWordList.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
+        initialLoad = false;
     }
 
     private void TileClicked(Signal signal)
@@ -280,7 +284,9 @@ public class WordScrambleController : MonoBehaviour
         if (word == currentWordScrambleLevel.specialWord)
         {
             t.color = Color.yellow;
-            AudioManager.instance.Play("Go");
+
+            if (!initialLoad)
+                AudioManager.instance.Play("Go");
         }
 
         ResizeFoundWordScroll();

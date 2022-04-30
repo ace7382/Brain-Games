@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Level 1
   m_EditorClassIdentifier: 
   levelName: Level 1
-  unlocked: 0
-  tutorial: {fileID: 11400000, guid: acc3f6cb8f1070a4a8cb85da82ecd376, type: 2}
+  unlocked: 1
+  tutorial: {fileID: 11400000, guid: 258f14fef3faaa5449d9322e1be841e1, type: 2}
   nextLevel: {fileID: 11400000, guid: c09a5e4de2c7db74fb59732f712fa19e, type: 2}
   difficulty: 0
   objective1: 0

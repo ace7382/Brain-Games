@@ -114,6 +114,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -808,6 +809,37 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      ~ReactorController_005: 7871831860792739291
+      ~ReactorController_017: 6304819109657584031
+      ~ReactorController_001: -376302802867555794
+      ~ReactorController_004: -8836606305023429616
+      ~ReactorController_025: 7091171257124188992
+      ~ReactorController_003: 3256934022989653350
+      ~ReactorController_008: 7178123994742634164
+      ~ReactorController_015: 6013347587102620119
+      ~ReactorController_011: -4278275943940979292
+      ~ReactorController_020: 715169499724205964
+      ~ReactorController_018: 5691286831145377092
+      ~ReactorController_007: -5529281301478204707
+      ~ReactorController_013: 3242288029421611965
+      ~ReactorController_016: -8483639062447013734
+      ~ReactorController_028: 3665448209045389319
+      ~ReactorController_009: 4213896967208006940
+      ~ReactorController_027: -1863864541942040740
+      ~ReactorController_002: 2561659660200752295
+      ~ReactorController_023: 2072510129616112634
+      ~ReactorController_010: 536977503948124542
+      ~ReactorController_019: 8934956162317983682
+      ~ReactorController_029: 6585216789470750376
+      ~ReactorController_012: 379965598296964908
+      ~ReactorController_021: 4392173159499321041
+      ~ReactorController_022: -5674236714438005134
+      ~ReactorController_024: -2909877550503257484
+      ~ReactorController_000: 864118031226921914
+      ~ReactorController_014: 4515896570770092042
+      ~ReactorController_026: -221021549860318443
+      ~ReactorController_006: -8770755778581092829
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

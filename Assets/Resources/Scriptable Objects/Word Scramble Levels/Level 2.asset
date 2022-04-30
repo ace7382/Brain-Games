@@ -14,18 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Level 2
   unlocked: 1
-  tutorial: {fileID: 11400000, guid: acc3f6cb8f1070a4a8cb85da82ecd376, type: 2}
+  tutorial: {fileID: 11400000, guid: 258f14fef3faaa5449d9322e1be841e1, type: 2}
   nextLevel: {fileID: 11400000, guid: a194140110ba7b341b9ebd8a94dd9ccb, type: 2}
   difficulty: 0
   objective1: 1
   objective2: 0
-  objective3: 0
+  objective3: 1
   letters: gosd
   goalWordCount: 4
   secondGoalWordCount: 8
   specialWord: dogs
   hiddenWords:
-  - dogs
   - gos
   - ods
   - sod
@@ -35,3 +34,4 @@ MonoBehaviour:
   - dos
   - god
   - gods
+  - dogs
