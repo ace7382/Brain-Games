@@ -22,7 +22,7 @@ public class CountdownScreenController : MonoBehaviour
 
     private IEnumerator Countdown()
     {
-        WaitForSeconds w = new WaitForSeconds(1);
+        WaitForSeconds w    = new WaitForSeconds(1);
 
         t.text = "3";
         AudioManager.instance.Play("Countdown Tick");
