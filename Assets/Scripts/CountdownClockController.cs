@@ -28,8 +28,9 @@ public class CountdownClockController : MonoBehaviour
     public float                growthBound = 1.1f;
     public float                shrinkBound = 0.9f;
     private float               currentRatio = 1;
+    private bool                shouldClockPulse;
 
-    public void SetupTimer(float startingSeconds, float midSeconds)
+    public void SetupTimer(float startingSeconds, float midSeconds, bool pulse)
     {
         notifiedOutOfTime   = false;
         clockMaxSeconds     = startingSeconds;
@@ -37,6 +38,7 @@ public class CountdownClockController : MonoBehaviour
         midPointSeconds     = midSeconds;
         countingDown        = null;
         pulsing             = null;
+        shouldClockPulse    = pulse;
 
         StopAllCoroutines();
 
@@ -69,21 +71,6 @@ public class CountdownClockController : MonoBehaviour
 
         secondsRemaining = -1;
         UpdateTimerDisplay();
-
-        //AudioManager.instance.Play("Out of Time", .5f);
-
-        //if (pulsing != null)
-        //{
-        //    StopCoroutine(pulsing);
-        //    pulsing = null;
-        //}
-
-        //if (onOutOfTime != null && !notifiedOutOfTime)
-        //{
-        //    onOutOfTime.Invoke();
-        //}
-        
-        //notifiedOutOfTime = true;
     }
 
     public void AddTime(float timeToAdd)
@@ -96,8 +83,6 @@ public class CountdownClockController : MonoBehaviour
     public void SubtractTime(float timeToSubtract)
     {
         AddTime(timeToSubtract * -1);
-
-        //UpdateTimerDisplay();
     }
 
     public void SetTime(float secondsToSetTo)
@@ -199,16 +184,19 @@ public class CountdownClockController : MonoBehaviour
                 AudioManager.instance.Play("Countdown Tick");
         }
 
-        if (fakeSecondsRemaining <= 5f && pulsing == null)
+        if (shouldClockPulse)
         {
-            pulsing = Helpful.Pulse(transform, currentRatio, growthBound, shrinkBound, approachSpeed);
-            StartCoroutine(pulsing);
-        }
+            if (fakeSecondsRemaining <= 5f && pulsing == null)
+            {
+                pulsing = Helpful.Pulse(transform, currentRatio, growthBound, shrinkBound, approachSpeed);
+                StartCoroutine(pulsing);
+            }
 
-        if (pulsing != null && (fakeSecondsRemaining > 5f || fakeSecondsRemaining == 0))
-        {
-            StopCoroutine(pulsing);
-            pulsing = null;
+            if (pulsing != null && (fakeSecondsRemaining > 5f || fakeSecondsRemaining == 0))
+            {
+                StopCoroutine(pulsing);
+                pulsing = null;
+            }
         }
 
         System.TimeSpan ts = System.TimeSpan.FromSeconds(fakeSecondsRemaining);

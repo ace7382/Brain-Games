@@ -9,6 +9,8 @@ using BizzyBeeGames;
 
 public class TimedTriviaController : MonoBehaviour
 {
+    //SPEED MATH is a variant of the standard TIMED TRIVIA
+
     public TextMeshProUGUI                                      question;
     public TextMeshProUGUI                                      answer0;
     public TextMeshProUGUI                                      answer1;
@@ -107,7 +109,7 @@ public class TimedTriviaController : MonoBehaviour
         currentQuestionIndex = -1;
         questionsAnsweredCorrectly = 0;
         
-        countdownClock.SetupTimer(currentTimedTriviaLevel.startTimeInSeconds, currentTimedTriviaLevel.parTimeRemainingInSeconds);
+        countdownClock.SetupTimer(currentTimedTriviaLevel.startTimeInSeconds, currentTimedTriviaLevel.parTimeRemainingInSeconds, true);
         
         LoadNextQuestion();
     }

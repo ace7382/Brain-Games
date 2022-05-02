@@ -100,7 +100,7 @@ public class PathPuzzleController : MonoBehaviour
 
         SetConnectionCounter();
 
-        countdownClock.SetupTimer(currentPPLevel.timeLimitInSeconds, currentPPLevel.parTimeInSeconds);
+        countdownClock.SetupTimer(currentPPLevel.timeLimitInSeconds, currentPPLevel.parTimeInSeconds, true);
 
         LoadNextBoard();
     }
