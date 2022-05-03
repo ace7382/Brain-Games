@@ -40,7 +40,8 @@ public class TutorialScreenController : MonoBehaviour
     //Called by the Tutorial Screen's OnShow Callback;
     public void Setup()
     {
-        info                            = GameManager.instance.currentLevel.tutorial;
+        info                            = GameManager.instance.currentLevel != null ? GameManager.instance.currentLevel.tutorial
+                                          : GameManager.instance.currentMinigame.tutorial;
 
         pagebuttonsClickable            = true;
 
@@ -209,7 +210,9 @@ public class TutorialScreenController : MonoBehaviour
 
     public void LeaveTutorialScreen()
     {
-        Signal.Send("GameManagement", "LeaveTutorialScreen", Helpful.GetGameID(GameManager.instance.currentLevel.GetType()));
+        //Signal.Send("GameManagement", "LeaveTutorialScreen", Helpful.GetGameID(GameManager.instance.currentLevel.GetType()));
+        Signal.Send("GameManagement", "LeaveTutorialScreen",
+            GameManager.instance.currentLevel != null ? GameManager.instance.currentLevel.timedLevel : GameManager.instance.currentMinigame.timed);
     }
 
     private void AllowPageMovement(Signal signal)

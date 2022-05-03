@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Level 1
   unlocked: 1
+  timedLevel: 1
   tutorial: {fileID: 11400000, guid: 227d9a4ffcc42d04a9d8d7c32fde230b, type: 2}
   nextLevel: {fileID: 0}
-  difficulty: 5
   objective1: 1
   objective2: 0
   objective3: 0

@@ -19,7 +19,7 @@ public class LevelSelectButtonController : MonoBehaviour
         if (!level.unlocked)
             return;
 
-        GameManager.instance.currentLevel = level;
+        GameManager.instance.SetLevel(level);
 
         int gameID = Helpful.GetGameID(level.GetType());
 

@@ -944,8 +944,8 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: TriviaModeController, Assembly-CSharp
+        - m_Target: {fileID: 698027524}
+          m_TargetAssemblyTypeName: ArrowSwipeController, Assembly-CSharp
           m_MethodName: StartGame
           m_Mode: 1
           m_Arguments:

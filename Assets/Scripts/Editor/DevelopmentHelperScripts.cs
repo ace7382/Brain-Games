@@ -22,9 +22,11 @@ public class DevelopmentHelperScripts : MonoBehaviour
     {
         MainMenuController m = GameObject.FindObjectOfType<MainMenuController>();
 
-        LevelSelectButtonController[] levelButtons = FindObjectsOfType<LevelSelectButtonController>();
+        LevelSelectButtonController[] levelButtons          = FindObjectsOfType<LevelSelectButtonController>();
+        MinigameSelectButtonController[] minigameButtons    = FindObjectsOfType<MinigameSelectButtonController>();
 
-        m.levelButtons = levelButtons.ToList();
+        m.levelButtons      = levelButtons.ToList();
+        m.minigameButtons   = minigameButtons.ToList();
     }
 
     [MenuItem("Dev Commands/Reset all Levels")]

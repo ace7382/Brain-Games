@@ -29,6 +29,8 @@ MonoBehaviour:
     - Category: GameManagement
       Name: LoadLevelScene
     - Category: GameManagement
+      Name: LoadMinigameScene
+    - Category: GameManagement
       Name: PlayNextLevel
     - Category: GameManagement
       Name: ReplayCurrentLevel

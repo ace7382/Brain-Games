@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager   instance = null;
 
     public LevelBase            currentLevel;
+    public Minigame             currentMinigame;
 
     private SignalReceiver      gamemanagement_replaycurrentlevel_receiver;
     private SignalStream        gamemanagement_replaycurrentlevel_stream;
@@ -58,11 +59,6 @@ public class GameManager : MonoBehaviour
 
     public void PlayCurrentLevel(Signal signal)
     {
-        //int gameID = Helpful.GetGameID(currentLevel.GetType());
-
-        //if (gameID >= 0)
-        //    Signal.Send("GameManagement", "StartLevel", gameID);
-
         Signal.Send("GameManagement", "StartLevel");
     }
 
@@ -78,6 +74,19 @@ public class GameManager : MonoBehaviour
 
         PlayCurrentLevel(signal);
     }
+
+    public void SetLevel(LevelBase level)
+    {
+        currentLevel        = level;
+        currentMinigame     = null;
+    }
+
+    public void SetMinigame(Minigame minigame)
+    {
+        currentMinigame     = minigame;
+        currentLevel        = null;
+    }
+
 
     public void UnloadAllGameScenes(Signal signal)
     {
