@@ -9,10 +9,14 @@ public class GameManager : MonoBehaviour
     public static GameManager   instance = null;
 
     public LevelBase            currentLevel;
+    public LevelResultsData     currentLevelResults;
     public Minigame             currentMinigame;
+    public MinigameResultsData  currentMinigameResults;
 
     private SignalReceiver      gamemanagement_replaycurrentlevel_receiver;
     private SignalStream        gamemanagement_replaycurrentlevel_stream;
+    private SignalReceiver      gamemanagement_replaycurrentminigame_receiver;
+    private SignalStream        gamemanagement_replaycurrentminigame_stream;
     private SignalReceiver      gamemanagement_playnextlevel_receiver;
     private SignalStream        gamemanagement_playnextlevel_stream;
     private SignalReceiver      gamemanagement_unloadgamescenes_receiver;
@@ -30,20 +34,23 @@ public class GameManager : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
 
-        gamemanagement_replaycurrentlevel_stream    = SignalStream.Get("GameManagement", "ReplayCurrentLevel");
-        gamemanagement_playnextlevel_stream         = SignalStream.Get("GameManagement", "PlayNextLevel");
-        gamemanagement_unloadgamescenes_stream      = SignalStream.Get("GameManagement", "UnloadGameScenes");
-        quitconfirmation_popup_stream               = SignalStream.Get("QuitConfirmation", "Popup");
+        gamemanagement_replaycurrentlevel_stream        = SignalStream.Get("GameManagement", "ReplayCurrentLevel");
+        gamemanagement_replaycurrentminigame_stream     = SignalStream.Get("GameManagement", "ReplayCurrentMinigame");
+        gamemanagement_playnextlevel_stream             = SignalStream.Get("GameManagement", "PlayNextLevel");
+        gamemanagement_unloadgamescenes_stream          = SignalStream.Get("GameManagement", "UnloadGameScenes");
+        quitconfirmation_popup_stream                   = SignalStream.Get("QuitConfirmation", "Popup");
 
-        gamemanagement_replaycurrentlevel_receiver  = new SignalReceiver().SetOnSignalCallback(PlayCurrentLevel);
-        gamemanagement_playnextlevel_receiver       = new SignalReceiver().SetOnSignalCallback(PlayNextLevel);
-        gamemanagement_unloadgamescenes_receiver    = new SignalReceiver().SetOnSignalCallback(UnloadAllGameScenes);
-        quitconfirmation_popup_receiver             = new SignalReceiver().SetOnSignalCallback(ShowExitPopup);
+        gamemanagement_replaycurrentlevel_receiver      = new SignalReceiver().SetOnSignalCallback(PlayCurrentLevel);
+        gamemanagement_replaycurrentminigame_receiver   = new SignalReceiver().SetOnSignalCallback(PlayCurrentMinigame);
+        gamemanagement_playnextlevel_receiver           = new SignalReceiver().SetOnSignalCallback(PlayNextLevel);
+        gamemanagement_unloadgamescenes_receiver        = new SignalReceiver().SetOnSignalCallback(UnloadAllGameScenes);
+        quitconfirmation_popup_receiver                 = new SignalReceiver().SetOnSignalCallback(ShowExitPopup);
     }
 
     private void OnEnable()
     {
         gamemanagement_replaycurrentlevel_stream.ConnectReceiver(gamemanagement_replaycurrentlevel_receiver);
+        gamemanagement_replaycurrentminigame_stream.ConnectReceiver(gamemanagement_replaycurrentminigame_receiver);
         gamemanagement_playnextlevel_stream.ConnectReceiver(gamemanagement_playnextlevel_receiver);
         gamemanagement_unloadgamescenes_stream.ConnectReceiver(gamemanagement_unloadgamescenes_receiver);
         quitconfirmation_popup_stream.ConnectReceiver(quitconfirmation_popup_receiver);
@@ -52,6 +59,7 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         gamemanagement_replaycurrentlevel_stream.DisconnectReceiver(gamemanagement_replaycurrentlevel_receiver);
+        gamemanagement_replaycurrentminigame_stream.DisconnectReceiver(gamemanagement_replaycurrentminigame_receiver);
         gamemanagement_playnextlevel_stream.DisconnectReceiver(gamemanagement_playnextlevel_receiver);
         gamemanagement_unloadgamescenes_stream.DisconnectReceiver(gamemanagement_unloadgamescenes_receiver);
         quitconfirmation_popup_stream.DisconnectReceiver(quitconfirmation_popup_receiver);
@@ -60,6 +68,11 @@ public class GameManager : MonoBehaviour
     public void PlayCurrentLevel(Signal signal)
     {
         Signal.Send("GameManagement", "StartLevel");
+    }
+
+    public void PlayCurrentMinigame(Signal signal)
+    {
+        Signal.Send("GameManagement", "StartMinigame");
     }
 
     public void PlayNextLevel(Signal signal)
@@ -87,7 +100,6 @@ public class GameManager : MonoBehaviour
         currentLevel        = null;
     }
 
-
     public void UnloadAllGameScenes(Signal signal)
     {
         //TODO - evaluate whether I need this
@@ -101,4 +113,31 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("ExitConfirmationScreen", LoadSceneMode.Additive);
     }
 
+    public void SetMinigameResults(MinigameResultsData data)
+    {
+        currentMinigameResults = data;
+    }
+
+    public void ClearMinigameResults()
+    {
+        currentMinigameResults = null;
+    }
+
+    public void SetLevelResults(LevelResultsData data)
+    {
+        currentLevelResults = data;
+    }
+
+    public void ClearLevelResults()
+    {
+        currentLevelResults = null;
+    }
+
+    public void ClearLevelData()
+    {
+        currentLevel        = null;
+        currentMinigame     = null;
+        ClearLevelResults();
+        ClearMinigameResults();
+    }
 }

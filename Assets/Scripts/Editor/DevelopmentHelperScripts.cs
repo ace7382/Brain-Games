@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using UnityEditor.SceneManagement;
 
 public class DevelopmentHelperScripts : MonoBehaviour
 {
@@ -135,6 +136,12 @@ public class DevelopmentHelperScripts : MonoBehaviour
 
             level.ResetObjectives();
         }
+    }
+
+    [MenuItem("Dev Commands/Open Main Menu")]
+    public static void OpenMainMenu()
+    {
+        EditorSceneManager.OpenScene("Assets/Scenes/_Main.unity", OpenSceneMode.Single);
     }
 
     private static bool CheckWord(string wordToCheck, string availableLetters)

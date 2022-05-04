@@ -6,7 +6,22 @@ using UnityEngine;
 public class Minigame : ScriptableObject
 {
     public int                  minigameID;
-    public bool                 unlocked;
-    public bool                 timed;
     public TutorialInfoObject   tutorial;
+
+    [Space]
+    [Space]
+
+    public bool                 unlocked;
+
+    [Space]
+    [Space]
+
+    public bool                 timed;
+    public float                timedStartTime;
+
+    [Space]
+    [Space]
+
+    public int                  maxDifficulty;
+    public int                  currentMaxDifficulty;
 }

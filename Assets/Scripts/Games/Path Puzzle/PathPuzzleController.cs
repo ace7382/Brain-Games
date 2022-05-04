@@ -373,20 +373,17 @@ public class PathPuzzleController : MonoBehaviour
     
     private void GoToEndScreen()
     {
-        //Signal Data should be object[3]
-        //  index 0 =>  LevelBase       - The level that was just completed/exited
-        //  index 1 =>  bool            - true = success, false = exit early/fail
-        //  index 2 =>  string          - subtitle text
+        LevelResultsData results    = new LevelResultsData();
 
-        System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining <= 0 ? 0 : countdownClock.SecondsRemaining + 1);
+        System.TimeSpan ts          = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining <= 0 ? 0 : countdownClock.SecondsRemaining + 1);
 
-        object[] data = new object[3];
-        data[0] = currentPPLevel;
-        data[1] = won;
-        data[2] = string.Format("Time Remaining {0}:{1}\n{2} pieces traversed!", ts.Minutes.ToString(),
-                    ts.Seconds.ToString("00"),pathPiecesConnected.ToString());
+        results.successIndicator    = won;
+        results.subtitleText        = string.Format("Time Remaining {0}:{1}\n{2} pieces traversed!", ts.Minutes.ToString(),
+                                      ts.Seconds.ToString("00"), pathPiecesConnected.ToString());
 
-        Signal.Send("GameManagement", "LevelEnded", data);
+        GameManager.instance.SetLevelResults(results);
+
+        Signal.Send("GameManagement", "LevelEnded", 0);
     }
 
     private void SetConnectionCounter()

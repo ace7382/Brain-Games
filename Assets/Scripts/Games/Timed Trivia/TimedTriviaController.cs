@@ -254,12 +254,8 @@ public class TimedTriviaController : MonoBehaviour
         won                         = false;
         questionsAnsweredCorrectly  = 0;
 
-        countdownClock.Pause();
+        countdownClock.Pause(); //TODO: Don't think I need this call
         countdownClock.SetTime(-1f); //To make the game end at the same time the timer visually ends, we feed it a negative value
-
-        //AudioManager.instance.Play("Out of Time", .5f);
-
-        //EndGame();
     }
 
     private void EndGame()
@@ -296,14 +292,17 @@ public class TimedTriviaController : MonoBehaviour
     //Invoked by EndGame()
     private void GoToEndScreen()
     {
-        System.TimeSpan ts = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining == 0 ? 0 : countdownClock.SecondsRemaining + 1);
+        LevelResultsData results    = new LevelResultsData();
 
-        object[] data   = new object[3];
-        data[0]         = currentTimedTriviaLevel;
-        data[1]         = won;
-        data[2]         = string.Format("Time Remaining {0}:{1}\n{2}/{3} Questions Correct", ts.Minutes.ToString(),
-                            ts.Seconds.ToString("00"), questionsAnsweredCorrectly.ToString(), currentTimedTriviaLevel.questions.Count.ToString());
+        System.TimeSpan ts          = System.TimeSpan.FromSeconds(countdownClock.SecondsRemaining <= 0 ? 0 : countdownClock.SecondsRemaining + 1);
+        
+        results.successIndicator    = won;
+        results.subtitleText        = string.Format("Time Remaining {0}:{1}\n{2}/{3} Questions Correct", ts.Minutes.ToString(),
+                                      ts.Seconds.ToString("00"), questionsAnsweredCorrectly.ToString()
+                                      , currentTimedTriviaLevel.questions.Count.ToString());
 
-        Signal.Send("GameManagement", "LevelEnded", data);
+        GameManager.instance.SetLevelResults(results);
+
+        Signal.Send("GameManagement", "LevelEnded", 0);
     }
 }

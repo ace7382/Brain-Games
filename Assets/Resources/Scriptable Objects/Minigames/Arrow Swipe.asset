@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Arrow Swipe
   m_EditorClassIdentifier: 
   minigameID: 0
+  tutorial: {fileID: 11400000, guid: 73772b2139d0fc040a3b4097b4a77db1, type: 2}
   unlocked: 1
   timed: 1
-  tutorial: {fileID: 11400000, guid: 73772b2139d0fc040a3b4097b4a77db1, type: 2}
+  timedStartTime: 60
+  maxDifficulty: 5000
+  currentMaxDifficulty: 896

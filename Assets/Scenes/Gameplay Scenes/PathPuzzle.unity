@@ -442,6 +442,10 @@ PrefabInstance:
       value: 0.0015
       objectReference: {fileID: 0}
     - target: {fileID: 9028170950381862964, guid: abb8a94bc2defc5488394bc66a197261, type: 3}
+      propertyPath: onOutOfTimeAudioClip
+      value: Out of Time
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028170950381862964, guid: abb8a94bc2defc5488394bc66a197261, type: 3}
       propertyPath: onOutOfTime.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}

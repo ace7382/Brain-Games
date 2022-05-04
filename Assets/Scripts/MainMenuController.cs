@@ -16,7 +16,6 @@ public class MainMenuController : MonoBehaviour
         for (int i = 0; i < minigameButtons.Count; i++)
             minigameButtons[i].ShowLockedStatus();
 
-        GameManager.instance.currentLevel       = null;
-        GameManager.instance.currentMinigame    = null;
+        GameManager.instance.ClearLevelData();
     }
 }

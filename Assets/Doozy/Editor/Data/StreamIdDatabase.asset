@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Database:
     Items:
+    - Category: EndLevelScreen
+      Name: Setup
+    - Category: EndLevelScreen
+      Name: ShowScreen
     - Category: GameManagement
       Name: CountdownEnded
     - Category: GameManagement
@@ -35,7 +39,11 @@ MonoBehaviour:
     - Category: GameManagement
       Name: ReplayCurrentLevel
     - Category: GameManagement
+      Name: ReplayCurrentMinigame
+    - Category: GameManagement
       Name: StartLevel
+    - Category: GameManagement
+      Name: StartMinigame
     - Category: GameManagement
       Name: UnloadGameScenes
     - Category: None

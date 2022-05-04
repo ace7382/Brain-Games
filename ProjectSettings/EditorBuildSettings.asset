@@ -26,4 +26,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Gameplay Scenes/ArrowSwipe.unity
     guid: 18cbf6d51ce2daf47b73c5428de82af4
+  - enabled: 1
+    path: Assets/Scenes/LevelEndScreen.unity
+    guid: b616390f8319f9d43bb13fa3d6eeaa52
+  - enabled: 1
+    path: Assets/Scenes/MinigameEndScreen.unity
+    guid: 347a4ef019897934ba92bfafa2809862
   m_configObjects: {}

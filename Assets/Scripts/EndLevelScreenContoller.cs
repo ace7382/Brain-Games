@@ -6,61 +6,56 @@ using Doozy.Runtime.Signals;
 
 public class EndLevelScreenContoller : MonoBehaviour
 {
-    public TextMeshProUGUI  failSuccessDisplay;
-    public TextMeshProUGUI  subtitleText;
+    public TextMeshProUGUI      failSuccessDisplay;
+    public TextMeshProUGUI      subtitleText;
 
-    public CanvasGroup      objective1Group;
-    public TextMeshProUGUI  objective1Title;
-    public GameObject       objective1Dot;
+    public CanvasGroup          objective1Group;
+    public TextMeshProUGUI      objective1Title;
+    public GameObject           objective1Dot;
 
-    public CanvasGroup      objective2Group;
-    public TextMeshProUGUI  objective2Title;
-    public GameObject       objective2Dot;
+    public CanvasGroup          objective2Group;
+    public TextMeshProUGUI      objective2Title;
+    public GameObject           objective2Dot;
 
-    public CanvasGroup      objective3Group;
-    public TextMeshProUGUI  objective3Title;
-    public GameObject       objective3Dot;
+    public CanvasGroup          objective3Group;
+    public TextMeshProUGUI      objective3Title;
+    public GameObject           objective3Dot;
 
-    public GameObject       buttonContainer;
-    public GameObject       nextLevelButton;
-    public GameObject       skipMenuAnimationButton;
+    public GameObject           buttonContainer;
+    public GameObject           nextLevelButton;
+    public GameObject           skipMenuAnimationButton;
 
-    private SignalReceiver  gamemanagement_levelended_receiver;
-    private SignalStream    gamemanagement_levelended_stream;
+    private SignalReceiver      endlevelscreen_setup_receiver;
+    private SignalStream        endlevelscreen_setup_stream;
 
-    private IEnumerator     menuLoading;
+    private IEnumerator         menuLoading;
 
-    private LevelBase       levelCompleted;
+    private LevelBase           levelCompleted;
+    private LevelResultsData    levelResults;
 
     private void Awake()
     {
-        gamemanagement_levelended_stream = SignalStream.Get("GameManagement", "LevelEnded");
+        endlevelscreen_setup_stream = SignalStream.Get("EndLevelScreen", "Setup");
 
-        gamemanagement_levelended_receiver = new SignalReceiver().SetOnSignalCallback(SetUp);
+        endlevelscreen_setup_receiver = new SignalReceiver().SetOnSignalCallback(Setup);
     }
 
     private void OnEnable()
     {
-        gamemanagement_levelended_stream.ConnectReceiver(gamemanagement_levelended_receiver);
+        endlevelscreen_setup_stream.ConnectReceiver(endlevelscreen_setup_receiver);
     }
 
     private void OnDisable()
     {
-        gamemanagement_levelended_stream.DisconnectReceiver(gamemanagement_levelended_receiver);
+        endlevelscreen_setup_stream.DisconnectReceiver(endlevelscreen_setup_receiver);
     }
 
-    public void SetUp(Signal signal)
+    public void Setup(Signal signal)
     {
-        //Signal Data should be object[3]
-        //  index 0 =>  LevelBase       - The level that was just completed/exited
-        //  index 1 =>  bool            - true = success, false = exit early/fail
-        //  index 2 =>  string          - subtitle text
+        levelCompleted  = GameManager.instance.currentLevel;
+        levelResults    = GameManager.instance.currentLevelResults;
 
-        object[] data = signal.GetValueUnsafe<object[]>();
-
-        levelCompleted = (LevelBase)data[0];
-
-        if ((bool)data[1])
+        if (levelResults.successIndicator)
         {
             failSuccessDisplay.text = "~Success~";
             failSuccessDisplay.color = Color.green;
@@ -71,17 +66,17 @@ public class EndLevelScreenContoller : MonoBehaviour
             failSuccessDisplay.color = Color.red;
         }
 
-        subtitleText.text = (string)data[2];
+        subtitleText.text = levelResults.subtitleText;
 
         nextLevelButton.SetActive(levelCompleted.nextLevel == null ? false : levelCompleted.nextLevel.unlocked);
 
-        objective1Group.alpha   = 0;
-        objective2Group.alpha   = 0;
-        objective3Group.alpha   = 0;
+        objective1Group.alpha = 0;
+        objective2Group.alpha = 0;
+        objective3Group.alpha = 0;
 
-        objective1Title.text    = Helpful.GetLevelObjectiveTitles(levelCompleted, 1);
-        objective2Title.text    = Helpful.GetLevelObjectiveTitles(levelCompleted, 2);
-        objective3Title.text    = Helpful.GetLevelObjectiveTitles(levelCompleted, 3);
+        objective1Title.text = Helpful.GetLevelObjectiveTitles(levelCompleted, 1);
+        objective2Title.text = Helpful.GetLevelObjectiveTitles(levelCompleted, 2);
+        objective3Title.text = Helpful.GetLevelObjectiveTitles(levelCompleted, 3);
 
         buttonContainer.GetComponent<CanvasGroup>().alpha = 0;
 
@@ -90,6 +85,8 @@ public class EndLevelScreenContoller : MonoBehaviour
         objective3Dot.SetActive(levelCompleted.objective3);
 
         skipMenuAnimationButton.SetActive(true);
+
+        Signal.Send("EndLevelScreen", "ShowScreen");
     }
 
     //Called from the View - Screen End of Level's Show Animation's end animation callback

@@ -110,12 +110,13 @@ public class WordScrambleController : MonoBehaviour
 
         Signal.Send("GameManagement", "DisableExitLevelButton", false);
 
-        object[] data   = new object[3];
-        data[0]         = currentWordScrambleLevel;
-        data[1]         = true; //Anytime you leave this mode it's a "Success" since progress is maintained
-        data[2]         = string.Format("{0} Words Found", currentWordScrambleLevel.foundWords.Count.ToString());
+        LevelResultsData results    = new LevelResultsData();
+        results.successIndicator    = true;
+        results.subtitleText        = string.Format("{0} Words Found", currentWordScrambleLevel.foundWords.Count.ToString());
 
-        Signal.Send("GameManagement", "LevelEnded", data);
+        GameManager.instance.SetLevelResults(results);
+
+        Signal.Send("GameManagement", "LevelEnded", 0);
     }
 
     private void Setup(Signal signal)

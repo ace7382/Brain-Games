@@ -20,6 +20,7 @@ public class CountdownClockController : MonoBehaviour
     public TextMeshProUGUI      timeDisplay;
     public Color                clockMidColor;
     public UnityEvent           onOutOfTime;
+    public string               onOutOfTimeAudioClip = "Out of Time";
 
     public float                SecondsRemaining { get { return secondsRemaining; } }
 
@@ -134,7 +135,7 @@ public class CountdownClockController : MonoBehaviour
     {
         Pause();
 
-        AudioManager.instance.Play("Out of Time", .5f);
+        AudioManager.instance.Play(onOutOfTimeAudioClip, .5f);
 
         if (pulsing != null)
         {

@@ -22,6 +22,7 @@ public class ArrowSwipeController : MonoBehaviour
 
     [SerializeField] private Image                      arrowImage;
     [SerializeField] private CountdownClockController   countdownClock;
+    [SerializeField] private CanvasGroup                arrowCanvasGroup ;
 
     #endregion
 
@@ -34,6 +35,8 @@ public class ArrowSwipeController : MonoBehaviour
 
     private Vector2             startSwipePosition;
     private float               startSwipeTime;
+
+    private MinigameResultsData results;
 
     #endregion
 
@@ -52,12 +55,15 @@ public class ArrowSwipeController : MonoBehaviour
 
     private void Awake()
     {
-        gamemanagement_gamesetup_stream     = SignalStream.Get("GameManagement", "GameSetup");
-        quitconfirmation_exitlevel_stream   = SignalStream.Get("QuitConfirmation", "ExitLevel");
-        quitconfirmation_backtogame_stream  = SignalStream.Get("QuitConfirmation", "BackToGame");
-        quitconfirmation_popup_stream       = SignalStream.Get("QuitConfirmation", "Popup");
+        gamemanagement_gamesetup_stream         = SignalStream.Get("GameManagement", "GameSetup");
+        quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
+        quitconfirmation_backtogame_stream      = SignalStream.Get("QuitConfirmation", "BackToGame");
+        quitconfirmation_popup_stream           = SignalStream.Get("QuitConfirmation", "Popup");
 
-        gamemanagement_gamesetup_receiver   = new SignalReceiver().SetOnSignalCallback(Setup);
+        gamemanagement_gamesetup_receiver       = new SignalReceiver().SetOnSignalCallback(Setup);
+        quitconfirmation_exitlevel_receiver     = new SignalReceiver().SetOnSignalCallback(EndGameEarly);
+        quitconfirmation_backtogame_receiver    = new SignalReceiver().SetOnSignalCallback(Unpause);
+        quitconfirmation_popup_receiver         = new SignalReceiver().SetOnSignalCallback(Pause);
     }
 
     private void OnEnable()
@@ -81,10 +87,17 @@ public class ArrowSwipeController : MonoBehaviour
 
     public void Setup(Signal signal)
     {
-        correctSwipes   = 0;
-        incorrectSwipes = 0;
+        results                     = new MinigameResultsData();
+        results.startingDifficulty  = GameManager.instance.currentMinigame.currentMaxDifficulty;
 
-        //countdownClock.SetupTimer(30f, 0f, false);
+        correctSwipes               = 0;
+        incorrectSwipes             = 0;
+
+        arrowCanvasGroup.alpha  = 1;
+
+        countdownClock.SetupTimer(30f, 0f, false);
+
+        Signal.Send("GameManagement", "DisableExitLevelButton", true);
 
         NextArrow();
     }
@@ -92,10 +105,44 @@ public class ArrowSwipeController : MonoBehaviour
     //Called by the GamePlay view's Shown callback
     public void StartGame()
     {
-        InputManager.instance.OnStartTouch += SwipeStart;
-        InputManager.instance.OnEndTouch += SwipeEnd;
+        InputManager.instance.OnStartTouch  += SwipeStart;
+        InputManager.instance.OnEndTouch    += SwipeEnd;
 
-        //countdownClock.StartTimer();
+        countdownClock.StartTimer();
+    }
+
+    public void EndGameEarly(Signal signal)
+    {
+        countdownClock.SetTime(-1f);
+    }
+
+    //Invoked by the Countdown Clock's OnOutOfTime Event
+    public void EndGame()
+    {
+        results.numCorrect          = correctSwipes;
+        results.numIncorrect        = incorrectSwipes;
+
+        GameManager.instance.SetMinigameResults(results);
+
+        InputManager.instance.OnStartTouch  -= SwipeStart;
+        InputManager.instance.OnEndTouch    -= SwipeEnd;
+
+        Signal.Send("GameManagement", "DisableExitLevelButton", false);
+
+        StartCoroutine(EndAnimation());
+    }
+
+    private IEnumerator EndAnimation()
+    {
+        arrowImage.color = Color.grey;
+
+        yield return new WaitForSeconds(.75f);
+
+        yield return FadePanelOut(arrowCanvasGroup);
+
+        Debug.Log(string.Format("Minigame Ended. Correct: {0} || Incorrect: {1}", correctSwipes.ToString(), incorrectSwipes.ToString()));
+
+        Signal.Send("GameManagement", "LevelEnded", 1);
     }
 
     private void SwipeStart(Vector2 position, float time)
@@ -200,5 +247,25 @@ public class ArrowSwipeController : MonoBehaviour
         {
             arrowImage.color = Color.green;
         }    
+    }
+
+    private IEnumerator FadePanelOut(CanvasGroup c)
+    {
+        while (c.alpha > 0)
+        {
+            c.alpha = Mathf.MoveTowards(c.alpha, 0f, .75f * Time.deltaTime);
+
+            yield return null;
+        }
+    }
+
+    private void Pause(Signal signal)
+    {
+        countdownClock.Pause();
+    }
+
+    private void Unpause(Signal signal)
+    {
+        countdownClock.Unpause();
     }
 }
