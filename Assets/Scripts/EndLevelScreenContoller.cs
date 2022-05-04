@@ -133,21 +133,23 @@ public class EndLevelScreenContoller : MonoBehaviour
 
     private IEnumerator MenuFadeIn()
     {
-        yield return new WaitForSeconds(.25f);
+        WaitForSeconds w = new WaitForSeconds(.25f);
 
-        yield return FadeCanvasIn(objective1Group);
+        yield return w;
 
-        yield return new WaitForSeconds(.25f);
+        yield return Helpful.FadeCanvasIn(objective1Group, .75f);
 
-        yield return FadeCanvasIn(objective2Group);
+        yield return w;
 
-        yield return new WaitForSeconds(.25f);
+        yield return Helpful.FadeCanvasIn(objective2Group, .75f);
 
-        yield return FadeCanvasIn(objective3Group);
+        yield return w;
 
-        yield return new WaitForSeconds(.25f);
+        yield return Helpful.FadeCanvasIn(objective3Group, .75f);
 
-        yield return FadeCanvasIn(buttonContainer.GetComponent<CanvasGroup>());
+        yield return w;
+
+        yield return Helpful.FadeCanvasIn(buttonContainer.GetComponent<CanvasGroup>(), .75f);
 
         skipMenuAnimationButton.SetActive(false);
     }
@@ -158,16 +160,6 @@ public class EndLevelScreenContoller : MonoBehaviour
         {
             float newAlpha = Mathf.MoveTowards(t.color.a, 1, .75f * Time.deltaTime);
             t.color = new Color(t.color.r, t.color.g, t.color.b, newAlpha);
-
-            yield return null;
-        }
-    }
-
-    private IEnumerator FadeCanvasIn(CanvasGroup c)
-    {
-        while (c.alpha < 1)
-        {
-            c.alpha = Mathf.MoveTowards(c.alpha, 1, .75f * Time.deltaTime);
 
             yield return null;
         }

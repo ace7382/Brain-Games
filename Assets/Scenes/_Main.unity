@@ -15493,6 +15493,7 @@ GameObject:
   - component: {fileID: 954979775}
   - component: {fileID: 954979776}
   - component: {fileID: 954979777}
+  - component: {fileID: 954979778}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -15550,6 +15551,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minimumSwipeDistance: 0.2
   maximumSwipeTime: 1
+--- !u!114 &954979778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954979774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f88f41a0a1ed8b341937b7d0a9025733, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  KGHappySolid: {fileID: 12800000, guid: aab8dd3d6bfa8f949903b40f5fc643f2, type: 3}
+  KGHappy: {fileID: 12800000, guid: 532e5093b61d3c245b16b8849e0d0523, type: 3}
 --- !u!1 &965713460
 GameObject:
   m_ObjectHideFlags: 0

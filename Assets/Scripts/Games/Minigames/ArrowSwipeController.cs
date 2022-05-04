@@ -20,9 +20,9 @@ public class ArrowSwipeController : MonoBehaviour
 
     #region Inspector Variables
 
-    [SerializeField] private Image                      arrowImage;
-    [SerializeField] private CountdownClockController   countdownClock;
-    [SerializeField] private CanvasGroup                arrowCanvasGroup ;
+    [SerializeField] private Image                              arrowImage;
+    [SerializeField] private CountdownProgressBarController     countdownProgress;
+    [SerializeField] private CanvasGroup                        arrowCanvasGroup ;
 
     #endregion
 
@@ -88,14 +88,14 @@ public class ArrowSwipeController : MonoBehaviour
     public void Setup(Signal signal)
     {
         results                     = new MinigameResultsData();
-        results.startingDifficulty  = GameManager.instance.currentMinigame.currentMaxDifficulty;
+        results.startingDifficulty  = GameManager.instance.currentMinigame.currentDifficultyLevel;
 
         correctSwipes               = 0;
         incorrectSwipes             = 0;
 
         arrowCanvasGroup.alpha  = 1;
 
-        countdownClock.SetupTimer(30f, 0f, false);
+        countdownProgress.SetupTimer(GameManager.instance.currentMinigame.timedStartTime);
 
         Signal.Send("GameManagement", "DisableExitLevelButton", true);
 
@@ -108,12 +108,12 @@ public class ArrowSwipeController : MonoBehaviour
         InputManager.instance.OnStartTouch  += SwipeStart;
         InputManager.instance.OnEndTouch    += SwipeEnd;
 
-        countdownClock.StartTimer();
+        countdownProgress.StartTimer();
     }
 
     public void EndGameEarly(Signal signal)
     {
-        countdownClock.SetTime(-1f);
+        countdownProgress.SetTime(-1f);
     }
 
     //Invoked by the Countdown Clock's OnOutOfTime Event
@@ -261,11 +261,11 @@ public class ArrowSwipeController : MonoBehaviour
 
     private void Pause(Signal signal)
     {
-        countdownClock.Pause();
+        countdownProgress.Pause();
     }
 
     private void Unpause(Signal signal)
     {
-        countdownClock.Unpause();
+        countdownProgress.Unpause();
     }
 }

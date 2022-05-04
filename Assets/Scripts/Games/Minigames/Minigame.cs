@@ -23,5 +23,5 @@ public class Minigame : ScriptableObject
     [Space]
 
     public int                  maxDifficulty;
-    public int                  currentMaxDifficulty;
+    public int                  currentDifficultyLevel;
 }

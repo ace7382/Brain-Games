@@ -18,7 +18,7 @@ public class TimedTriviaController : MonoBehaviour
     public TextMeshProUGUI                                      answer3;
     public TextMeshProUGUI                                      questionCount;
 
-    public Font                                                 responsePopupFont;
+    //public Font                                                 responsePopupFont;
     public CountdownClockController                             countdownClock;
 
     private TimedTriviaLevel                                     currentTimedTriviaLevel;
@@ -131,7 +131,8 @@ public class TimedTriviaController : MonoBehaviour
             {
                 countdownClock.AddTime(currentTimedTriviaLevel.secondsGainedForCorrectAnswer);
                 Helpful.TextPopup(string.Format("+{0}s", currentTimedTriviaLevel.secondsGainedForCorrectAnswer.ToString())
-                    , countdownClock.timeDisplay.transform, Vector2.zero, Color.green, responsePopupFont);
+                    , countdownClock.timeDisplay.transform, Vector2.zero, Color.green
+                    , UniversalInspectorVariables.instance.KGHappy, 80);
             }
         }
         else
@@ -141,7 +142,8 @@ public class TimedTriviaController : MonoBehaviour
             //Getting the last question incorrect will make you lose time though, so you can lose on the last question
             countdownClock.SubtractTime(currentTimedTriviaLevel.secondsLostForWrongAnswer);
             Helpful.TextPopup(string.Format("-{0}s", currentTimedTriviaLevel.secondsLostForWrongAnswer.ToString())
-                , countdownClock.timeDisplay.transform, Vector2.zero, Color.red, responsePopupFont);
+                , countdownClock.timeDisplay.transform, Vector2.zero, Color.red
+                , UniversalInspectorVariables.instance.KGHappy, 80);
         }
 
         if (countdownClock.SecondsRemaining > 0)
@@ -236,7 +238,7 @@ public class TimedTriviaController : MonoBehaviour
 
         center = new Vector2(0f, 40f);
 
-        Helpful.TextPopup(t, tran, center, c, responsePopupFont);
+        Helpful.TextPopup(t, tran, center, c, UniversalInspectorVariables.instance.KGHappy, 80);
     }
 
     private void Pause(Signal signal)

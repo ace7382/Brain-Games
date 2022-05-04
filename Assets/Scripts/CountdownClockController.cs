@@ -154,7 +154,7 @@ public class CountdownClockController : MonoBehaviour
     private void UpdateTimerDisplay()
     {
         //TODO: Add 1 to the display/remaining seconds. Currently the last second shows 0:00 on the clock.
-        //      It's just a visual issue
+        //      It's just a visual issue. (I think this is done?)
 
         float fakeSecondsRemaining = Mathf.Clamp(secondsRemaining + 1, 0f, float.MaxValue);
 

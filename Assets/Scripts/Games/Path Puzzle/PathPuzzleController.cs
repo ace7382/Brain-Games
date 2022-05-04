@@ -20,7 +20,7 @@ public class PathPuzzleController : MonoBehaviour
     public CountdownClockController         countdownClock;
     public TextMeshProUGUI                  connectionCounterTitle;
     public TextMeshProUGUI                  connectionCounter;
-    public Font                             popupFont;
+    //public Font                             popupFont;
 
     public List<PathPuzzleTileController>   tiles;
 
@@ -217,7 +217,8 @@ public class PathPuzzleController : MonoBehaviour
                 Helpful.TextPopup(string.Format("+{0}", checkedSet.Count.ToString())
                     , connectionCounter.transform
                     , Vector2.zero
-                    , Color.green, popupFont);
+                    , Color.green, UniversalInspectorVariables.instance.KGHappySolid
+                    , 80);
 
                 StartCoroutine(AnimateBoardEnding());
             }

@@ -6,13 +6,14 @@ using UnityEngine.UI;
 
 public static class Helpful
 {
-    public static void TextPopup(string word, Transform par, Vector2 center, Color col, Font font)
+    //TODO: Make this use TMPro
+    public static void TextPopup(string word, Transform par, Vector2 center, Color col, Font font, int fontSize)
     {
         GameObject floatingTextObject = new GameObject("found_word_floating_text", typeof(Shadow));
         RectTransform floatingTextRectT = floatingTextObject.AddComponent<RectTransform>();
         Text floatingText = floatingTextObject.AddComponent<Text>();
         floatingText.font = font;
-        floatingText.fontSize = 80;
+        floatingText.fontSize = fontSize;
 
         floatingText.text = word;
         floatingText.color = col;
@@ -153,6 +154,16 @@ public static class Helpful
 
                 yield return new WaitForEndOfFrame();
             }
+        }
+    }
+
+    public static IEnumerator FadeCanvasIn(CanvasGroup c, float speed)
+    {
+        while (c.alpha < 1)
+        {
+            c.alpha = Mathf.MoveTowards(c.alpha, 1, speed * Time.deltaTime);
+
+            yield return null;
         }
     }
 
