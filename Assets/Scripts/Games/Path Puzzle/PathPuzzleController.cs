@@ -41,6 +41,10 @@ public class PathPuzzleController : MonoBehaviour
 
     private void Awake()
     {
+        Canvas c        = GetComponentInParent<Canvas>();
+        c.worldCamera   = Camera.main;
+        c.sortingOrder  = UniversalInspectorVariables.instance.gameScreenOrderInLayer;
+
         pathpuzzle_tilerotated_stream           = SignalStream.Get("PathPuzzle", "TileRotated");
         gamemanagement_gamesetup_stream         = SignalStream.Get("GameManagement", "GameSetup");
         quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");

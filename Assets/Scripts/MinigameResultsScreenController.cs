@@ -42,6 +42,10 @@ public class MinigameResultsScreenController : MonoBehaviour
 
     private void Awake()
     {
+        Canvas c        = GetComponentInParent<Canvas>();
+        c.worldCamera   = Camera.main;
+        c.sortingOrder  = UniversalInspectorVariables.instance.popupScreenOrderInLayer;
+
         endlevelscreen_setup_stream     = SignalStream.Get("EndLevelScreen", "Setup");
         
         endlevelscreen_setup_receiver   = new SignalReceiver().SetOnSignalCallback(Setup);
@@ -157,11 +161,13 @@ public class MinigameResultsScreenController : MonoBehaviour
         {
             difficultyBarText.text      = "MAX!!";
             difficultyBarText.fontSize  = 100;
+            difficultyBarText.margin    = new Vector4(0, 0, 0, -21); //This value is hardcoded based on the current font size.
         }
         else
         {
             difficultyBarText.text      = GameManager.instance.currentMinigame.currentDifficultyLevel.ToString();
             difficultyBarText.fontSize  = 36;
+            difficultyBarText.margin    = Vector4.zero;
         }
     }
 

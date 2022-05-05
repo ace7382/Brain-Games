@@ -7,9 +7,6 @@ using UnityEngine.UI;
 
 public class CountdownProgressBarController : MonoBehaviour
 {
-    //TODO: Create a "Fast Drain" function to use when a level is exited. Setting directly to zero is jarring
-    //      Can probably use the progressor's PlayToValue or somethign
-
     #region Inspector Variables
 
     [SerializeField] Progressor     progressor;
@@ -89,6 +86,15 @@ public class CountdownProgressBarController : MonoBehaviour
         secondsRemaining = t;
 
         UpdateTimerDisplay();
+    }
+
+    public void DrainClock()
+    {
+        RanOutOfTime();
+
+        secondsRemaining = 0;
+
+        progressor.PlayToProgress(0);
     }
 
     #endregion

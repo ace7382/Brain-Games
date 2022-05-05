@@ -22,7 +22,10 @@ public class ArrowSwipeController : MonoBehaviour
 
     [SerializeField] private Image                              arrowImage;
     [SerializeField] private CountdownProgressBarController     countdownProgress;
-    [SerializeField] private CanvasGroup                        arrowCanvasGroup ;
+    [SerializeField] private CanvasGroup                        arrowCanvasGroup;
+    [SerializeField] private CanvasGroup                        exitButtonCanvasGroup;
+
+    [SerializeField] private GameObject                         trailRenderer;
 
     #endregion
 
@@ -37,6 +40,8 @@ public class ArrowSwipeController : MonoBehaviour
     private float               startSwipeTime;
 
     private MinigameResultsData results;
+
+    private IEnumerator         trailCoroutine;
 
     #endregion
 
@@ -55,6 +60,10 @@ public class ArrowSwipeController : MonoBehaviour
 
     private void Awake()
     {
+        Canvas c        = GetComponentInParent<Canvas>();
+        c.worldCamera   = Camera.main;
+        c.sortingOrder  = UniversalInspectorVariables.instance.gameScreenOrderInLayer;
+
         gamemanagement_gamesetup_stream         = SignalStream.Get("GameManagement", "GameSetup");
         quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
         quitconfirmation_backtogame_stream      = SignalStream.Get("QuitConfirmation", "BackToGame");
@@ -93,7 +102,8 @@ public class ArrowSwipeController : MonoBehaviour
         correctSwipes               = 0;
         incorrectSwipes             = 0;
 
-        arrowCanvasGroup.alpha  = 1;
+        arrowCanvasGroup.alpha      = 1;
+        exitButtonCanvasGroup.alpha = 1;
 
         countdownProgress.SetupTimer(GameManager.instance.currentMinigame.timedStartTime);
 
@@ -113,7 +123,7 @@ public class ArrowSwipeController : MonoBehaviour
 
     public void EndGameEarly(Signal signal)
     {
-        countdownProgress.SetTime(-1f);
+        countdownProgress.DrainClock();
     }
 
     //Invoked by the Countdown Clock's OnOutOfTime Event
@@ -138,6 +148,7 @@ public class ArrowSwipeController : MonoBehaviour
 
         yield return new WaitForSeconds(.75f);
 
+        StartCoroutine(FadePanelOut(exitButtonCanvasGroup));
         yield return FadePanelOut(arrowCanvasGroup);
 
         Debug.Log(string.Format("Minigame Ended. Correct: {0} || Incorrect: {1}", correctSwipes.ToString(), incorrectSwipes.ToString()));
@@ -149,10 +160,23 @@ public class ArrowSwipeController : MonoBehaviour
     {
         startSwipePosition = position;
         startSwipeTime = time;
+
+        trailRenderer.SetActive(true);
+        trailRenderer.transform.position = position;
+        trailCoroutine = trailRenderer.GetComponent<SwipeTrailController>().Trail();
+        StartCoroutine(trailCoroutine);
     }
 
     private void SwipeEnd(Vector2 position, float time)
     {
+        trailRenderer.SetActive(false);
+
+        if (trailCoroutine != null)
+        {
+            StopCoroutine(trailCoroutine);
+            trailCoroutine = null;
+        }
+
         if (Vector3.Distance(startSwipePosition, position) >= InputManager.instance.minimumSwipeDistance
             && (time - startSwipeTime) <= InputManager.instance.maximumSwipeTime)
         {
@@ -261,11 +285,17 @@ public class ArrowSwipeController : MonoBehaviour
 
     private void Pause(Signal signal)
     {
+        InputManager.instance.OnStartTouch  -= SwipeStart;
+        InputManager.instance.OnEndTouch    -= SwipeEnd;
+
         countdownProgress.Pause();
     }
 
     private void Unpause(Signal signal)
     {
+        InputManager.instance.OnStartTouch  += SwipeStart;
+        InputManager.instance.OnEndTouch    += SwipeEnd;
+
         countdownProgress.Unpause();
     }
 }

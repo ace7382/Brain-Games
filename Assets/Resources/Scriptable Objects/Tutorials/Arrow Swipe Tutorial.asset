@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Arrow Swipe Tutorial
   m_EditorClassIdentifier: 
   pages:
-  - instructionPage: {fileID: 4787047687346424706, guid: f54caac1cb3fdd44fb858e20ac08f227, type: 3}
+  - instructionPage: {fileID: 4787047687346424706, guid: b49ab82b4b86d1c43ba2f43d65e5c187, type: 3}
     displayPage: {fileID: 4787047687346424706, guid: f8f6f731ccccb9243bfe425726db2bc1, type: 3}
   pagesOnRight: 0

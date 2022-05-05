@@ -8,6 +8,8 @@ public class UniversalInspectorVariables : MonoBehaviour
 
     public Font KGHappySolid;
     public Font KGHappy;
+    public int  gameScreenOrderInLayer;
+    public int  popupScreenOrderInLayer;
 
     public void Awake()
     {

@@ -8,6 +8,13 @@ public class QuitConfirmationScreenController : MonoBehaviour
     //NOTES:    To add custom pause/exit behavior to certain games
     //          just add a stream listener for the popup/return to game streams
 
+    public void Awake()
+    {
+        Canvas c        = GetComponentInParent<Canvas>();
+        c.worldCamera   = Camera.main;
+        c.sortingOrder  = UniversalInspectorVariables.instance.popupScreenOrderInLayer;
+    }
+
     //Called by the QUitConfirmation Screen's Return to Game Button's OnClick
     public void ReturnToGame()
     {

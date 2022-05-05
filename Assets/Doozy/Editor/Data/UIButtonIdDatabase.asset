@@ -25,4 +25,6 @@ MonoBehaviour:
     - Category: TutorialScreen
       Name: NextPage
     - Category: TutorialScreen
+      Name: PlayGame
+    - Category: TutorialScreen
       Name: ReturnHome

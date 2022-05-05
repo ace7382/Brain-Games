@@ -39,6 +39,10 @@ public class WordScrambleController : MonoBehaviour
 
     private void Awake()
     {
+        Canvas c        = GetComponentInParent<Canvas>();
+        c.worldCamera   = Camera.main;
+        c.sortingOrder  = UniversalInspectorVariables.instance.gameScreenOrderInLayer;
+
         gamemanagement_gamesetup_stream         = SignalStream.Get("GameManagement", "GameSetup");
         wordscramble_tileclicked_stream         = SignalStream.Get("WordScramble", "TileClicked");
         quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");

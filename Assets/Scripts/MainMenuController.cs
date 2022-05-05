@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class MainMenuController : MonoBehaviour
 {
+    #region Inspector Variables
+
+    [SerializeField] private RectTransform          leftSideScrollRect;
+
     public List<LevelSelectButtonController>        levelButtons;
     public List<MinigameSelectButtonController>     minigameButtons;
+
+    #endregion
 
     //Screen - Main Menu's OnShowCallback calls this
     public void Setup()
@@ -17,5 +23,7 @@ public class MainMenuController : MonoBehaviour
             minigameButtons[i].ShowLockedStatus();
 
         GameManager.instance.ClearLevelData();
+
+        leftSideScrollRect.anchoredPosition = Vector3.zero;
     }
 }

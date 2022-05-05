@@ -210,7 +210,8 @@ public class TutorialScreenController : MonoBehaviour
 
     public void LeaveTutorialScreen()
     {
-        //Signal.Send("GameManagement", "LeaveTutorialScreen", Helpful.GetGameID(GameManager.instance.currentLevel.GetType()));
+        AudioManager.instance.Play("Button Click");
+
         Signal.Send("GameManagement", "LeaveTutorialScreen",
             GameManager.instance.currentLevel != null ? GameManager.instance.currentLevel.timedLevel : GameManager.instance.currentMinigame.timed);
     }

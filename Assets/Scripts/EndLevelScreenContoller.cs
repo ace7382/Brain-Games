@@ -35,6 +35,10 @@ public class EndLevelScreenContoller : MonoBehaviour
 
     private void Awake()
     {
+        Canvas c        = GetComponentInParent<Canvas>();
+        c.worldCamera   = Camera.main;
+        c.sortingOrder  = UniversalInspectorVariables.instance.popupScreenOrderInLayer;
+
         endlevelscreen_setup_stream = SignalStream.Get("EndLevelScreen", "Setup");
 
         endlevelscreen_setup_receiver = new SignalReceiver().SetOnSignalCallback(Setup);

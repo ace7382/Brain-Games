@@ -42,6 +42,10 @@ public class TimedTriviaController : MonoBehaviour
 
     private void Awake()
     {
+        Canvas c        = GetComponentInParent<Canvas>();
+        c.worldCamera   = Camera.main;
+        c.sortingOrder  = UniversalInspectorVariables.instance.gameScreenOrderInLayer;
+
         gamemanagement_gamesetup_stream         = SignalStream.Get("GameManagement", "GameSetup");
         trivia_answerchosen_stream              = SignalStream.Get("Trivia", "AnswerChosen");
         quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
@@ -256,7 +260,6 @@ public class TimedTriviaController : MonoBehaviour
         won                         = false;
         questionsAnsweredCorrectly  = 0;
 
-        countdownClock.Pause(); //TODO: Don't think I need this call
         countdownClock.SetTime(-1f); //To make the game end at the same time the timer visually ends, we feed it a negative value
     }
 
