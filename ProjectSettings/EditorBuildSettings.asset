@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MinigameEndScreen.unity
     guid: 347a4ef019897934ba92bfafa2809862
+  - enabled: 1
+    path: Assets/Scenes/Gameplay Scenes/CodeBreaker.unity
+    guid: 6e090d4f532060e42bc54950dfe1e513
   m_configObjects: {}

@@ -20,7 +20,6 @@ public class PathPuzzleController : MonoBehaviour
     public CountdownClockController         countdownClock;
     public TextMeshProUGUI                  connectionCounterTitle;
     public TextMeshProUGUI                  connectionCounter;
-    //public Font                             popupFont;
 
     public List<PathPuzzleTileController>   tiles;
 
@@ -52,7 +51,7 @@ public class PathPuzzleController : MonoBehaviour
         quitconfirmation_popup_stream           = SignalStream.Get("QuitConfirmation", "Popup");
 
         pathpuzzle_tilerotated_receiver         = new SignalReceiver().SetOnSignalCallback(CheckTiles);
-        gamemanagement_gamesetup_receiver = new SignalReceiver().SetOnSignalCallback(Setup);
+        gamemanagement_gamesetup_receiver       = new SignalReceiver().SetOnSignalCallback(Setup);
         quitconfirmation_exitlevel_receiver     = new SignalReceiver().SetOnSignalCallback(EndGameEarly);
         quitconfirmation_backtogame_receiver    = new SignalReceiver().SetOnSignalCallback(Unpause);
         quitconfirmation_popup_receiver         = new SignalReceiver().SetOnSignalCallback(Pause);

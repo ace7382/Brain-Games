@@ -106,6 +106,21 @@ public static class Helpful
                 return "All Correct";
             }
         }
+        else if (level.GetType() == typeof(CodeBreakerLevel))
+        {
+            if (objectiveNumber == 1)
+            {
+                return "Code Broken";
+            }
+            else if (objectiveNumber == 2)
+            {
+                return string.Format("Code Broken in {0} guesses", ((CodeBreakerLevel)level).highNumberOfGuessesGoal.ToString());
+            }
+            else if (objectiveNumber == 3)
+            {
+                return string.Format("Code Broken in {0} guesses", ((CodeBreakerLevel)level).lowNumberOfGuessesGoal.ToString());
+            }
+        }
 
         Debug.Log("Something went wrong when grabbing a level's objective names");
 
@@ -122,6 +137,8 @@ public static class Helpful
             return 2;
         else if (t == typeof(SpeedMathLevel))
             return 3;
+        else if (t == typeof(CodeBreakerLevel))
+            return 4;
 
         return -1;
     }
