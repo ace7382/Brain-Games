@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Doozy.Runtime.Signals;
 using UnityEngine.UI;
@@ -254,35 +255,47 @@ public class CodeBreakerController : MonoBehaviour
 
         if (solutionIndicators.Contains(1))
         {
-            List<int> indexesToCheck = new List<int>();
+            Dictionary<CodeBreakerChoicesInfo.CodebreakerChoices, int> maxNumberOfWrongPlace = new Dictionary<CodeBreakerChoicesInfo.CodebreakerChoices, int>();
 
-            for (int i = 0; i < solutionIndicators.Count; i++)
-                if (solutionIndicators[i] != 0)
-                    indexesToCheck.Add(i);
-            
-            for (int i = 0; i < solutionIndicators.Count; i++)
+            for (int i = 0; i < currentCodeBreakerLevel.solution.Count; i++)
+            {
+                if (!maxNumberOfWrongPlace.ContainsKey(choices[i]))
+                {
+                    int numInSolution = currentCodeBreakerLevel.solution.Where(x => x == choices[i]).Count();
+
+                    maxNumberOfWrongPlace.Add(choices[i], numInSolution);
+                }
+            }
+
+            for (int i = 0; i < choices.Count; i++)
             {
                 if (solutionIndicators[i] == 0)
+                    maxNumberOfWrongPlace[choices[i]] -= 1;
+            }
+
+            for (int i = 0; i < choices.Count; i++)
+            {
+                if (solutionIndicators[i] != 1)
                     continue;
 
-                CodeBreakerChoicesInfo.CodebreakerChoices c = choices[i];
-                
-                for (int j = 0; j < indexesToCheck.Count; j++)
+                if (maxNumberOfWrongPlace.ContainsKey(choices[i]))
                 {
-                    if (i == indexesToCheck[j])
-                        continue;
-
-                    if (currentCodeBreakerLevel.solution[indexesToCheck[j]] == c)
-                        goto nextSolutionSlot;
+                    if (maxNumberOfWrongPlace[choices[i]] > 0)
+                    {
+                        maxNumberOfWrongPlace[choices[i]] -= 1;
+                    }
+                    else
+                    {
+                        solutionIndicators[i] = -1;
+                    }    
                 }
-
-                solutionIndicators[i] = -1;
-
-                nextSolutionSlot:;
-            } //TODO: only mark the 1st x of solutions as yellow, (don't mark 3 yellow if there's only 1 of the choice in the solution)
+            }
         }
 
         control.Setup(codeBreakerGuessTrackerIconPrefab, attemptNumber, choices, solutionIndicators);
+
+        //TODO: Add arrows/indicators showing list is scrollable. Make scrollable only when scroll is needed.
+        //      Pull view to bottom of list when a new one is added
     }
 
     private void ClearGuesses()
