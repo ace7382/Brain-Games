@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8bf7790bdaa1594e8b545671661a4b1, type: 3}
-  m_Name: Test Level
+  m_Name: Level 1
   m_EditorClassIdentifier: 
   levelName: Level 1
   unlocked: 1
   timedLevel: 0
-  tutorial: {fileID: 11400000, guid: 73772b2139d0fc040a3b4097b4a77db1, type: 2}
-  nextLevel: {fileID: 0}
-  objective1: 0
-  objective2: 0
-  objective3: 0
+  tutorial: {fileID: 11400000, guid: 4699fcee7648d634eacb5de84da0c383, type: 2}
+  nextLevel: {fileID: 11400000, guid: 1e20c3aab8c456a48aa6d20123dbf72a, type: 2}
+  objective1: 1
+  objective2: 1
+  objective3: 1
   solution: 01000000020000000300000003000000
   possibleChoices: 0100000002000000030000000400000005000000060000000700000008000000
   highNumberOfGuessesGoal: 5

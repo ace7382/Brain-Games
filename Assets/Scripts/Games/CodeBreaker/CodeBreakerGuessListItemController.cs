@@ -19,8 +19,6 @@ public class CodeBreakerGuessListItemController : MonoBehaviour
     {
         attemptNumText.text = string.Format("#{0}", attemptNum <= 9999 ? attemptNum.ToString() : "X__X");
 
-        Debug.Log(string.Format("Choices Count {0}", choices.Count));
-
         for (int i = 0; i < choices.Count; i++)
         {
             GameObject go = Instantiate(prefab, iconPanel.transform);

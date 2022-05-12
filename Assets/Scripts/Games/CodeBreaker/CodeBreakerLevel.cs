@@ -6,8 +6,8 @@ using UnityEngine;
 public class CodeBreakerLevel : LevelBase
 {
     //Objective 1 - Completed
-    //Objective 2 - Number of guesses 1
-    //Objective 3 - Number of guesses 2
+    //Objective 2 - High Number of guesses
+    //Objective 3 - Low Number of guesses
 
     public List<CodeBreakerChoicesInfo.CodebreakerChoices>  solution;
     public List<CodeBreakerChoicesInfo.CodebreakerChoices>  possibleChoices;

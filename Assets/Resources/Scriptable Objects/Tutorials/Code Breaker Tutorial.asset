@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72bf9e41f2c320b4eae93d81c2a99e17, type: 3}
+  m_Name: Code Breaker Tutorial
+  m_EditorClassIdentifier: 
+  pages:
+  - instructionPage: {fileID: 4787047687346424706, guid: 7c418109e4831464093963ea9e216041, type: 3}
+    displayPage: {fileID: 4787047687346424706, guid: 5ca658df4bb8d0a4fa80a6fb7a240a43, type: 3}
+  - instructionPage: {fileID: 4787047687346424706, guid: 47a5bc08323e2ff4d956e7a18d5373b2, type: 3}
+    displayPage: {fileID: 0}
+  pagesOnRight: 1

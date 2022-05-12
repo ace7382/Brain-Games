@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Doozy.Runtime.Signals;
 using UnityEngine.UI;
+using Doozy.Runtime.UIManager.Components;
 
 public class CodeBreakerController : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class CodeBreakerController : MonoBehaviour
 
     private int                                     selectedGuessSlotID;
     private int                                     attemptNumber;
+    private bool                                    won;
 
     #endregion
 
@@ -52,7 +54,6 @@ public class CodeBreakerController : MonoBehaviour
     private SignalStream                            codebreaker_assignchoice_stream;
 
     #endregion
-
 
     #region Unity Functions
     private void Awake()
@@ -123,16 +124,29 @@ public class CodeBreakerController : MonoBehaviour
 
     private void Setup(Signal signal)
     {
+        EnableScreenItems(true);
+
         currentCodeBreakerLevel     = (CodeBreakerLevel)GameManager.instance.currentLevel;
         attemptNumber               = 0;
+        won                         = false;
 
         SetupMainPanel();
         SetupRightPanel();
+        SetupLeftPanel();
+
+        //This section is needed for some reason bc deactivating buttons on endgame and then activating at the beginning of this function
+        //causes them to not be positioned correctly
+        mainPanel.SetActive(false);
+        Canvas.ForceUpdateCanvases();
+        mainPanel.SetActive(true);
+        Canvas.ForceUpdateCanvases();
+        //
     }
 
     private void SetupMainPanel()
     {
-        guessButtons                = new List<CodeBreakerGuessButtonController>();
+        if (guessButtons == null)
+            guessButtons            = new List<CodeBreakerGuessButtonController>();
 
         GridLayoutGroup layoutGroup = mainPanel.GetComponent<GridLayoutGroup>();
 
@@ -155,18 +169,72 @@ public class CodeBreakerController : MonoBehaviour
             case 8:
                 layoutGroup.cellSize    = new Vector2(150f, 150f);
                 layoutGroup.spacing     = new Vector2(40f, 0f);
+                ((RectTransform)selectionCursor.transform).sizeDelta = new Vector2(195f, 195f);
                 break;
         }
 
-        for (int i = 0; i < currentCodeBreakerLevel.solution.Count; i++)
+        if (mainPanel.transform.childCount == 0) //No buttons yet
         {
-            GameObject go                                   = Instantiate(codeBreakerGuessButtonPrefab, mainPanel.transform);
-            CodeBreakerGuessButtonController buttonControl  = go.GetComponent<CodeBreakerGuessButtonController>();
+            for (int i = 0; i < currentCodeBreakerLevel.solution.Count; i++)
+            {
+                GameObject go                                   = Instantiate(codeBreakerGuessButtonPrefab, mainPanel.transform);
+                CodeBreakerGuessButtonController buttonControl  = go.GetComponent<CodeBreakerGuessButtonController>();
 
-            buttonControl.buttonID                          = i;
-            buttonControl.Clear();
+                buttonControl.buttonID                          = i;
+                buttonControl.Clear();
 
-            guessButtons.Add(buttonControl);
+                guessButtons.Add(buttonControl);
+            }
+        }
+        else if (mainPanel.transform.childCount > currentCodeBreakerLevel.solution.Count) //More children than needed for the solution
+        {
+            for (int i = currentCodeBreakerLevel.solution.Count; i < mainPanel.transform.childCount; i++)
+            {
+                Transform t = mainPanel.transform.GetChild(i);
+
+                if (t.gameObject.activeSelf)
+                {
+                    guessButtons.Remove(t.GetComponent<CodeBreakerGuessButtonController>());
+                    t.gameObject.SetActive(false);
+                }
+            }
+        }
+        else if (mainPanel.transform.childCount < currentCodeBreakerLevel.solution.Count) //Fewer children than are needed, but there are some existing children
+        {
+            //Check children to see if they're active. If they are, skip, if not activate and add to guess buttons.
+            //if past the child count, make new ones
+            guessButtons.Clear();
+
+            for (int i = 0; i < currentCodeBreakerLevel.solution.Count; i++)
+            {
+                if (i < mainPanel.transform.childCount)
+                {
+                    GameObject go = mainPanel.transform.GetChild(i).gameObject;
+                    CodeBreakerGuessButtonController buttonControl = go.GetComponent<CodeBreakerGuessButtonController>();
+
+                    if (!go.activeSelf)
+                        go.SetActive(true);
+
+                    buttonControl.buttonID = i;
+                    buttonControl.Clear();
+
+                    guessButtons.Add(buttonControl);
+                }
+                else
+                {
+                    GameObject go = Instantiate(codeBreakerGuessButtonPrefab, mainPanel.transform);
+                    CodeBreakerGuessButtonController buttonControl = go.GetComponent<CodeBreakerGuessButtonController>();
+
+                    buttonControl.buttonID = i;
+                    buttonControl.Clear();
+
+                    guessButtons.Add(buttonControl);
+                }
+            }
+        }
+        else //Same number needed as existing. Don't need to do anything I think
+        {
+
         }
 
         Canvas.ForceUpdateCanvases();
@@ -177,6 +245,9 @@ public class CodeBreakerController : MonoBehaviour
 
     private void SetupRightPanel()
     {
+        foreach (Transform child in rightPanelButtonPanel.transform)
+            Destroy(child.gameObject);
+
         for (int i = 0; i < currentCodeBreakerLevel.possibleChoices.Count; i++)
         {
             GameObject go                               = Instantiate(codeBreakerChoiceButtonPrefab, rightPanelButtonPanel.transform);
@@ -184,6 +255,12 @@ public class CodeBreakerController : MonoBehaviour
 
             buttonControl.Setup(currentCodeBreakerLevel.possibleChoices[i], i);
         }
+    }
+
+    private void SetupLeftPanel()
+    {
+        foreach (Transform child in leftPanelListContainer.transform)
+            Destroy(child.gameObject);
     }
 
     private void GuessButtonClicked(Signal signal)
@@ -294,6 +371,35 @@ public class CodeBreakerController : MonoBehaviour
 
         control.Setup(codeBreakerGuessTrackerIconPrefab, attemptNumber, choices, solutionIndicators);
 
+        RectTransform leftTran  = (RectTransform)leftPanelListContainer.transform;
+        ScrollRect sc           = leftPanelListContainer.GetComponentInParent<ScrollRect>();
+
+        if (leftTran.sizeDelta.y >= 0)
+        {
+            sc.enabled              = true;
+
+            Canvas.ForceUpdateCanvases();
+
+            leftTran.localPosition  = new Vector3(leftTran.localPosition.x
+                , leftTran.sizeDelta.y + 50f //50 is the list item size.y
+                , leftTran.localPosition.z);
+        }
+        else
+            sc.enabled              = false;
+
+        if (!solutionIndicators.Contains(1) && !solutionIndicators.Contains(-1))
+        {
+            AudioManager.instance.Play("Go");
+
+            won = true;
+
+            EndGame();
+        }
+        else
+        {
+            AudioManager.instance.Play("No");
+        }
+
         //TODO: Add arrows/indicators showing list is scrollable. Make scrollable only when scroll is needed.
         //      Pull view to bottom of list when a new one is added
     }
@@ -308,9 +414,56 @@ public class CodeBreakerController : MonoBehaviour
         SelectGuessButton(0);
     }
 
+    private void EndGame()
+    {
+        EnableScreenItems(false);
+
+        if (won)
+        {
+            if (!currentCodeBreakerLevel.objective1)
+                currentCodeBreakerLevel.objective1 = true;
+
+            if (currentCodeBreakerLevel.nextLevel != null && !currentCodeBreakerLevel.nextLevel.unlocked)
+                currentCodeBreakerLevel.nextLevel.unlocked = true;
+        }     
+
+        if (attemptNumber <= currentCodeBreakerLevel.highNumberOfGuessesGoal)
+        {
+            if (!currentCodeBreakerLevel.objective2)
+                currentCodeBreakerLevel.objective2 = true;
+
+            if (attemptNumber <= currentCodeBreakerLevel.lowNumberOfGuessesGoal && !currentCodeBreakerLevel.objective3)
+                currentCodeBreakerLevel.objective3 = true;
+        }
+
+        LevelResultsData results    = new LevelResultsData();
+        results.successIndicator    = won;
+        results.subtitleText        = string.Format("{0} attempts made!", attemptNumber.ToString());
+
+        GameManager.instance.SetLevelResults(results);
+
+        selectionCursor.SetActive(false);
+
+        Invoke("EndSignal", 1.5f);
+    }
+
+    private void EnableScreenItems(bool settingOn)
+    {
+        foreach (UIButton butt in GetComponentsInChildren<UIButton>())
+            butt.interactable = settingOn;
+
+        ScrollRect sc   = leftPanelListContainer.GetComponentInParent<ScrollRect>();
+        sc.enabled      = settingOn;
+    }
+
+    private void EndSignal()
+    {
+        Signal.Send("GameManagement", "LevelEnded", 0);
+    }
+
     private void EndGameEarly(Signal signal)
     {
-
+        EndGame();
     }
 
     private void Pause(Signal signal)

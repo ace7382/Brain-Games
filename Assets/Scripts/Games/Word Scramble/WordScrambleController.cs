@@ -93,6 +93,7 @@ public class WordScrambleController : MonoBehaviour
         SubmitWord();
     }
 
+    //Called by the Finish Button's OnClick Behavior
     public void EndGame()
     {
         for (int i = 0; i < tiles.Count; i++)

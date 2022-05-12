@@ -41,6 +41,9 @@ public class DevelopmentHelperScripts : MonoBehaviour
 
         ResetPathPuzzleLevels();
         Debug.Log("Path Puzzle Levels Reset");
+
+        ResetCodeBreakerLevels();
+        Debug.Log("Code Breaker Levels Reset");
     }
 
     [MenuItem("Dev Commands/Reset Trivia Levels")]
@@ -124,6 +127,27 @@ public class DevelopmentHelperScripts : MonoBehaviour
             new List<PathPuzzleLevel>(Resources.LoadAll<PathPuzzleLevel>("Scriptable Objects/Path Puzzle Levels"));
 
         foreach (PathPuzzleLevel level in levels)
+        {
+            if (level.name.Contains("Level 1"))
+            {
+                level.unlocked = true;
+            }
+            else
+            {
+                level.unlocked = false;
+            }
+
+            level.ResetObjectives();
+        }
+    }
+
+    [MenuItem("Dev Commands/Reset Code Breaker Levels")]
+    public static void ResetCodeBreakerLevels()
+    {
+        List<CodeBreakerLevel> levels =
+            new List<CodeBreakerLevel>(Resources.LoadAll<CodeBreakerLevel>("Scriptable Objects/Code Breaker Levels"));
+
+        foreach (CodeBreakerLevel level in levels)
         {
             if (level.name.Contains("Level 1"))
             {

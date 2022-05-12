@@ -114,11 +114,11 @@ public static class Helpful
             }
             else if (objectiveNumber == 2)
             {
-                return string.Format("Code Broken in {0} guesses", ((CodeBreakerLevel)level).highNumberOfGuessesGoal.ToString());
+                return string.Format("{0} or fewer attempts", ((CodeBreakerLevel)level).highNumberOfGuessesGoal.ToString());
             }
             else if (objectiveNumber == 3)
             {
-                return string.Format("Code Broken in {0} guesses", ((CodeBreakerLevel)level).lowNumberOfGuessesGoal.ToString());
+                return string.Format("{0} or fewer attempts", ((CodeBreakerLevel)level).lowNumberOfGuessesGoal.ToString());
             }
         }
 
