@@ -221,6 +221,7 @@ MonoBehaviour:
     - 9dea1495-5bf8-49fb-ade9-0b66e8db8816
     - 1a43b0c7-b4d2-4800-a09e-14f7cbf41351
     - 83327a08-cc23-4823-91eb-16459dc3db42
+    - 51d0dd96-22bd-440a-919e-75af79be9566
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0
@@ -368,6 +369,57 @@ MonoBehaviour:
     Category: None
     Name: None
     Custom: 0
+--- !u!114 &-5073307027630619044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ca49677b98354a4bb12a4f833f88f48, type: 3}
+  m_Name: Unload Scene
+  m_EditorClassIdentifier: 
+  FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
+  NodeId: 82aab2f5-e4b2-44d6-93ae-4aeaf4a1ac2a
+  NodeType: 0
+  NodeName: Unload ColorDissonance
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 82aab2f5-e4b2-44d6-93ae-4aeaf4a1ac2a
+    PortId: 9a9251bf-30be-4343-a3e0-5c8f46b7562e
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 585ed375-1ca3-4d98-b3eb-72a08ea64270
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 82aab2f5-e4b2-44d6-93ae-4aeaf4a1ac2a
+    PortId: 5bb0a36b-acc5-4f8e-97b8-1c8fc6b62098
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 4fa46c37-ff81-46ac-b585-b3ff3b4959da
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 428.00015, y: 395.50006}
+  GetSceneBy: 0
+  SceneBuildIndex: 0
+  SceneName: ColorDissonance
+  WaitForSceneToUnload: 0
 --- !u!114 &-4538837189636143822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1115,8 +1167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02761efe598a45c98fa1baf4d446c6a7, type: 3}
   m_Name: Game Management Flow
   m_EditorClassIdentifier: 
-  EditorPosition: {x: 1270, y: -737, z: 0}
-  EditorScale: {x: 1.7490063, y: 1.7490063, z: 1}
+  EditorPosition: {x: -926, y: -6, z: 0}
+  EditorScale: {x: 0.7561437, y: 0.7561437, z: 1}
   Id: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
   GraphName: Flow Graph
   GraphDescription: 
@@ -1157,6 +1209,8 @@ MonoBehaviour:
   - {fileID: 7361668970463939186}
   - {fileID: -2121507526894304840}
   - {fileID: 6032532107342793256}
+  - {fileID: -5073307027630619044}
+  - {fileID: 897329095312300669}
   RootNode: {fileID: -2819881898719066116}
   ActiveNode: {fileID: 0}
 --- !u!114 &126856202300898386
@@ -1259,7 +1313,7 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections:
-    - 4fa46c37-ff81-46ac-b585-b3ff3b4959da
+    - 9a9251bf-30be-4343-a3e0-5c8f46b7562e
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0
@@ -1276,6 +1330,65 @@ MonoBehaviour:
   SceneBuildIndex: 0
   SceneName: ArrowSwipe
   WaitForSceneToUnload: 0
+--- !u!114 &897329095312300669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa9fac3374aea542bc6c2ebda1da399, type: 3}
+  m_Name: Load Scene
+  m_EditorClassIdentifier: 
+  FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
+  NodeId: 75cc09f3-e111-41cd-8a16-e4b54fd75356
+  NodeType: 0
+  NodeName: Load Scene - ColorDissonance
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 75cc09f3-e111-41cd-8a16-e4b54fd75356
+    PortId: 576981f3-1802-41bd-97c0-d5138e244b39
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - ec07f35c-b471-421a-ab67-665a518d146d
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 75cc09f3-e111-41cd-8a16-e4b54fd75356
+    PortId: 51d0dd96-22bd-440a-919e-75af79be9566
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 358abd24-a787-41b0-a848-f1bcfd595dd1
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 1230.0002, y: 626.0001}
+  GetSceneBy: 0
+  LoadSceneMode: 1
+  AllowSceneActivation: 1
+  SceneActivationDelay: 0.01
+  SceneBuildIndex: 0
+  SceneName: ColorDissonance
+  WaitForSceneToLoad: 1
+  ConnectProgressor: 0
+  ProgressorId:
+    Category: None
+    Name: None
+    Custom: 0
 --- !u!114 &949375552911270945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1842,7 +1955,7 @@ MonoBehaviour:
     Capacity: 1
     Connections:
     - 9080b3db-2115-40c6-a1ff-dfeafe915119
-    - 585ed375-1ca3-4d98-b3eb-72a08ea64270
+    - 5bb0a36b-acc5-4f8e-97b8-1c8fc6b62098
     Value: '{"CanGoBack":false}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -1911,6 +2024,17 @@ MonoBehaviour:
     Connections:
     - c44b1074-814e-4929-a2cc-a01c29115817
     Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"GameManagement","Name":"LoadLevelScene","Custom":false},"SignalValueType":1,"IntegerValue":4,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
+  - NodeId: 25fe9491-9f08-46ca-be70-786d46ad7ac4
+    PortId: ec07f35c-b471-421a-ab67-665a518d146d
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 576981f3-1802-41bd-97c0-d5138e244b39
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"GameManagement","Name":"LoadMinigameScene","Custom":false},"SignalValueType":1,"IntegerValue":1,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 1
