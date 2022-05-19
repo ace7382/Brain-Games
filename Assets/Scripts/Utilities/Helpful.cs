@@ -184,6 +184,16 @@ public static class Helpful
         }
     }
 
+    public static IEnumerator FadePanelOut(CanvasGroup c, float speed)
+    {
+        while (c.alpha > 0)
+        {
+            c.alpha = Mathf.MoveTowards(c.alpha, 0f, speed * Time.deltaTime);
+
+            yield return null;
+        }
+    }
+
     public static Vector3 ScreenToWorld(Camera camera, Vector3 position)
     {
         position.z = camera.nearClipPlane;

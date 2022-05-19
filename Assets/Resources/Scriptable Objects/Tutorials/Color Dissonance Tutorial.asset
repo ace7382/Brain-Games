@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72bf9e41f2c320b4eae93d81c2a99e17, type: 3}
+  m_Name: Color Dissonance Tutorial
+  m_EditorClassIdentifier: 
+  pages:
+  - instructionPage: {fileID: 4787047687346424706, guid: b49ab82b4b86d1c43ba2f43d65e5c187, type: 3}
+    displayPage: {fileID: 4787047687346424706, guid: f8f6f731ccccb9243bfe425726db2bc1, type: 3}
+  pagesOnRight: 0
