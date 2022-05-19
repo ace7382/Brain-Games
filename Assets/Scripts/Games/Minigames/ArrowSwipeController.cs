@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ArrowSwipeController : MonoBehaviour
+public class ArrowSwipeController : TimedMinigameController
 {
     #region Enums
 
@@ -21,9 +21,6 @@ public class ArrowSwipeController : MonoBehaviour
     #region Inspector Variables
 
     [SerializeField] private Image                              arrowImage;
-    [SerializeField] private CountdownProgressBarController     countdownProgress;
-    [SerializeField] private CanvasGroup                        arrowCanvasGroup;
-    [SerializeField] private CanvasGroup                        exitButtonCanvasGroup;
 
     [SerializeField] private GameObject                         trailRenderer;
 
@@ -33,128 +30,83 @@ public class ArrowSwipeController : MonoBehaviour
 
     private bool                reverse;
     private Direction           arrowDirection;
-    private int                 correctSwipes;
-    private int                 incorrectSwipes;
 
     private Vector2             startSwipePosition;
     private float               startSwipeTime;
-
-    private MinigameResultsData results;
 
     private IEnumerator         trailCoroutine;
 
     #endregion
 
-    #region Signal Variables
+    #region Unity Functions
 
-    private SignalReceiver      gamemanagement_gamesetup_receiver;
-    private SignalStream        gamemanagement_gamesetup_stream;
-    private SignalReceiver      quitconfirmation_exitlevel_receiver;
-    private SignalStream        quitconfirmation_exitlevel_stream;
-    private SignalReceiver      quitconfirmation_backtogame_receiver;
-    private SignalStream        quitconfirmation_backtogame_stream;
-    private SignalReceiver      quitconfirmation_popup_receiver;
-    private SignalStream        quitconfirmation_popup_stream;
-
-    #endregion
-
-    private void Awake()
-    {
-        Canvas c        = GetComponentInParent<Canvas>();
-        c.worldCamera   = Camera.main;
-        c.sortingOrder  = UniversalInspectorVariables.instance.gameScreenOrderInLayer;
-
-        gamemanagement_gamesetup_stream         = SignalStream.Get("GameManagement", "GameSetup");
-        quitconfirmation_exitlevel_stream       = SignalStream.Get("QuitConfirmation", "ExitLevel");
-        quitconfirmation_backtogame_stream      = SignalStream.Get("QuitConfirmation", "BackToGame");
-        quitconfirmation_popup_stream           = SignalStream.Get("QuitConfirmation", "Popup");
-
-        gamemanagement_gamesetup_receiver       = new SignalReceiver().SetOnSignalCallback(Setup);
-        quitconfirmation_exitlevel_receiver     = new SignalReceiver().SetOnSignalCallback(EndGameEarly);
-        quitconfirmation_backtogame_receiver    = new SignalReceiver().SetOnSignalCallback(Unpause);
-        quitconfirmation_popup_receiver         = new SignalReceiver().SetOnSignalCallback(Pause);
-    }
-
-    private void OnEnable()
-    {
-        gamemanagement_gamesetup_stream.ConnectReceiver(gamemanagement_gamesetup_receiver);
-        quitconfirmation_exitlevel_stream.ConnectReceiver(quitconfirmation_exitlevel_receiver);
-        quitconfirmation_backtogame_stream.ConnectReceiver(quitconfirmation_backtogame_receiver);
-        quitconfirmation_popup_stream.ConnectReceiver(quitconfirmation_popup_receiver);
-    }
-
-    private void OnDisable()
+    protected override void OnDisable()
     {
         InputManager.instance.OnStartTouch  -= SwipeStart;
         InputManager.instance.OnEndTouch    -= SwipeEnd;
 
-        gamemanagement_gamesetup_stream.DisconnectReceiver(gamemanagement_gamesetup_receiver);
-        quitconfirmation_exitlevel_stream.DisconnectReceiver(quitconfirmation_exitlevel_receiver);
-        quitconfirmation_backtogame_stream.DisconnectReceiver(quitconfirmation_backtogame_receiver);
-        quitconfirmation_popup_stream.DisconnectReceiver(quitconfirmation_popup_receiver);
+        base.OnDisable();
     }
 
-    public void Setup(Signal signal)
-    {
-        results                     = new MinigameResultsData();
-        results.startingDifficulty  = GameManager.instance.currentMinigame.currentDifficultyLevel;
+    #endregion
 
-        correctSwipes               = 0;
-        incorrectSwipes             = 0;
-
-        arrowCanvasGroup.alpha      = 1;
-        exitButtonCanvasGroup.alpha = 1;
-
-        countdownProgress.SetupTimer(GameManager.instance.currentMinigame.timedStartTime);
-
-        Signal.Send("GameManagement", "DisableExitLevelButton", true);
-
-        NextArrow();
-    }
+    #region Public Functions
 
     //Called by the GamePlay view's Shown callback
-    public void StartGame()
+    public override void StartGame()
     {
         InputManager.instance.OnStartTouch  += SwipeStart;
         InputManager.instance.OnEndTouch    += SwipeEnd;
 
-        countdownProgress.StartTimer();
-    }
-
-    public void EndGameEarly(Signal signal)
-    {
-        countdownProgress.DrainClock();
+        base.StartGame();
     }
 
     //Invoked by the Countdown Clock's OnOutOfTime Event
-    public void EndGame()
+    public override void EndGame()
     {
-        results.numCorrect          = correctSwipes;
-        results.numIncorrect        = incorrectSwipes;
-
-        GameManager.instance.SetMinigameResults(results);
-
         InputManager.instance.OnStartTouch  -= SwipeStart;
         InputManager.instance.OnEndTouch    -= SwipeEnd;
 
-        Signal.Send("GameManagement", "DisableExitLevelButton", false);
-
-        StartCoroutine(EndAnimation());
+        base.EndGame();
     }
 
-    private IEnumerator EndAnimation()
+    #endregion
+
+    #region Override Functions
+
+    protected override void Setup(Signal signal)
+    {
+        base.Setup(signal);
+
+        NextArrow();
+    }
+
+    protected override void Pause(Signal signal)
+    {
+        InputManager.instance.OnStartTouch  -= SwipeStart;
+        InputManager.instance.OnEndTouch    -= SwipeEnd;
+
+        base.Pause(signal);
+    }
+
+    protected override void Unpause(Signal signal)
+    {
+        InputManager.instance.OnStartTouch  += SwipeStart;
+        InputManager.instance.OnEndTouch    += SwipeEnd;
+
+        base.Unpause(signal);
+    }
+
+    protected override IEnumerator EndAnimation()
     {
         arrowImage.color = Color.grey;
 
-        yield return new WaitForSeconds(.75f);
-
-        StartCoroutine(FadePanelOut(exitButtonCanvasGroup));
-        yield return FadePanelOut(arrowCanvasGroup);
-
-        Debug.Log(string.Format("Minigame Ended. Correct: {0} || Incorrect: {1}", correctSwipes.ToString(), incorrectSwipes.ToString()));
-
-        Signal.Send("GameManagement", "LevelEnded", 1);
+        return base.EndAnimation();
     }
+
+    #endregion
+
+    #region Private Functions
 
     private void SwipeStart(Vector2 position, float time)
     {
@@ -212,12 +164,13 @@ public class ArrowSwipeController : MonoBehaviour
     private void NextArrow()
     {
         SetReverse();
+
         SetRandomArrowRotation(Random.Range(0, 4));
     }
 
     private void CorrectSwipe()
     {
-        correctSwipes++;
+        correctResponses++;
 
         AudioManager.instance.Play("Go");
 
@@ -226,7 +179,7 @@ public class ArrowSwipeController : MonoBehaviour
 
     private void IncorrectSwipe()
     {
-        incorrectSwipes++;
+        incorrectResponses++;
 
         AudioManager.instance.Play("No");
 
@@ -237,21 +190,25 @@ public class ArrowSwipeController : MonoBehaviour
     {
         if (direction == 0) //Default, up
         {
+            Debug.Log("Up");
             arrowImage.transform.eulerAngles    = new Vector3(0, 0, 0);
             arrowDirection                      = Direction.Up;
         }
         else if (direction == 1) //Right
         {
+            Debug.Log("Right");
             arrowImage.transform.eulerAngles    = new Vector3(0, 0, -90);
             arrowDirection                      = Direction.Right;
         }
         else if (direction == 2) //Down
         {
+            Debug.Log("Down");
             arrowImage.transform.eulerAngles    = new Vector3(0, 0, 180);
             arrowDirection                      = Direction.Down;
         }
         else if (direction == 3) //Left
         {
+            Debug.Log("Left");
             arrowImage.transform.eulerAngles    = new Vector3(0, 0, 90);
             arrowDirection                      = Direction.Left;
         }
@@ -273,29 +230,5 @@ public class ArrowSwipeController : MonoBehaviour
         }    
     }
 
-    private IEnumerator FadePanelOut(CanvasGroup c)
-    {
-        while (c.alpha > 0)
-        {
-            c.alpha = Mathf.MoveTowards(c.alpha, 0f, .75f * Time.deltaTime);
-
-            yield return null;
-        }
-    }
-
-    private void Pause(Signal signal)
-    {
-        InputManager.instance.OnStartTouch  -= SwipeStart;
-        InputManager.instance.OnEndTouch    -= SwipeEnd;
-
-        countdownProgress.Pause();
-    }
-
-    private void Unpause(Signal signal)
-    {
-        InputManager.instance.OnStartTouch  += SwipeStart;
-        InputManager.instance.OnEndTouch    += SwipeEnd;
-
-        countdownProgress.Unpause();
-    }
+    #endregion
 }

@@ -1217,10 +1217,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d30f15a17b36ce14e8d5f15b9e997b1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowImage: {fileID: 410092848}
   countdownProgress: {fileID: 8249748534224876110}
-  arrowCanvasGroup: {fileID: 1045177785}
+  gameElementsCanvasGroup: {fileID: 1045177785}
   exitButtonCanvasGroup: {fileID: 1688944597}
+  arrowImage: {fileID: 410092848}
   trailRenderer: {fileID: 285196724}
 --- !u!1 &751994108
 GameObject:
