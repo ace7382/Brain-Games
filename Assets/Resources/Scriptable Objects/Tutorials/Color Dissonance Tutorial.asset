@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Color Dissonance Tutorial
   m_EditorClassIdentifier: 
   pages:
-  - instructionPage: {fileID: 4787047687346424706, guid: b49ab82b4b86d1c43ba2f43d65e5c187, type: 3}
-    displayPage: {fileID: 4787047687346424706, guid: f8f6f731ccccb9243bfe425726db2bc1, type: 3}
+  - instructionPage: {fileID: 4787047687346424706, guid: 2dc1f8c0dfde94547a1cafc9d94b1353, type: 3}
+    displayPage: {fileID: 4787047687346424706, guid: aeb30f79c0b68ab4aa0c21d5af99c3cd, type: 3}
   pagesOnRight: 0

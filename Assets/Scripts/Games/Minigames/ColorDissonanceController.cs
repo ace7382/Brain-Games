@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ColorDissonanceController : TimedMinigameController
 {
@@ -15,8 +16,18 @@ public class ColorDissonanceController : TimedMinigameController
         [SerializeField] private string             word;
         [SerializeField] private Color              color;
 
-        public string Word { get { return word; } }
-        public Color Color { get { return color; } }
+        public string Word      { get { return word; } }
+        public Color Color      { get { return color; } }
+    }
+
+    [System.Serializable]
+    private class WordShapeCombo
+    {
+        [SerializeField] private string             word;
+        [SerializeField] private Sprite             shape;
+
+        public string Word      { get { return word; } }
+        public Sprite Shape     { get { return shape; } }
     }
 
     #endregion
@@ -25,12 +36,20 @@ public class ColorDissonanceController : TimedMinigameController
 
     [SerializeField] private TextMeshProUGUI        leftPanelText;
     [SerializeField] private TextMeshProUGUI        rightPanelText;
+    [SerializeField] private Image                  rightPanelShapeImage;
     [SerializeField] private UIButton               doesMatchButton;
     [SerializeField] private UIButton               doesNotMatchButton;
 
     [Space]
 
     [SerializeField] private List<WordColorCombo>   colorsAnswerKey;
+    [SerializeField] private List<WordShapeCombo>   shapesAnswerKey;
+
+    #endregion
+
+    #region Private Variables
+
+    private bool isShapeQuestion;
 
     #endregion
 
@@ -57,17 +76,35 @@ public class ColorDissonanceController : TimedMinigameController
     //Called by the Does Match Button's OnClick Behavior
     public void CheckYes()
     {
-        if (rightPanelText.color == colorsAnswerKey.Find(x => x.Word == leftPanelText.text).Color)
+        if (isShapeQuestion)
         {
-            correctResponses++;
+            if (rightPanelShapeImage.sprite == shapesAnswerKey.Find(x => x.Word == leftPanelText.text).Shape)
+            {
+                correctResponses++;
 
-            AudioManager.instance.Play("Go");
+                AudioManager.instance.Play("Go");
+            }
+            else
+            {
+                incorrectResponses++;
+
+                AudioManager.instance.Play("No");
+            }
         }
         else
         {
-            incorrectResponses++;
+            if (rightPanelText.color == colorsAnswerKey.Find(x => x.Word == leftPanelText.text).Color)
+            {
+                correctResponses++;
 
-            AudioManager.instance.Play("No");
+                AudioManager.instance.Play("Go");
+            }
+            else
+            {
+                incorrectResponses++;
+
+                AudioManager.instance.Play("No");
+            }
         }
 
         NextSet();
@@ -76,17 +113,35 @@ public class ColorDissonanceController : TimedMinigameController
     //Called by the Does NOT Match Button's OnClick Behavior
     public void CheckNo()
     {
-        if (rightPanelText.color != colorsAnswerKey.Find(x => x.Word == leftPanelText.text).Color)
+        if (isShapeQuestion)
         {
-            correctResponses++;
+            if (rightPanelShapeImage.sprite != shapesAnswerKey.Find(x => x.Word == leftPanelText.text).Shape)
+            {
+                correctResponses++;
 
-            AudioManager.instance.Play("Go");
+                AudioManager.instance.Play("Go");
+            }
+            else
+            {
+                incorrectResponses++;
+
+                AudioManager.instance.Play("No");
+            }
         }
         else
         {
-            incorrectResponses++;
+            if (rightPanelText.color != colorsAnswerKey.Find(x => x.Word == leftPanelText.text).Color)
+            {
+                correctResponses++;
 
-            AudioManager.instance.Play("No");
+                AudioManager.instance.Play("Go");
+            }
+            else
+            {
+                incorrectResponses++;
+
+                AudioManager.instance.Play("No");
+            }
         }
 
         NextSet();
@@ -102,6 +157,8 @@ public class ColorDissonanceController : TimedMinigameController
 
         doesMatchButton.interactable    = true;
         doesNotMatchButton.interactable = true;
+
+        isShapeQuestion                 = false;
 
         NextSet();
     }
@@ -120,17 +177,44 @@ public class ColorDissonanceController : TimedMinigameController
 
     private void NextSet()
     {
-        int leftPanelColorIndex     = Random.Range(0, colorsAnswerKey.Count);
-        int leftPanelWordIndex      = Random.Range(0, colorsAnswerKey.Count);
+        if (Random.Range(0,2) > 0) //Color Question
+        {
+            rightPanelShapeImage.gameObject.SetActive(false);
+            rightPanelText.gameObject.SetActive(true);
 
-        int rightPanelColorIndex    = Random.Range(0, colorsAnswerKey.Count);
-        int rightPanelWordIndex     = Random.Range(0, colorsAnswerKey.Count);
+            isShapeQuestion             = false;
 
-        leftPanelText.color         = colorsAnswerKey[leftPanelColorIndex].Color;
-        leftPanelText.text          = colorsAnswerKey[leftPanelWordIndex].Word;
+            int leftPanelColorIndex     = Random.Range(0, colorsAnswerKey.Count);
+            int leftPanelWordIndex      = Random.Range(0, colorsAnswerKey.Count);
 
-        rightPanelText.color        = colorsAnswerKey[rightPanelColorIndex].Color;
-        rightPanelText.text         = colorsAnswerKey[rightPanelWordIndex].Word;
+            int rightPanelColorIndex    = Random.Range(0, colorsAnswerKey.Count);
+            int rightPanelWordIndex     = Random.Range(0, colorsAnswerKey.Count);
+
+            leftPanelText.color         = colorsAnswerKey[leftPanelColorIndex].Color;
+            leftPanelText.text          = colorsAnswerKey[leftPanelWordIndex].Word;
+
+            rightPanelText.color        = colorsAnswerKey[rightPanelColorIndex].Color;
+            rightPanelText.text         = colorsAnswerKey[rightPanelWordIndex].Word;
+        }
+        else //Shape
+        {
+            rightPanelShapeImage.gameObject.SetActive(true);
+            rightPanelText.gameObject.SetActive(false);
+
+            isShapeQuestion             = true;
+
+            int leftPanelColorIndex     = Random.Range(0, colorsAnswerKey.Count);
+            int leftPanelWordIndex      = Random.Range(0, shapesAnswerKey.Count);
+
+            int rightPanelShapeIndex    = Random.Range(0, shapesAnswerKey.Count);
+            int rightPanelColorIndex    = Random.Range(0, colorsAnswerKey.Count);
+
+            leftPanelText.color         = colorsAnswerKey[leftPanelColorIndex].Color;
+            leftPanelText.text          = shapesAnswerKey[leftPanelWordIndex].Word;
+
+            rightPanelShapeImage.color  = colorsAnswerKey[rightPanelColorIndex].Color;
+            rightPanelShapeImage.sprite = shapesAnswerKey[rightPanelShapeIndex].Shape;
+        }
     }
     
     #endregion
