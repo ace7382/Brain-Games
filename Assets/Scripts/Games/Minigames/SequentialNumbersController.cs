@@ -1,4 +1,5 @@
 using Doozy.Runtime.Signals;
+using Doozy.Runtime.UIManager.Components;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,13 @@ public class SequentialNumbersController : TimedMinigameController
 
     private List<SequentialNumbersTile> tiles;
     private int                         currentSolutionIndex;
-    //[SerializeField] private List<float>                 solution; //TODO: Remove SerializeField tag
 
     #endregion
 
     #region Signal Variables
 
-    protected SignalReceiver    sequentialnumbers_tileclicked_receiver;
-    protected SignalStream      sequentialnumbers_tileclicked_stream;
+    private SignalReceiver  sequentialnumbers_tileclicked_receiver;
+    private SignalStream    sequentialnumbers_tileclicked_stream;
 
     #endregion
 
@@ -64,6 +64,22 @@ public class SequentialNumbersController : TimedMinigameController
         SetupTiles();
     }
 
+    protected override void EndGameEarly(Signal signal)
+    {
+        foreach (UIButton b in tileGridTransform.GetComponentsInChildren<UIButton>())
+            b.interactable = false;
+
+        base.EndGameEarly(signal);
+    }
+
+    public override void EndGame()
+    {
+        foreach (UIButton b in tileGridTransform.GetComponentsInChildren<UIButton>())
+            b.interactable = false;
+
+        base.EndGame();
+    }
+
     #endregion
 
     #region Private Functions
@@ -76,19 +92,23 @@ public class SequentialNumbersController : TimedMinigameController
 
         if (t.SolutionIndex == currentSolutionIndex)
         {
-            Debug.Log("Correct");
             t.HideTile();
             currentSolutionIndex++;
 
             if (tiles.FindIndex(x => x.Showing) < 0)
             {
                 Debug.Log("Board Completed");
+
+                correctResponses++;
+                AudioManager.instance.Play("Go");
                 SetupTiles();
             }
         }
         else
         {
-            Debug.Log("NO BITCH");
+            incorrectResponses++;
+            AudioManager.instance.Play("No");
+            SetupTiles();
         }
     }
 
@@ -97,16 +117,17 @@ public class SequentialNumbersController : TimedMinigameController
         //TODO: Calculate number of tiles that should be used
         //      Then resize Grid
         //      Then spawn/destroy tiles based on the number currently
+        //      or don't use a grid and just make the objects spawn in random places w/o overlapping
         //      RN just using 15 tiles for the whole thing
 
-        currentSolutionIndex        = 0;
+        currentSolutionIndex            = 0;
 
-        int HARDCODEDTILELIMIT      = 15;
+        int HARDCODEDTILELIMIT          = 15;
 
-        int tilesShowing            = GetNumOfTilesShowing();
+        int tilesShowing                = GetNumOfTilesShowing();
 
-        List<float> numbersLeft     = GetNumbersToDisplay(tilesShowing, 0);
-        List<float> solutionOrder   = new List<float>(numbersLeft);
+        List<decimal> numbersLeft       = GetNumbersToDisplay(tilesShowing, Random.Range(0,2));
+        List<decimal> solutionOrder     = new List<decimal>(numbersLeft);
 
         if (tiles == null)
         {
@@ -172,9 +193,9 @@ public class SequentialNumbersController : TimedMinigameController
         return Random.Range(3, 6);
     }
 
-    private List<float> GetNumbersToDisplay(int numOfNumbers, int numberType)
+    private List<decimal> GetNumbersToDisplay(int numOfNumbers, int numberType)
     {
-        List<float> ret = new List<float>();
+        List<decimal> ret = new List<decimal>();
 
         if(numberType == 0) //Integers
         {
@@ -185,6 +206,19 @@ public class SequentialNumbersController : TimedMinigameController
             for (int i = 1; i < numOfNumbers; i++)
             {
                 startingNum += Random.Range(1, 6);
+
+                ret.Add(startingNum);
+            }
+        }
+        else if (numberType == 1) //decimals
+        {
+            decimal startingNum = System.Decimal.Round((decimal)Random.Range(0f, 50f), 2);
+
+            ret.Add(startingNum);
+
+            for (int i = 1; i < numOfNumbers; i++)
+            {
+                startingNum += System.Decimal.Round((decimal)Random.Range(.1f, 6f), 2);
 
                 ret.Add(startingNum);
             }

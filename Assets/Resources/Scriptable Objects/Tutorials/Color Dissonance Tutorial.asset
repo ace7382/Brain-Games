@@ -15,4 +15,8 @@ MonoBehaviour:
   pages:
   - instructionPage: {fileID: 4787047687346424706, guid: 2dc1f8c0dfde94547a1cafc9d94b1353, type: 3}
     displayPage: {fileID: 4787047687346424706, guid: aeb30f79c0b68ab4aa0c21d5af99c3cd, type: 3}
+  - instructionPage: {fileID: 4787047687346424706, guid: 5ece30f63828d46428c302572b6c107e, type: 3}
+    displayPage: {fileID: 0}
+  - instructionPage: {fileID: 4787047687346424706, guid: f88514e5e15c3ea4d921f1a384e55308, type: 3}
+    displayPage: {fileID: 0}
   pagesOnRight: 0

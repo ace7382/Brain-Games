@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Sequential Numbers
   m_EditorClassIdentifier: 
   minigameID: 2
-  tutorial: {fileID: 11400000, guid: 9154027d9964e6e4dbdf6d8e5e3d650e, type: 2}
+  tutorial: {fileID: 11400000, guid: 1ab466fccfe9d8f478de11a03b07f127, type: 2}
   unlocked: 1
   timed: 1
-  timedStartTime: 45
+  timedStartTime: 600
   maxDifficulty: 500
-  currentDifficultyLevel: 0
+  currentDifficultyLevel: 44

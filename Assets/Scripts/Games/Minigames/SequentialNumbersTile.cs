@@ -19,14 +19,14 @@ public class SequentialNumbersTile : MonoBehaviour
 
     #region Private Variables
 
-    private float                               number;
-    [SerializeField]private int                                 solutionIndex; //TODO: Remove SerializeFIeld
+    private decimal                             number;
+    private int                                 solutionIndex;
 
     #endregion
 
     #region Public Properties
 
-    public float Number                         { get { return number; } }
+    public decimal Number                       { get { return number; } }
     public int SolutionIndex                    { get { return solutionIndex; } }
     public bool Showing                         { get { return numberDisplay.enabled; } }
 
@@ -34,7 +34,7 @@ public class SequentialNumbersTile : MonoBehaviour
 
     #region Public Functions
 
-    public void Setup(float n, int sol)
+    public void Setup(decimal n, int sol)
     {
         number              = n;
         solutionIndex       = sol;
@@ -67,6 +67,10 @@ public class SequentialNumbersTile : MonoBehaviour
         numberDisplay.enabled   = true;
 
         uiButton.enabled        = true;
+        uiButton.interactable   = true;
+
+        transform.localScale    = Vector3.one;
+        transform.eulerAngles   = Vector4.zero;
 
         Canvas.ForceUpdateCanvases();
     }

@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 4787047687346424705}
   - component: {fileID: 4787047687346424704}
   m_Layer: 5
-  m_Name: Info - Color Dissonance 1
+  m_Name: Info - Color Dissonance 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1168,11 +1168,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Determine if the LEFT word''s meaning matches the color as ot the RIGHT
-    word''s text.
-
-
-    Click the Check mark if they match or the X if they do not.'
+  m_text: "On higher difficulties, the LEFT word will have SHAPE words. \n\nDetermine
+    if the RIGHT word's shape matches the LEFT word's meaning."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 78ee1c4ccccf27448b2db34e71ca92a1, type: 2}
   m_sharedMaterial: {fileID: -67380637403349598, guid: 78ee1c4ccccf27448b2db34e71ca92a1, type: 2}
