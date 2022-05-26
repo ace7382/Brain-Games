@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: Level 2
   m_EditorClassIdentifier: 
   levelName: Level 2
-  unlocked: 1
+  unlocked: 0
   timedLevel: 0
   tutorial: {fileID: 11400000, guid: 4699fcee7648d634eacb5de84da0c383, type: 2}
-  nextLevel: {fileID: 11400000, guid: d837d4479ee531340a3c089280c4622c, type: 2}
-  objective1: 1
-  objective2: 1
-  objective3: 1
+  levelsUnlockedByThisLevel:
+  - {fileID: 11400000, guid: 50fac6c0444a0d8439ae8e9ad5375b59, type: 2}
+  - {fileID: 11400000, guid: 1585de463d45f1442b3cb5a346ceb089, type: 2}
+  objective1: 0
+  objective2: 0
+  objective3: 0
   solution: 050000000200000003000000050000000300000007000000
   possibleChoices: 0100000002000000030000000400000005000000060000000700000008000000
   highNumberOfGuessesGoal: 8

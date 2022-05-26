@@ -72,7 +72,9 @@ public class EndLevelScreenContoller : MonoBehaviour
 
         subtitleText.text = levelResults.subtitleText;
 
-        nextLevelButton.SetActive(levelCompleted.nextLevel == null ? false : levelCompleted.nextLevel.unlocked);
+        //TODO: Update this
+        //nextLevelButton.SetActive(levelCompleted.levelsUnlockedByThisLevel == null ? false : levelCompleted.levelsUnlockedByThisLevel.unlocked);
+        nextLevelButton.SetActive(true); //This replaces the above line for now
 
         objective1Group.alpha = 0;
         objective2Group.alpha = 0;

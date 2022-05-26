@@ -279,9 +279,18 @@ public class TimedTriviaController : MonoBehaviour
         {
             if (!currentTimedTriviaLevel.objective1)
                 currentTimedTriviaLevel.objective1 = true;
-            
-            if (currentTimedTriviaLevel.nextLevel != null && !currentTimedTriviaLevel.nextLevel.unlocked)
-                currentTimedTriviaLevel.nextLevel.unlocked = true;
+
+            if (currentTimedTriviaLevel.levelsUnlockedByThisLevel != null)
+            {
+                for (int i = 0; i < currentTimedTriviaLevel.levelsUnlockedByThisLevel.Count; i++)
+                {
+                    if (!currentTimedTriviaLevel.levelsUnlockedByThisLevel[i].unlocked)
+                    {
+                        currentTimedTriviaLevel.levelsUnlockedByThisLevel[i].unlocked = true;
+                        GameManager.instance.SetWorldMapUnlockLevels(currentTimedTriviaLevel.levelsUnlockedByThisLevel[i]);
+                    }
+                }
+            }
 
             if (!currentTimedTriviaLevel.objective2 && (countdownClock.SecondsRemaining == 0 ? 0 : countdownClock.SecondsRemaining + 1) >= currentTimedTriviaLevel.parTimeRemainingInSeconds)
                 currentTimedTriviaLevel.objective2 = true;

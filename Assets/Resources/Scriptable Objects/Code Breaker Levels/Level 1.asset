@@ -16,10 +16,12 @@ MonoBehaviour:
   unlocked: 1
   timedLevel: 0
   tutorial: {fileID: 11400000, guid: 4699fcee7648d634eacb5de84da0c383, type: 2}
-  nextLevel: {fileID: 11400000, guid: 1e20c3aab8c456a48aa6d20123dbf72a, type: 2}
-  objective1: 1
-  objective2: 1
-  objective3: 1
+  levelsUnlockedByThisLevel:
+  - {fileID: 11400000, guid: 1e20c3aab8c456a48aa6d20123dbf72a, type: 2}
+  - {fileID: 11400000, guid: d837d4479ee531340a3c089280c4622c, type: 2}
+  objective1: 0
+  objective2: 0
+  objective3: 0
   solution: 01000000020000000300000003000000
   possibleChoices: 0100000002000000030000000400000005000000060000000700000008000000
   highNumberOfGuessesGoal: 5

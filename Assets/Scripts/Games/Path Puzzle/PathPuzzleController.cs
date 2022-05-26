@@ -360,8 +360,17 @@ public class PathPuzzleController : MonoBehaviour
             if (!currentPPLevel.objective1)
                 currentPPLevel.objective1 = true;
 
-            if (currentPPLevel.nextLevel != null && !currentPPLevel.nextLevel.unlocked)
-                currentPPLevel.nextLevel.unlocked = true;
+            if (currentPPLevel.levelsUnlockedByThisLevel != null)
+            {
+                for (int i = 0; i < currentPPLevel.levelsUnlockedByThisLevel.Count; i++)
+                {
+                    if (!currentPPLevel.levelsUnlockedByThisLevel[i].unlocked)
+                    {
+                        currentPPLevel.levelsUnlockedByThisLevel[i].unlocked = true;
+                        GameManager.instance.SetWorldMapUnlockLevels(currentPPLevel.levelsUnlockedByThisLevel[i]);
+                    }
+                }
+            }
         }
 
         //Add one to seconds remaining because the clock display is actually showing a second behind

@@ -8,7 +8,7 @@ public class LevelBase : ScriptableObject
     public bool                 unlocked;
     public bool                 timedLevel;
     public TutorialInfoObject   tutorial;
-    public LevelBase            nextLevel;
+    public List<LevelBase>      levelsUnlockedByThisLevel;
 
     [Space]
     [Space]

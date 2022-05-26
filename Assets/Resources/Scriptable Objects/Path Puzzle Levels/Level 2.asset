@@ -16,7 +16,8 @@ MonoBehaviour:
   unlocked: 0
   timedLevel: 1
   tutorial: {fileID: 11400000, guid: 060b4544fa2010d48b0481698d0d10b9, type: 2}
-  nextLevel: {fileID: 0}
+  levelsUnlockedByThisLevel:
+  - {fileID: 11400000, guid: a28d9c0bd92020044b04c072c4a28d74, type: 2}
   objective1: 0
   objective2: 0
   objective3: 0

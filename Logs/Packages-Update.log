@@ -97,3 +97,11 @@ The following packages were updated:
   com.unity.timeline from version 1.4.8 to 1.6.4
 The following packages were removed:
   com.unity.package-manager-ui@2.2.0
+
+=== Wed May 25 09:49:58 2022
+
+Packages were changed.
+Update Mode: mergeDefaultDependencies
+
+The following packages were updated:
+  com.unity.ide.rider from version 3.0.13 to 3.0.14

@@ -77,13 +77,14 @@ public class GameManager : MonoBehaviour
 
     public void PlayNextLevel(Signal signal)
     {
-        if (currentLevel.nextLevel == null)
+        if (currentLevel.levelsUnlockedByThisLevel == null)
         {
             Debug.Log("current level does not have a next level");
             return;
         }
 
-        currentLevel = currentLevel.nextLevel;
+        //TODO: Update this
+        //currentLevel = currentLevel.levelsUnlockedByThisLevel;
 
         PlayCurrentLevel(signal);
     }
@@ -139,5 +140,12 @@ public class GameManager : MonoBehaviour
         currentMinigame     = null;
         ClearLevelResults();
         ClearMinigameResults();
+    }
+
+    //TODO: Probably move the list of things to animate to here vs the wordl map controller
+    //      currently world map hides when moving to a game, might have it unload completely
+    public void SetWorldMapUnlockLevels(LevelBase level)
+    {
+        FindObjectOfType<WorldMapController>().AddLevelsToUnlock(level);
     }
 }

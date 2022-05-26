@@ -110,8 +110,17 @@ public class WordScrambleController : MonoBehaviour
         if (!currentWordScrambleLevel.objective3 && currentWordScrambleLevel.foundWords.Contains(currentWordScrambleLevel.specialWord))
             currentWordScrambleLevel.objective3 = true;
 
-        if (currentWordScrambleLevel.nextLevel != null && !currentWordScrambleLevel.nextLevel.unlocked && currentWordScrambleLevel.objective1)
-            currentWordScrambleLevel.nextLevel.unlocked = true;
+        if (currentWordScrambleLevel.objective1 && currentWordScrambleLevel.levelsUnlockedByThisLevel != null)
+        {
+            for (int i = 0; i < currentWordScrambleLevel.levelsUnlockedByThisLevel.Count; i++)
+            {
+                if (!currentWordScrambleLevel.levelsUnlockedByThisLevel[i].unlocked)
+                {
+                    currentWordScrambleLevel.levelsUnlockedByThisLevel[i].unlocked = true;
+                    GameManager.instance.SetWorldMapUnlockLevels(currentWordScrambleLevel.levelsUnlockedByThisLevel[i]);
+                }
+            }
+        }
 
         Signal.Send("GameManagement", "DisableExitLevelButton", false);
 

@@ -41,4 +41,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Gameplay Scenes/SequentialNumbers.unity
     guid: 129729754c3ebc644a0732b393c96abd
+  - enabled: 1
+    path: Assets/Scenes/New World Map Scene.unity
+    guid: 66f823ab3d063464caa733b9fc76e685
   m_configObjects: {}

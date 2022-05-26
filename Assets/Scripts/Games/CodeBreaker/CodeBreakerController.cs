@@ -423,8 +423,17 @@ public class CodeBreakerController : MonoBehaviour
             if (!currentCodeBreakerLevel.objective1)
                 currentCodeBreakerLevel.objective1 = true;
 
-            if (currentCodeBreakerLevel.nextLevel != null && !currentCodeBreakerLevel.nextLevel.unlocked)
-                currentCodeBreakerLevel.nextLevel.unlocked = true;
+            if (currentCodeBreakerLevel.levelsUnlockedByThisLevel != null)
+            {
+                for (int i = 0; i < currentCodeBreakerLevel.levelsUnlockedByThisLevel.Count; i++)
+                {
+                    if (!currentCodeBreakerLevel.levelsUnlockedByThisLevel[i].unlocked)
+                    {
+                        currentCodeBreakerLevel.levelsUnlockedByThisLevel[i].unlocked = true;
+                        GameManager.instance.SetWorldMapUnlockLevels(currentCodeBreakerLevel.levelsUnlockedByThisLevel[i]);
+                    }
+                }
+            }
         }     
 
         if (attemptNumber <= currentCodeBreakerLevel.highNumberOfGuessesGoal)
