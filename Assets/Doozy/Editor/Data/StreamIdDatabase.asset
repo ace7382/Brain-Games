@@ -14,6 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Database:
     Items:
+    - Category: Battle
+      Name: EnemyCurrentHPUpdate
+    - Category: Battle
+      Name: EnemyMaxHPUpdate
+    - Category: Battle
+      Name: PlayerCurrentHPUpdate
+    - Category: Battle
+      Name: PlayerMaxHPUpdate
+    - Category: Battle
+      Name: UnitTakeDamage
     - Category: CodeBreaker
       Name: AssignChoice
     - Category: CodeBreaker
