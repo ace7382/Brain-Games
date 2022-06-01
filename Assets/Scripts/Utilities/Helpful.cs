@@ -201,4 +201,11 @@ public static class Helpful
 
         return camera.ScreenToWorldPoint(position);
     }
+
+    public static object GetInstance(string strFullyQualifiedName)
+    {
+        Type t = Type.GetType(strFullyQualifiedName);
+        
+        return Activator.CreateInstance(t);
+    }
 }

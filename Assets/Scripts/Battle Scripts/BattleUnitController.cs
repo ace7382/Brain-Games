@@ -20,6 +20,7 @@ public class BattleUnitController : MonoBehaviour
     #region Public Properties
 
     public Unit UnitInfo { get { return unit; } }
+    public bool IsPlayer { get { return isPlayer; } }
 
     #endregion
 
@@ -39,12 +40,12 @@ public class BattleUnitController : MonoBehaviour
         battle_unittakedamage_receiver  = new SignalReceiver().SetOnSignalCallback(TakeDamage);
     }
 
-    protected virtual void OnEnable()
+    private void OnEnable()
     {
         battle_unittakedamage_stream.ConnectReceiver(battle_unittakedamage_receiver);
     }
 
-    protected virtual void OnDisable()
+    private void OnDisable()
     {
         battle_unittakedamage_stream.DisconnectReceiver(battle_unittakedamage_receiver);
     }
@@ -56,6 +57,11 @@ public class BattleUnitController : MonoBehaviour
     public void Setup(Unit unit)
     {
         this.unit = unit;
+
+        for (int i = 0; i < this.unit.Abilities.Count; i++)
+        {
+            this.unit.Abilities[i].Init(this);
+        }
     }
 
     #endregion
@@ -65,16 +71,21 @@ public class BattleUnitController : MonoBehaviour
     private void TakeDamage(Signal signal)
     {
         //Signal info is object[2]
-        //info[0] bool                  - true = player, false = enemy
+        //info[0] bool                  - false = player takes dam, true = enemy takes dam
         //info[1] int                   - The amount of damage to take
 
         object[] info = signal.GetValueUnsafe<object[]>();
 
-        if ((bool)info[0] == isPlayer)
+        if ((bool)info[0] == !isPlayer)
         {
             unit.CurrentHP -= (int)info[1];
 
             Signal.Send("Battle", isPlayer ? "PlayerCurrentHPUpdate" : "EnemyCurrentHPUpdate", unit.CurrentHP);
+        }
+
+        if (unit.CurrentHP <= 0)
+        {
+            Signal.Send("Battle", isPlayer ? "PlayerKOed" : "EnemyKOed");
         }
     }
 

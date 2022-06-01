@@ -13,7 +13,8 @@ public class Unit
 
     #region Private Variables
 
-    private int currentHP;
+    private int             currentHP;
+    private List<Ability>   abilities;
 
     #endregion
 
@@ -35,13 +36,29 @@ public class Unit
         }
     }
 
+    public List<Ability> Abilities
+    {
+        get { return abilities; }
+    }
+
     #endregion
 
     #region Public Functions
 
     public void Init()
     {
-        currentHP = MaxHP;
+        currentHP   = MaxHP;
+
+        abilities   = new List<Ability>();
+
+        for (int i = 0; i < battleUnitBase.abilityNames.Count; i++)
+        {
+            Ability a = (Ability)Helpful.GetInstance(battleUnitBase.abilityNames[i]);
+
+            abilities.Add(a);
+
+            Debug.Log(abilities[i].GetType());
+        }
     }
 
     #endregion

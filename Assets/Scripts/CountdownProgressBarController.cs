@@ -47,7 +47,6 @@ public class CountdownProgressBarController : MonoBehaviour
 
     #endregion
 
-
     #region Public Functions
 
     public void SetupTimer(float startingSeconds)

@@ -77,8 +77,6 @@ public class HPBarDisplayController : MonoBehaviour
 
         current = newVal;
 
-        Debug.Log(name + " Changed CURRENT value to: " + current);
-
         UpdateDisplay();
     }
 
@@ -89,8 +87,6 @@ public class HPBarDisplayController : MonoBehaviour
         int newVal = signal.GetValueUnsafe<int>();
 
         max = newVal;
-
-        Debug.Log(name + " Changed MAX value to: " + max);
 
         UpdateDisplay();
     }

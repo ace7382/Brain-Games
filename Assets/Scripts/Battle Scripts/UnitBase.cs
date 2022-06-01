@@ -6,4 +6,5 @@ using UnityEngine;
 public class UnitBase : ScriptableObject
 {
     public int baseMaxHP;
+    public List<string> abilityNames;
 }

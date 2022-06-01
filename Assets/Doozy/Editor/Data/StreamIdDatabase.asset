@@ -15,13 +15,25 @@ MonoBehaviour:
   Database:
     Items:
     - Category: Battle
+      Name: AbilityCharge
+    - Category: Battle
+      Name: CorrectResponse
+    - Category: Battle
       Name: EnemyCurrentHPUpdate
+    - Category: Battle
+      Name: EnemyKOed
     - Category: Battle
       Name: EnemyMaxHPUpdate
     - Category: Battle
+      Name: IncorrectResponse
+    - Category: Battle
       Name: PlayerCurrentHPUpdate
     - Category: Battle
+      Name: PlayerKOed
+    - Category: Battle
       Name: PlayerMaxHPUpdate
+    - Category: Battle
+      Name: ResetAbilityCharges
     - Category: Battle
       Name: UnitTakeDamage
     - Category: CodeBreaker

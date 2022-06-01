@@ -34013,6 +34013,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partyBattleUnits:
   - battleUnitBase: {fileID: 11400000, guid: 2007171b01a37bd45a2265a0767ceafc, type: 2}
+  - battleUnitBase: {fileID: 11400000, guid: 9c02074e1e60ad848ae957251f627aa6, type: 2}
 --- !u!4 &1880752768
 Transform:
   m_ObjectHideFlags: 0

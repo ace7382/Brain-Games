@@ -6,10 +6,6 @@ using UnityEngine.UI;
 
 public class BattleGame_ArrowSwipe : BattleGameControllerBase
 {
-    //Swipe arrows
-    //  mark 5? boxes as correct or incorrect
-    //Every 5? arrows will do damage based on number correct
-
     #region Enums
 
     private enum Direction
@@ -22,7 +18,7 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     #endregion
 
-    #region InspectorVariables
+    #region Inspector Variables
 
     [SerializeField] private Image                              arrowImage;
     [SerializeField] private GameObject                         trailRenderer;
@@ -140,7 +136,7 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
     {
         AudioManager.instance.Play("Go");
 
-        Signal.Send("Battle", "UnitTakeDamage", new object[] { false, 1 });
+        Signal.Send("Battle", "CorrectResponse");
 
         NextArrow();
     }
@@ -149,7 +145,7 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
     {
         AudioManager.instance.Play("No");
 
-        Signal.Send("Battle", "UnitTakeDamage", new object[] { true, 1 });
+        Signal.Send("Battle", "IncorrectResponse");
 
         NextArrow();
     }
@@ -158,25 +154,21 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
     {
         if (direction == 0) //Default, up
         {
-            Debug.Log("Up");
             arrowImage.transform.eulerAngles = new Vector3(0, 0, 0);
             arrowDirection = Direction.Up;
         }
         else if (direction == 1) //Right
         {
-            Debug.Log("Right");
             arrowImage.transform.eulerAngles = new Vector3(0, 0, -90);
             arrowDirection = Direction.Right;
         }
         else if (direction == 2) //Down
         {
-            Debug.Log("Down");
             arrowImage.transform.eulerAngles = new Vector3(0, 0, 180);
             arrowDirection = Direction.Down;
         }
         else if (direction == 3) //Left
         {
-            Debug.Log("Left");
             arrowImage.transform.eulerAngles = new Vector3(0, 0, 90);
             arrowDirection = Direction.Left;
         }

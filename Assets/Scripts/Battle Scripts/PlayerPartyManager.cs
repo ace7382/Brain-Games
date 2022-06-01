@@ -24,6 +24,8 @@ public class PlayerPartyManager : MonoBehaviour
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
+
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -32,6 +34,15 @@ public class PlayerPartyManager : MonoBehaviour
         {
             partyBattleUnits[i].Init();
         }
+    }
+
+    #endregion
+
+    #region Public Functions
+
+    public Unit GetFirstLivingUnit()
+    {
+        return partyBattleUnits.Find(x => x.CurrentHP > 0);
     }
 
     #endregion
