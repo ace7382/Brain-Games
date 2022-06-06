@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11c8af7e0c004e042ac2d806714e1087, type: 3}
-  m_Name: x_Player Test Unit 1
+  m_Script: {fileID: 11500000, guid: daffa5e89601bb14799ba2d9b9cba88c, type: 3}
+  m_Name: Test Level 2a
   m_EditorClassIdentifier: 
-  baseMaxHP: 50
-  abilityNames:
-  - Ability_Attack
+  levelName: Level 2
+  unlocked: 0
+  levelsUnlockedByThisLevel: []
+  enemyUnits:
+  - battleUnitBase: {fileID: 11400000, guid: cf295d3ca3ba15c47985c70db89d62f3, type: 2}

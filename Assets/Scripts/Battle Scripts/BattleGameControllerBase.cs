@@ -41,6 +41,16 @@ public abstract class BattleGameControllerBase : MonoBehaviour
 
     }
 
+    public virtual void Pause()
+    {
+
+    }
+
+    public virtual void Unpause()
+    {
+
+    }
+
     #endregion
 
     #region Protected Functions

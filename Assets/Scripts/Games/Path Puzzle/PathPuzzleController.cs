@@ -93,7 +93,7 @@ public class PathPuzzleController : MonoBehaviour
 
     public void Setup(Signal signal)
     {
-        currentPPLevel      = (PathPuzzleLevel)GameManager.instance.currentLevel;
+        currentPPLevel      = (PathPuzzleLevel)GameManager.instance.currentLevelOLD;
 
         currentBoardNum     = -1;
         won                 = false;
@@ -367,7 +367,7 @@ public class PathPuzzleController : MonoBehaviour
                     if (!currentPPLevel.levelsUnlockedByThisLevel[i].unlocked)
                     {
                         currentPPLevel.levelsUnlockedByThisLevel[i].unlocked = true;
-                        GameManager.instance.SetWorldMapUnlockLevels(currentPPLevel.levelsUnlockedByThisLevel[i]);
+                        //GameManager.instance.SetWorldMapUnlockLevels(currentPPLevel.levelsUnlockedByThisLevel[i]);
                     }
                 }
             }

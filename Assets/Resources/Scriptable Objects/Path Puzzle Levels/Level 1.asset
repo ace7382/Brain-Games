@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level 1
   m_EditorClassIdentifier: 
   levelName: Level 1
-  unlocked: 1
+  unlocked: 0
   timedLevel: 1
   tutorial: {fileID: 11400000, guid: 060b4544fa2010d48b0481698d0d10b9, type: 2}
   levelsUnlockedByThisLevel:

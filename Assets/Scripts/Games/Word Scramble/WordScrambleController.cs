@@ -117,7 +117,7 @@ public class WordScrambleController : MonoBehaviour
                 if (!currentWordScrambleLevel.levelsUnlockedByThisLevel[i].unlocked)
                 {
                     currentWordScrambleLevel.levelsUnlockedByThisLevel[i].unlocked = true;
-                    GameManager.instance.SetWorldMapUnlockLevels(currentWordScrambleLevel.levelsUnlockedByThisLevel[i]);
+                    //GameManager.instance.SetWorldMapUnlockLevels(currentWordScrambleLevel.levelsUnlockedByThisLevel[i]);
                 }
             }
         }
@@ -137,7 +137,7 @@ public class WordScrambleController : MonoBehaviour
     {
         initialLoad = true;
 
-        currentWordScrambleLevel = (WordScrambleLevel)GameManager.instance.currentLevel;
+        currentWordScrambleLevel = (WordScrambleLevel)GameManager.instance.currentLevelOLD;
 
         //TODO: Pool these too
         foreach (Transform child in foundWordList.transform)

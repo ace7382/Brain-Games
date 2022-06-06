@@ -32,8 +32,12 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     private Vector2         startSwipePosition;
     private float           startSwipeTime;
+    private bool            swiping;
 
     private IEnumerator     trailCoroutine;
+
+    private float           boardXMin;
+    private float           boardXMax;
 
     #endregion
 
@@ -53,6 +57,13 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     public override void StartGame()
     {
+        swiping             = false;
+
+        RectTransform rt    = GetComponent<RectTransform>();
+
+        boardXMin           = Helpful.ScreenToWorld(Camera.main, rt.TransformPoint(rt.rect.min)).x;
+        boardXMax           = Helpful.ScreenToWorld(Camera.main, rt.TransformPoint(rt.rect.max)).x;
+
         InputManager.instance.OnStartTouch  += SwipeStart;
         InputManager.instance.OnEndTouch    += SwipeEnd;
 
@@ -63,10 +74,38 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     public override void EndGame()
     {
+        swiping                             = false;
+
+        if (trailCoroutine != null)
+        {
+            StopCoroutine(trailCoroutine);
+            trailCoroutine = null;
+        }
+
         InputManager.instance.OnStartTouch  -= SwipeStart;
         InputManager.instance.OnEndTouch    -= SwipeEnd;
 
         base.EndGame();
+    }
+
+    public override void Pause()
+    {
+        swiping                             = false;
+
+        if (trailCoroutine != null)
+        {
+            StopCoroutine(trailCoroutine);
+            trailCoroutine = null;
+        }
+
+        InputManager.instance.OnStartTouch  -= SwipeStart;
+        InputManager.instance.OnEndTouch    -= SwipeEnd; 
+    }
+
+    public override void Unpause()
+    {
+        InputManager.instance.OnStartTouch  += SwipeStart;
+        InputManager.instance.OnEndTouch    += SwipeEnd;
     }
 
     #endregion
@@ -74,8 +113,12 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
     #region Private Functions
     private void SwipeStart(Vector2 position, float time)
     {
-        startSwipePosition = position;
-        startSwipeTime = time;
+        if (position.x < boardXMin || position.x > boardXMax)
+            return;
+
+        swiping             = true;
+        startSwipePosition  = position;
+        startSwipeTime      = time;
 
         trailRenderer.SetActive(true);
         trailRenderer.transform.position = position;
@@ -85,6 +128,11 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     private void SwipeEnd(Vector2 position, float time)
     {
+        if (!swiping)
+            return;
+
+        swiping = false;
+
         trailRenderer.SetActive(false);
 
         if (trailCoroutine != null)

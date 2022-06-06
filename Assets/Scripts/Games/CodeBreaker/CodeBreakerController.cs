@@ -126,7 +126,7 @@ public class CodeBreakerController : MonoBehaviour
     {
         EnableScreenItems(true);
 
-        currentCodeBreakerLevel     = (CodeBreakerLevel)GameManager.instance.currentLevel;
+        currentCodeBreakerLevel     = (CodeBreakerLevel)GameManager.instance.currentLevelOLD;
         attemptNumber               = 0;
         won                         = false;
 
@@ -430,7 +430,7 @@ public class CodeBreakerController : MonoBehaviour
                     if (!currentCodeBreakerLevel.levelsUnlockedByThisLevel[i].unlocked)
                     {
                         currentCodeBreakerLevel.levelsUnlockedByThisLevel[i].unlocked = true;
-                        GameManager.instance.SetWorldMapUnlockLevels(currentCodeBreakerLevel.levelsUnlockedByThisLevel[i]);
+                        //GameManager.instance.SetWorldMapUnlockLevels(currentCodeBreakerLevel.levelsUnlockedByThisLevel[i]);
                     }
                 }
             }

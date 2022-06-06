@@ -64,6 +64,19 @@ public class BattleUnitController : MonoBehaviour
         }
     }
 
+    public void ResetBattleUnitController()
+    {
+        Debug.Log("reset battle unit controller " + unit == null);
+
+        if (unit == null)
+            return;
+
+        for (int i = 0; i < this.unit.Abilities.Count; i++)
+        {
+            unit.Abilities[i].Deactivate();
+        }
+    }
+
     #endregion
 
     #region Private Functions

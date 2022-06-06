@@ -13,7 +13,7 @@ public class WorldMapController : MonoBehaviour
 
     #region Private Variables
 
-    [SerializeField]private List<LevelBase> levelsToAnimateUnlocking;
+    [SerializeField]private List<NewLevelBase> levelsToAnimateUnlocking;
 
     #endregion
 
@@ -40,20 +40,20 @@ public class WorldMapController : MonoBehaviour
         StartCoroutine(UnlockLevels());
     }
 
-    public void AddLevelsToUnlock(List<LevelBase> levels)
+    public void AddLevelsToUnlock(List<NewLevelBase> levels)
     {
         if (levelsToAnimateUnlocking == null)
-            levelsToAnimateUnlocking = new List<LevelBase>();
+            levelsToAnimateUnlocking = new List<NewLevelBase>();
 
         for (int i = 0; i < levels.Count; i++)
             if (!levelsToAnimateUnlocking.Contains(levels[i]))
                 levelsToAnimateUnlocking.Add(levels[i]);
     }
 
-    public void AddLevelsToUnlock(LevelBase level)
+    public void AddLevelsToUnlock(NewLevelBase level)
     {
         if (levelsToAnimateUnlocking == null)
-            levelsToAnimateUnlocking = new List<LevelBase>();
+            levelsToAnimateUnlocking = new List<NewLevelBase>();
 
         if (!levelsToAnimateUnlocking.Contains(level))
             levelsToAnimateUnlocking.Add(level);

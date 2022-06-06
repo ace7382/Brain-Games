@@ -32,8 +32,13 @@ public abstract class Ability
 
     public abstract void Activate();
 
-    public virtual void Deactivate()
-    {
+    public virtual void Deactivate() {    }
 
+    public void SendDetailsSignal()
+    {
+        object[] info   = new object[1];
+        info[0]         = this;
+
+        Signal.Send("Ability", "Details", info);
     }
 }

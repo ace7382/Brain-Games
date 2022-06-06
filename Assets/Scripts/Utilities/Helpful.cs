@@ -7,6 +7,24 @@ using UnityEngine.UI;
 
 public static class Helpful
 {
+    public enum BattleGameTypes
+    {
+        NO_GAME     = -999,
+        ArrowSwipe  = 0,
+    }
+
+    public static string GetBattleGameboardLoadingPath(BattleGameTypes gameType)
+    {
+        switch (gameType)
+        {
+            case BattleGameTypes.ArrowSwipe:
+                return "Prefabs/Battle Game Boards/Arrow Swipe Board";
+            default:
+                Debug.Log("Game Type invalid");
+                return "YEET";
+        }
+    }
+
     //TODO: Make this use TMPro
     public static void TextPopup(string word, Transform par, Vector2 center, Color col, Font font, int fontSize)
     {

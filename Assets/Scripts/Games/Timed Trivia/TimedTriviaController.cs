@@ -101,7 +101,7 @@ public class TimedTriviaController : MonoBehaviour
 
     public void SetUp(Signal signal)
     {
-        currentTimedTriviaLevel = (TimedTriviaLevel)GameManager.instance.currentLevel;
+        currentTimedTriviaLevel = (TimedTriviaLevel)GameManager.instance.currentLevelOLD;
         
         if (answer0 != null) { answer0.transform.parent.gameObject.GetComponent<UIButton>().interactable = true; }
         if (answer1 != null) { answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = true; }
@@ -287,7 +287,7 @@ public class TimedTriviaController : MonoBehaviour
                     if (!currentTimedTriviaLevel.levelsUnlockedByThisLevel[i].unlocked)
                     {
                         currentTimedTriviaLevel.levelsUnlockedByThisLevel[i].unlocked = true;
-                        GameManager.instance.SetWorldMapUnlockLevels(currentTimedTriviaLevel.levelsUnlockedByThisLevel[i]);
+                        //GameManager.instance.SetWorldMapUnlockLevels(currentTimedTriviaLevel.levelsUnlockedByThisLevel[i]);
                     }
                 }
             }

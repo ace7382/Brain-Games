@@ -7,7 +7,7 @@ public class NewLevelSelectButtonController : MonoBehaviour
 {
     #region Inspector Variables
 
-    [SerializeField] private LevelBase              level;
+    [SerializeField] private NewLevelBase           level;
     [SerializeField] private CanvasGroup            canvasGroup;
 
     #endregion
@@ -15,7 +15,7 @@ public class NewLevelSelectButtonController : MonoBehaviour
     #region Public Properties
 
     public bool Unlocked                            { get { return level.unlocked; } }
-    public LevelBase Level                          { get { return level; } }
+    public NewLevelBase Level                       { get { return level; } }
 
     #endregion
 
@@ -29,12 +29,9 @@ public class NewLevelSelectButtonController : MonoBehaviour
 
         GameManager.instance.SetLevel(level);
 
-        int gameID = Helpful.GetGameID(level.GetType());
-
         AudioManager.instance.Play("Button Click");
 
-        if (gameID >= 0)
-            Signal.Send("GameManagement", "LoadLevelScene", gameID);
+        Signal.Send("GameManagement", "LoadBattleScene");
     }
 
     public void ShowLockedStatus()

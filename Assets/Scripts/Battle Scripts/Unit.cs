@@ -20,6 +20,11 @@ public class Unit
 
     #region Public Properties
 
+    public string Name
+    {
+        get { return battleUnitBase.name; }
+    }
+
     public int MaxHP 
     { 
         get { return battleUnitBase.baseMaxHP; }

@@ -40,7 +40,7 @@ public class TutorialScreenController : MonoBehaviour
     //Called by the Tutorial Screen's OnShow Callback;
     public void Setup()
     {
-        info                            = GameManager.instance.currentLevel != null ? GameManager.instance.currentLevel.tutorial
+        info                            = GameManager.instance.currentLevelOLD != null ? GameManager.instance.currentLevelOLD.tutorial
                                           : GameManager.instance.currentMinigame.tutorial;
 
         pagebuttonsClickable            = true;
@@ -213,7 +213,7 @@ public class TutorialScreenController : MonoBehaviour
         AudioManager.instance.Play("Button Click");
 
         Signal.Send("GameManagement", "LeaveTutorialScreen",
-            GameManager.instance.currentLevel != null ? GameManager.instance.currentLevel.timedLevel : GameManager.instance.currentMinigame.timed);
+            GameManager.instance.currentLevelOLD != null ? GameManager.instance.currentLevelOLD.timedLevel : GameManager.instance.currentMinigame.timed);
     }
 
     private void AllowPageMovement(Signal signal)

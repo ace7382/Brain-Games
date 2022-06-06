@@ -56,7 +56,7 @@ public class EndLevelScreenContoller : MonoBehaviour
 
     public void Setup(Signal signal)
     {
-        levelCompleted  = GameManager.instance.currentLevel;
+        levelCompleted  = GameManager.instance.currentLevelOLD;
         levelResults    = GameManager.instance.currentLevelResults;
 
         if (levelResults.successIndicator)

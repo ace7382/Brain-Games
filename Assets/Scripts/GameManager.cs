@@ -6,24 +6,52 @@ using Doozy.Runtime.Signals;
 
 public class GameManager : MonoBehaviour
 {
+    #region OLD VARIABLES - TODO: REMOVE ALL OF THESE LOLLLLL
+
+    public LevelBase currentLevelOLD;
+    public LevelResultsData currentLevelResults;
+    public Minigame currentMinigame;
+    public MinigameResultsData currentMinigameResults;
+
+    private SignalReceiver gamemanagement_replaycurrentlevel_receiver;
+    private SignalStream gamemanagement_replaycurrentlevel_stream;
+    private SignalReceiver gamemanagement_replaycurrentminigame_receiver;
+    private SignalStream gamemanagement_replaycurrentminigame_stream;
+    private SignalReceiver gamemanagement_playnextlevel_receiver;
+    private SignalStream gamemanagement_playnextlevel_stream;
+
+    private SignalReceiver quitconfirmation_popup_receiver;
+    private SignalStream quitconfirmation_popup_stream;
+
+    #endregion
+
+
+
+
+
+    #region Singleton
+
     public static GameManager   instance = null;
 
-    public LevelBase            currentLevel;
-    public LevelResultsData     currentLevelResults;
-    public Minigame             currentMinigame;
-    public MinigameResultsData  currentMinigameResults;
+    #endregion
 
-    private SignalReceiver      gamemanagement_replaycurrentlevel_receiver;
-    private SignalStream        gamemanagement_replaycurrentlevel_stream;
-    private SignalReceiver      gamemanagement_replaycurrentminigame_receiver;
-    private SignalStream        gamemanagement_replaycurrentminigame_stream;
-    private SignalReceiver      gamemanagement_playnextlevel_receiver;
-    private SignalStream        gamemanagement_playnextlevel_stream;
-    private SignalReceiver      gamemanagement_unloadgamescenes_receiver;
-    private SignalStream        gamemanagement_unloadgamescenes_stream;
+    #region Private Variables
 
-    private SignalReceiver      quitconfirmation_popup_receiver;
-    private SignalStream        quitconfirmation_popup_stream;
+    private NewLevelBase        currentLevel;
+
+    #endregion
+
+    #region Public Properties
+
+    public NewLevelBase         CurrentLevel { get { return currentLevel; } }
+
+    #endregion
+
+    #region Signal Variables
+
+    #endregion
+
+    #region Unity Functions
 
     private void Awake()
     {
@@ -37,13 +65,11 @@ public class GameManager : MonoBehaviour
         gamemanagement_replaycurrentlevel_stream        = SignalStream.Get("GameManagement", "ReplayCurrentLevel");
         gamemanagement_replaycurrentminigame_stream     = SignalStream.Get("GameManagement", "ReplayCurrentMinigame");
         gamemanagement_playnextlevel_stream             = SignalStream.Get("GameManagement", "PlayNextLevel");
-        gamemanagement_unloadgamescenes_stream          = SignalStream.Get("GameManagement", "UnloadGameScenes");
         quitconfirmation_popup_stream                   = SignalStream.Get("QuitConfirmation", "Popup");
 
         gamemanagement_replaycurrentlevel_receiver      = new SignalReceiver().SetOnSignalCallback(PlayCurrentLevel);
         gamemanagement_replaycurrentminigame_receiver   = new SignalReceiver().SetOnSignalCallback(PlayCurrentMinigame);
         gamemanagement_playnextlevel_receiver           = new SignalReceiver().SetOnSignalCallback(PlayNextLevel);
-        gamemanagement_unloadgamescenes_receiver        = new SignalReceiver().SetOnSignalCallback(UnloadAllGameScenes);
         quitconfirmation_popup_receiver                 = new SignalReceiver().SetOnSignalCallback(ShowExitPopup);
     }
 
@@ -52,7 +78,6 @@ public class GameManager : MonoBehaviour
         gamemanagement_replaycurrentlevel_stream.ConnectReceiver(gamemanagement_replaycurrentlevel_receiver);
         gamemanagement_replaycurrentminigame_stream.ConnectReceiver(gamemanagement_replaycurrentminigame_receiver);
         gamemanagement_playnextlevel_stream.ConnectReceiver(gamemanagement_playnextlevel_receiver);
-        gamemanagement_unloadgamescenes_stream.ConnectReceiver(gamemanagement_unloadgamescenes_receiver);
         quitconfirmation_popup_stream.ConnectReceiver(quitconfirmation_popup_receiver);
     }
 
@@ -61,9 +86,28 @@ public class GameManager : MonoBehaviour
         gamemanagement_replaycurrentlevel_stream.DisconnectReceiver(gamemanagement_replaycurrentlevel_receiver);
         gamemanagement_replaycurrentminigame_stream.DisconnectReceiver(gamemanagement_replaycurrentminigame_receiver);
         gamemanagement_playnextlevel_stream.DisconnectReceiver(gamemanagement_playnextlevel_receiver);
-        gamemanagement_unloadgamescenes_stream.DisconnectReceiver(gamemanagement_unloadgamescenes_receiver);
         quitconfirmation_popup_stream.DisconnectReceiver(quitconfirmation_popup_receiver);
     }
+
+    #endregion
+
+    #region Public Functions
+
+    public void SetLevel(NewLevelBase level)
+    {
+        currentLevel = level;
+    }
+
+    //TODO: Probably move the list of things to animate to here vs the wordl map controller
+    //      currently world map hides when moving to a game, might have it unload completely
+    public void SetWorldMapUnlockLevels(NewLevelBase level)
+    {
+        FindObjectOfType<WorldMapController>().AddLevelsToUnlock(level);
+    }
+
+    #endregion
+
+    #region OLD FUNCTIONS - REMOVE OR UPDATE
 
     public void PlayCurrentLevel(Signal signal)
     {
@@ -77,7 +121,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayNextLevel(Signal signal)
     {
-        if (currentLevel.levelsUnlockedByThisLevel == null)
+        if (currentLevelOLD.levelsUnlockedByThisLevel == null)
         {
             Debug.Log("current level does not have a next level");
             return;
@@ -89,24 +133,10 @@ public class GameManager : MonoBehaviour
         PlayCurrentLevel(signal);
     }
 
-    public void SetLevel(LevelBase level)
-    {
-        currentLevel        = level;
-        currentMinigame     = null;
-    }
-
     public void SetMinigame(Minigame minigame)
     {
         currentMinigame     = minigame;
-        currentLevel        = null;
-    }
-
-    public void UnloadAllGameScenes(Signal signal)
-    {
-        //TODO - evaluate whether I need this
-        //      right now there are unload scene nodes for all games on return to main menu
-        //      not super simple to track and unload all available game scenes (there should only be one but not
-        //      trusting that right not). Might be better to do it this way though as more modes are added
+        currentLevelOLD        = null;
     }
 
     public void ShowExitPopup(Signal signal)
@@ -136,16 +166,13 @@ public class GameManager : MonoBehaviour
 
     public void ClearLevelData()
     {
-        currentLevel        = null;
-        currentMinigame     = null;
+        currentLevelOLD         = null;
+        currentMinigame         = null;
         ClearLevelResults();
         ClearMinigameResults();
     }
 
-    //TODO: Probably move the list of things to animate to here vs the wordl map controller
-    //      currently world map hides when moving to a game, might have it unload completely
-    public void SetWorldMapUnlockLevels(LevelBase level)
-    {
-        FindObjectOfType<WorldMapController>().AddLevelsToUnlock(level);
-    }
+    #endregion
+
+
 }

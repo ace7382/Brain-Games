@@ -16,6 +16,9 @@ public class Ability_Attack1 : Ability
     private SignalReceiver      battle_correctresponse_receiver;
     private SignalStream        battle_correctresponse_stream;
 
+    private SignalStream        battle_incorrectresponse_stream;
+    private SignalReceiver      battle_incorrectresponse_receiver;
+
     #endregion
 
     public override void Init(BattleUnitController owner)
@@ -24,22 +27,26 @@ public class Ability_Attack1 : Ability
 
         //HARD CODED SHIT
 
-        chargeType                      = AbilityChargeType.NUM_OF_CHARGES;
-        numOfCharges                    = 7;
-        abilityName                     = "Big Attack";
+        chargeType                          = AbilityChargeType.NUM_OF_CHARGES;
+        numOfCharges                        = 7;
+        abilityName                         = "Big Attack";
 
         //
 
-        battle_correctresponse_stream   = SignalStream.Get("Battle", "CorrectResponse");
+        battle_correctresponse_stream       = SignalStream.Get("Battle", "CorrectResponse");
+        battle_incorrectresponse_stream     = SignalStream.Get("Battle", "IncorrectResponse");
 
-        battle_correctresponse_receiver = new SignalReceiver().SetOnSignalCallback(ChargeAbility);
+        battle_correctresponse_receiver     = new SignalReceiver().SetOnSignalCallback(ChargeAbility);
+        battle_incorrectresponse_receiver   = new SignalReceiver().SetOnSignalCallback(ResetChargesOnMiss);
 
         battle_correctresponse_stream.ConnectReceiver(battle_correctresponse_receiver);
+        battle_incorrectresponse_stream.ConnectReceiver(battle_incorrectresponse_receiver);
     }
 
     public override void Deactivate()
     {
         battle_correctresponse_stream.DisconnectReceiver(battle_correctresponse_receiver);
+        battle_incorrectresponse_stream.DisconnectReceiver(battle_incorrectresponse_receiver);
     }
 
     public override void Activate()
@@ -75,5 +82,10 @@ public class Ability_Attack1 : Ability
         info[0]             = this; //The ability to charge
 
         Signal.Send("Battle", "ResetAbilityCharges", info);
+    }
+
+    public void ResetChargesOnMiss(Signal signal)
+    {
+        ResetCharges();
     }
 }

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Doozy.Runtime.Signals;
+using UnityEngine.UI;
 
 public class AbilityButtonController : MonoBehaviour
 {
     #region Inspector Variables
 
-    [SerializeField] private TextMeshProUGUI    abilityNameText;
-    [SerializeField] private RectTransform      chargeMarkerPanelTrans;
+    [SerializeField] private TextMeshProUGUI            abilityNameText;
+    [SerializeField] private RectTransform              chargeMarkerPanelTrans;
 
     #endregion
 
@@ -74,9 +75,7 @@ public class AbilityButtonController : MonoBehaviour
         {
             for (int i = 0; i < ability.numOfCharges; i++)
             {
-                BattleManager bm                                = FindObjectOfType<BattleManager>();
-
-                GameObject go                                   = Instantiate(bm.ChargeMarkerPrefab, chargeMarkerPanelTrans);
+                GameObject go                                   = Instantiate(BattleManager.instance.ChargeMarkerPrefab, chargeMarkerPanelTrans);
                 go.transform.localPosition                      = Vector3.zero;
                 go.transform.localScale                         = Vector3.one;
 
@@ -86,11 +85,27 @@ public class AbilityButtonController : MonoBehaviour
                 chargeMarkers.Add(control);
             }
         }
+
+        Canvas.ForceUpdateCanvases();
+
+        LayoutElement l = gameObject.AddComponent<LayoutElement>();
+        l.preferredHeight = transform.Find("Button Shadow").GetComponent<RectTransform>().rect.height;
+
+        Canvas.ForceUpdateCanvases();
+
+        ContentSizeFitter c = gameObject.AddComponent<ContentSizeFitter>();
+        c.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        Canvas.ForceUpdateCanvases();
     }
 
+    //Called by the Ability Button Controller's OnClick Behavior
     public void Activate()
     {
-        ability.Activate();
+        if (!BattleManager.instance.IsPaused)
+            ability.Activate();
+        else
+            ability.SendDetailsSignal();
     }
 
     #endregion
