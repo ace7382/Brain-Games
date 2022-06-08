@@ -21,6 +21,8 @@ MonoBehaviour:
     - Category: Battle
       Name: CorrectResponse
     - Category: Battle
+      Name: CountdownEnded
+    - Category: Battle
       Name: EnemyCurrentHPUpdate
     - Category: Battle
       Name: EnemyKOed
@@ -40,6 +42,8 @@ MonoBehaviour:
       Name: ResetAbilityCharges
     - Category: Battle
       Name: ReturnToWorldMap
+    - Category: Battle
+      Name: StartCountdown
     - Category: Battle
       Name: UnitTakeDamage
     - Category: Battle

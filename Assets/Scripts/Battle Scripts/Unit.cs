@@ -13,8 +13,8 @@ public class Unit
 
     #region Private Variables
 
-    private int             currentHP;
-    private List<Ability>   abilities;
+    private int currentHP;
+    private List<Ability> abilities;
 
     #endregion
 
@@ -25,15 +25,15 @@ public class Unit
         get { return battleUnitBase.name; }
     }
 
-    public int MaxHP 
-    { 
+    public int MaxHP
+    {
         get { return battleUnitBase.baseMaxHP; }
     }
 
     public int CurrentHP
     {
         get { return currentHP; }
-        set 
+        set
         {
             if (currentHP == value) return;
 
@@ -44,6 +44,16 @@ public class Unit
     public List<Ability> Abilities
     {
         get { return abilities; }
+    }
+
+    public Sprite InBattleSprite
+    {
+        get { return battleUnitBase.inBattleSprite; }
+    }
+
+    public Helpful.BattleGameTypes BattleGame
+    {
+        get { return battleUnitBase.battleGame; }
     }
 
     #endregion

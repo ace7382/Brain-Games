@@ -9,8 +9,9 @@ public static class Helpful
 {
     public enum BattleGameTypes
     {
-        NO_GAME     = -999,
-        ArrowSwipe  = 0,
+        NO_GAME         = -999,
+        ArrowSwipe      = 0,
+        ColorDissonance = 10
     }
 
     public static string GetBattleGameboardLoadingPath(BattleGameTypes gameType)
@@ -19,6 +20,8 @@ public static class Helpful
         {
             case BattleGameTypes.ArrowSwipe:
                 return "Prefabs/Battle Game Boards/Arrow Swipe Board";
+            case BattleGameTypes.ColorDissonance:
+                return "Prefabs/Battle Game Boards/Color Dissonance Board";
             default:
                 Debug.Log("Game Type invalid");
                 return "YEET";

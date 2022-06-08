@@ -61,8 +61,15 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
         RectTransform rt    = GetComponent<RectTransform>();
 
-        boardXMin           = Helpful.ScreenToWorld(Camera.main, rt.TransformPoint(rt.rect.min)).x;
-        boardXMax           = Helpful.ScreenToWorld(Camera.main, rt.TransformPoint(rt.rect.max)).x;
+        //boardXMin           = Helpful.ScreenToWorld(Camera.main, rt.TransformPoint(rt.rect.min)).x;
+        //boardXMax           = Helpful.ScreenToWorld(Camera.main, rt.TransformPoint(rt.rect.max)).x;
+
+        boardXMin           = rt.TransformPoint(rt.rect.min).x;
+        boardXMax           = rt.TransformPoint(rt.rect.max).x;
+
+        //Debug.Log(rt.TransformPoint(rt.rect.min));
+        //Debug.Log(rt.TransformPoint(rt.rect.max));
+        //Debug.Log(string.Format("Board xBounds: {0} :: {1}", boardXMin, boardXMax));
 
         InputManager.instance.OnStartTouch  += SwipeStart;
         InputManager.instance.OnEndTouch    += SwipeEnd;

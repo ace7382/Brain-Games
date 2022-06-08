@@ -33,7 +33,7 @@ public abstract class BattleGameControllerBase : MonoBehaviour
 
     public virtual void StartGame()
     {
-
+        Debug.Log("Game Started");
     }
 
     public virtual void EndGame()

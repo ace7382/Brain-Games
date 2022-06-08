@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    #region OLD FUNCTIONS - REMOVE OR UPDATE
+    #region OLD FUNCTIONS - TODO: REMOVE OR UPDATE
 
     public void PlayCurrentLevel(Signal signal)
     {

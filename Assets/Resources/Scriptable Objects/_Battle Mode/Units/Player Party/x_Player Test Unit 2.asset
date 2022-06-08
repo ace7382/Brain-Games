@@ -17,3 +17,4 @@ MonoBehaviour:
   - Ability_Attack1
   - Ability_Attack
   battleGame: -999
+  inBattleSprite: {fileID: 21300000, guid: 31dd2891b67e7a64d8aeb59996772a7d, type: 3}

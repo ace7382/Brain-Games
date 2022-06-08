@@ -3,21 +3,25 @@ using System;
 using TMPro;
 using UnityEngine;
 using Doozy.Runtime.Signals;
+using Doozy.Runtime.UIManager.Containers;
 
 public class CountdownScreenController : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI t;
-    
+
+    private void Start()
+    {
+        Canvas c        = GetComponentInParent<Canvas>();
+        Debug.Log(c.gameObject.name);
+        c.worldCamera   = Camera.main;
+        c.sortingOrder  = UniversalInspectorVariables.instance.popupScreenOrderInLayer;
+    }
+
     //Called by the GameManagement.Countdown View's End Show Animation callback
     public void StartCountdown()
     {
-        StartCoroutine(Countdown());
-    }
-
-    //Called by the GameManagement.Countdown View's End Hide Animation callback
-    public void OnHidden()
-    {
         t.text = "3";
+        StartCoroutine(Countdown());
     }
 
     private IEnumerator Countdown()
@@ -44,6 +48,6 @@ public class CountdownScreenController : MonoBehaviour
 
         yield return w;
 
-        Signal.Send("GameManagement", "CountdownEnded");
+        Signal.Send("Battle", "CountdownEnded");
     }
 }

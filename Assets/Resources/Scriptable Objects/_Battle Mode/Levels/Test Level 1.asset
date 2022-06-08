@@ -19,4 +19,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 69049729ef717d540bb59e7cd283141c, type: 2}
   enemyUnits:
   - battleUnitBase: {fileID: 11400000, guid: cf295d3ca3ba15c47985c70db89d62f3, type: 2}
-  - battleUnitBase: {fileID: 11400000, guid: cf295d3ca3ba15c47985c70db89d62f3, type: 2}
+  - battleUnitBase: {fileID: 11400000, guid: 235dc8f7523bf7f4791adc835cb7dcd7, type: 2}
+  - battleUnitBase: {fileID: 11400000, guid: 235dc8f7523bf7f4791adc835cb7dcd7, type: 2}
