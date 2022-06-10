@@ -9,7 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: defe2424e2294add87e7fc8f38137ba9, type: 3}
-  m_Name: NodySettings
+  m_Script: {fileID: 11500000, guid: 11c8af7e0c004e042ac2d806714e1087, type: 3}
+  m_Name: Arrow Swipe Test Unit
   m_EditorClassIdentifier: 
-  Graph: {fileID: 0}
+  baseMaxHP: 6
+  abilityNames:
+  - Ability_EnemyAttack
+  battleGame: 0
+  inBattleSprite: {fileID: 21300000, guid: 31dd2891b67e7a64d8aeb59996772a7d, type: 3}

@@ -9,37 +9,37 @@ EditorBuildSettings:
     path: Assets/Scenes/_Main.unity
     guid: 85006ca468066144fbed475cf8b728ad
   - enabled: 1
-    path: Assets/Scenes/OLD/ExitConfirmationScreen.unity
+    path: Assets/__OLD ASSETS/Scenes/ExitConfirmationScreen.unity
     guid: 17c23ab9c1e88f14c96d1c493bcdb0bc
   - enabled: 1
-    path: Assets/Scenes/OLD/Gameplay Scenes/WordScramble.unity
+    path: Assets/__OLD ASSETS/Scenes/Gameplay Scenes/WordScramble.unity
     guid: 8c9fade7f2c78f047a0762cb48d46ba1
   - enabled: 1
-    path: Assets/Scenes/OLD/Gameplay Scenes/TimedTrivia.unity
+    path: Assets/__OLD ASSETS/Scenes/Gameplay Scenes/TimedTrivia.unity
     guid: f958cf711c176134f9104d4dcea3125f
   - enabled: 1
-    path: Assets/Scenes/OLD/Gameplay Scenes/PathPuzzle.unity
+    path: Assets/__OLD ASSETS/Scenes/Gameplay Scenes/PathPuzzle.unity
     guid: 23ffb9e202861bd40b9ec843f36e50e1
   - enabled: 1
-    path: Assets/Scenes/OLD/Gameplay Scenes/SpeedMath.unity
+    path: Assets/__OLD ASSETS/Scenes/Gameplay Scenes/SpeedMath.unity
     guid: 1e7834664d0a62547971fa1ee9539a53
   - enabled: 1
-    path: Assets/Scenes/OLD/Gameplay Scenes/ArrowSwipe.unity
+    path: Assets/__OLD ASSETS/Scenes/Gameplay Scenes/ArrowSwipe.unity
     guid: 18cbf6d51ce2daf47b73c5428de82af4
   - enabled: 1
-    path: Assets/Scenes/OLD/LevelEndScreen.unity
+    path: Assets/__OLD ASSETS/Scenes/LevelEndScreen.unity
     guid: b616390f8319f9d43bb13fa3d6eeaa52
   - enabled: 1
-    path: Assets/Scenes/OLD/MinigameEndScreen.unity
+    path: Assets/__OLD ASSETS/Scenes/MinigameEndScreen.unity
     guid: 347a4ef019897934ba92bfafa2809862
   - enabled: 1
-    path: Assets/Scenes/OLD/Gameplay Scenes/CodeBreaker.unity
+    path: Assets/__OLD ASSETS/Scenes/Gameplay Scenes/CodeBreaker.unity
     guid: 6e090d4f532060e42bc54950dfe1e513
   - enabled: 1
-    path: Assets/Scenes/OLD/Gameplay Scenes/ColorDissonance.unity
+    path: Assets/__OLD ASSETS/Scenes/Gameplay Scenes/ColorDissonance.unity
     guid: a2638f9418f767943a9930a5bae8122f
   - enabled: 1
-    path: Assets/Scenes/OLD/Gameplay Scenes/SequentialNumbers.unity
+    path: Assets/__OLD ASSETS/Scenes/Gameplay Scenes/SequentialNumbers.unity
     guid: 129729754c3ebc644a0732b393c96abd
   - enabled: 1
     path: Assets/Scenes/World Map.unity

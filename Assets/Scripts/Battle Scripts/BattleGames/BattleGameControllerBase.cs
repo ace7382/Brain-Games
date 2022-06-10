@@ -33,7 +33,7 @@ public abstract class BattleGameControllerBase : MonoBehaviour
 
     public virtual void StartGame()
     {
-        Debug.Log("Game Started");
+        Debug.Log("BattleGameBase 'Start Game' Function called");
     }
 
     public virtual void EndGame()
@@ -50,6 +50,8 @@ public abstract class BattleGameControllerBase : MonoBehaviour
     {
 
     }
+
+    public abstract string GetBattleGameName();
 
     #endregion
 

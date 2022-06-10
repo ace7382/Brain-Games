@@ -7,9 +7,20 @@ using UnityEngine.UI;
 
 public class HPBarDisplayController : MonoBehaviour
 {
+    #region Enums
+
+    private enum HPBarOwner
+    {
+        PLAYER,
+        ENEMY,
+        DISPLAY,
+    }
+
+    #endregion
+
     #region Inspector Variables
 
-    [SerializeField] private bool               isPlayerHPBar;
+    [SerializeField] private HPBarOwner         owner;
 
     [Space]
 
@@ -38,15 +49,20 @@ public class HPBarDisplayController : MonoBehaviour
 
     private void Awake()
     {
-        if (isPlayerHPBar)
+        if (owner == HPBarOwner.PLAYER)
         {
             currentStr  = SignalStream.Get("Battle", "PlayerCurrentHPUpdate");
             maxStr      = SignalStream.Get("Battle", "PlayerMaxHPUpdate");
         }
-        else
+        else if (owner == HPBarOwner.ENEMY)
         {
             currentStr  = SignalStream.Get("Battle", "EnemyCurrentHPUpdate");
             maxStr      = SignalStream.Get("Battle", "EnemyMaxHPUpdate");
+        }
+        else
+        {
+            currentStr  = SignalStream.Get("Battle", "DisplayCurrentHPUpdate");
+            maxStr      = SignalStream.Get("Battle", "DisplayMaxHPUpdate");
         }
 
         currentRec      = new SignalReceiver().SetOnSignalCallback(UpdateCurrentHP);

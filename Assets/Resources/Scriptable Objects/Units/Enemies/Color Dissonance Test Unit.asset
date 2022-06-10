@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c8af7e0c004e042ac2d806714e1087, type: 3}
   m_Name: Color Dissonance Test Unit
   m_EditorClassIdentifier: 
-  baseMaxHP: 5
+  baseMaxHP: 3
   abilityNames:
   - Ability_EnemyAttack
   battleGame: 10

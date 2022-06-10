@@ -569,9 +569,8 @@ MonoBehaviour:
     PortId: a21addab-3b5a-4676-893e-f3e60e1a12fd
     Direction: 1
     Capacity: 0
-    Connections:
-    - 6657402c-9f3b-480c-8d45-2e412adf1929
-    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Battle","Name":"CountdownEnded","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    Connections: []
+    Value: '{"Trigger":0,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"Battle","Name":"CountdownEnded","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     CanBeDeleted: 0
@@ -582,7 +581,7 @@ MonoBehaviour:
   NodeState: 0
   CanBeDeleted: 1
   Passthrough: 0
-  ClearGraphHistory: 0
+  ClearGraphHistory: 1
   Position: {x: 1125.6001, y: -454}
   OnEnterShowViews:
   - Id:
@@ -592,12 +591,7 @@ MonoBehaviour:
     Mode: 0
   OnEnterHideViews: []
   OnExitShowViews: []
-  OnExitHideViews:
-  - Id:
-      Category: GameManagement
-      Name: Countdown
-      Custom: 0
-    Mode: 1
+  OnExitHideViews: []
   OnEnterHideAllViews: 0
   OnExitHideAllViews: 0
 --- !u!114 &11400000
@@ -612,8 +606,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02761efe598a45c98fa1baf4d446c6a7, type: 3}
   m_Name: Battle Game Flow
   m_EditorClassIdentifier: 
-  EditorPosition: {x: 69, y: 423, z: 0}
-  EditorScale: {x: 0.49717674, y: 0.49717674, z: 1}
+  EditorPosition: {x: 11, y: 308, z: 0}
+  EditorScale: {x: 0.375937, y: 0.375937, z: 1}
   Id: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
   GraphName: Flow Graph
   GraphDescription: 
@@ -633,58 +627,10 @@ MonoBehaviour:
   - {fileID: -5721211396137938054}
   - {fileID: -6630945398546080077}
   - {fileID: -298884580898688050}
-  - {fileID: 358702946558095185}
   - {fileID: -6758055594882032080}
   - {fileID: 951729272484851746}
   RootNode: {fileID: -2819881898719066116}
   ActiveNode: {fileID: 0}
---- !u!114 &358702946558095185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54190db4e4af45b7b8b7fcee721f1f20, type: 3}
-  m_Name: Debug
-  m_EditorClassIdentifier: 
-  FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
-  NodeId: 16905ee5-e84c-4be8-bfc0-ac50c4c41b6e
-  NodeType: 0
-  NodeName: Debug
-  NodeDescription: 
-  InputPorts:
-  - NodeId: 16905ee5-e84c-4be8-bfc0-ac50c4c41b6e
-    PortId: 6657402c-9f3b-480c-8d45-2e412adf1929
-    Direction: 0
-    Capacity: 1
-    Connections:
-    - a21addab-3b5a-4676-893e-f3e60e1a12fd
-    Value: 
-    ValueTypeQualifiedName: 
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  OutputPorts:
-  - NodeId: 16905ee5-e84c-4be8-bfc0-ac50c4c41b6e
-    PortId: 04f774f9-0e58-4a48-885f-8702a5a7c643
-    Direction: 1
-    Capacity: 0
-    Connections: []
-    Value: 
-    ValueTypeQualifiedName: 
-    CanBeDeleted: 0
-    CanBeReordered: 0
-  RunUpdate: 0
-  RunFixedUpdate: 0
-  RunLateUpdate: 0
-  NodeState: 0
-  CanBeDeleted: 1
-  Passthrough: 1
-  ClearGraphHistory: 0
-  Position: {x: 1415.1305, y: -454}
-  Message: 
 --- !u!114 &951729272484851746
 MonoBehaviour:
   m_ObjectHideFlags: 0

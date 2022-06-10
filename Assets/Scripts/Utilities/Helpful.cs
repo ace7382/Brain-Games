@@ -9,9 +9,10 @@ public static class Helpful
 {
     public enum BattleGameTypes
     {
-        NO_GAME         = -999,
-        ArrowSwipe      = 0,
-        ColorDissonance = 10
+        NO_GAME             = -999,
+        ArrowSwipe          = 0,
+        ColorDissonance     = 10,
+        SequentialNumbers   = 20,
     }
 
     public static string GetBattleGameboardLoadingPath(BattleGameTypes gameType)
@@ -22,9 +23,27 @@ public static class Helpful
                 return "Prefabs/Battle Game Boards/Arrow Swipe Board";
             case BattleGameTypes.ColorDissonance:
                 return "Prefabs/Battle Game Boards/Color Dissonance Board";
+            case BattleGameTypes.SequentialNumbers:
+                return "Prefabs/Battle Game Boards/Sequential Numbers Board";
             default:
                 Debug.Log("Game Type invalid");
                 return "YEET";
+        }
+    }
+
+    public static string GetStringFromBattleGameType(BattleGameTypes gameType)
+    {
+        switch (gameType)
+        {
+            case BattleGameTypes.ArrowSwipe:
+                return "Arrow Swipe";
+            case BattleGameTypes.ColorDissonance:
+                return "Color Dissonance";
+            case BattleGameTypes.SequentialNumbers:
+                return "Sequential Numbers";
+            default:
+                Debug.Log("Game Type invalid");
+                return "No Game (player character)";
         }
     }
 

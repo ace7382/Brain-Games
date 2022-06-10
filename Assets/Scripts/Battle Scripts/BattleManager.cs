@@ -10,7 +10,7 @@ public class BattleManager : MonoBehaviour
 {
     #region Singleton
 
-    public static BattleManager instance = null; //Does NOT persist between scenes currnetly though
+    public static BattleManager instance = null; //Does NOT persist between scenes currently though
 
     #endregion
 
@@ -37,8 +37,10 @@ public class BattleManager : MonoBehaviour
 
     [Header("Pre Battle Screen")]
     [SerializeField] private GameObject             preBattleScreen;
+    [SerializeField] private Image                  enemyPreBattleImage;
     [SerializeField] private TextMeshProUGUI        enemyCountText;
     [SerializeField] private TextMeshProUGUI        enemyNameText;
+    [SerializeField] private TextMeshProUGUI        enemyBattleGameName;
     [SerializeField] private GameObject             previousArrow;
     [SerializeField] private GameObject             nextArrow;
 
@@ -77,9 +79,10 @@ public class BattleManager : MonoBehaviour
 
     #region Public Properties
 
-    public GameObject AbilityButtonPrefab   { get { return abilityButtonPrefab; } }
-    public GameObject ChargeMarkerPrefab    { get { return abilityButtonChargeMarkerPrefab; } }
-    public bool IsPaused                    { get { return pauseScreen.activeInHierarchy; } }
+    public GameObject   AbilityButtonPrefab         { get { return abilityButtonPrefab; } }
+    public GameObject   ChargeMarkerPrefab          { get { return abilityButtonChargeMarkerPrefab; } }
+    public bool         IsPaused                    { get { return pauseScreen.activeInHierarchy; } }
+    public string       CurrentGameName             { get { return currentGameController.GetBattleGameName(); } }
 
     #endregion
 
@@ -180,8 +183,13 @@ public class BattleManager : MonoBehaviour
         pauseButton.SetActive(false);
         pauseScreen.SetActive(false);
 
-        enemyCountText.text     = string.Format("# {0} / {1}", (prePanelEnemyDisplayedIndex + 1).ToString(), enemyParty.Count.ToString());
-        enemyNameText.text      = enemyParty[prePanelEnemyDisplayedIndex].Name;
+        enemyPreBattleImage.sprite  = enemyParty[prePanelEnemyDisplayedIndex].InBattleSprite;
+        enemyCountText.text         = string.Format("# {0} / {1}", (prePanelEnemyDisplayedIndex + 1).ToString(), enemyParty.Count.ToString());
+        enemyNameText.text          = enemyParty[prePanelEnemyDisplayedIndex].Name;
+        enemyBattleGameName.text    = enemyParty[prePanelEnemyDisplayedIndex].BattleGameName;
+
+        Signal.Send("Battle", "DisplayMaxHPUpdate", enemyParty[prePanelEnemyDisplayedIndex].MaxHP);
+        Signal.Send("Battle", "DisplayCurrentHPUpdate", enemyParty[prePanelEnemyDisplayedIndex].MaxHP);
 
         nextArrow.SetActive(prePanelEnemyDisplayedIndex != enemyParty.Count - 1);
         previousArrow.SetActive(prePanelEnemyDisplayedIndex > 0);
@@ -253,20 +261,6 @@ public class BattleManager : MonoBehaviour
         GameObject.Find("Enemy HP Bar").GetComponent<CanvasGroup>().alpha = 1;
 
         ChangeGame();
-
-        //battleBoard = Instantiate(
-        //    Resources.Load<GameObject>(Helpful.GetBattleGameboardLoadingPath(currentEnemyUnitController.UnitInfo.BattleGame))
-        //    , gameBoardRectTrans);
-
-        //battleBoard.transform.localPosition     = Vector3.zero;
-        //battleBoard.transform.localScale        = Vector3.one;
-
-        //currentGameController                   = battleBoard.GetComponent<BattleGameControllerBase>();
-
-        //battleBoard.SetActive(false);
-        //StartCountdown();
-
-        //currentGameController.StartGame();
     }
 
     private void ChangeGame()
@@ -289,6 +283,8 @@ public class BattleManager : MonoBehaviour
 
     private void StartCountdown()
     {
+        pauseButton.SetActive(false);
+
         Signal.Send("Battle", "StartCountdown");
     }
 
@@ -296,11 +292,14 @@ public class BattleManager : MonoBehaviour
     {
         battleBoard.SetActive(true);
         pauseButton.SetActive(true);
+
         currentGameController.StartGame();
     }
 
     private void EnemyKO(Signal signal)
     {
+        Debug.Log("Enemy KOed");
+
         int nextEnemyIndex = enemyParty.FindIndex(x => x.CurrentHP > 0);
 
         if (nextEnemyIndex >= 0)

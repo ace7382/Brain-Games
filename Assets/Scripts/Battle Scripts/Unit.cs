@@ -56,6 +56,11 @@ public class Unit
         get { return battleUnitBase.battleGame; }
     }
 
+    public string BattleGameName
+    {
+        get { return Helpful.GetStringFromBattleGameType(battleUnitBase.battleGame); }
+    }
+
     #endregion
 
     #region Public Functions

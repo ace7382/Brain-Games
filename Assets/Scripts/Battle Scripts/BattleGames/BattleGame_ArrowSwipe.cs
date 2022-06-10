@@ -18,6 +18,12 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     #endregion
 
+    #region Constants
+
+    private const string battleGameName = "Arrow Swipe"; //TODO - name this better lollll
+
+    #endregion
+
     #region Inspector Variables
 
     [SerializeField] private Image                              arrowImage;
@@ -51,6 +57,12 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
         base.OnDisable();
     }
 
+    protected void OnDestroy()
+    {
+        InputManager.instance.OnStartTouch  -= SwipeStart;
+        InputManager.instance.OnEndTouch    -= SwipeEnd;
+    }
+
     #endregion
 
     #region Public Functions
@@ -75,8 +87,6 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
         InputManager.instance.OnEndTouch    += SwipeEnd;
 
         NextArrow();
-
-        base.StartGame();
     }
 
     public override void EndGame()
@@ -113,6 +123,11 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
     {
         InputManager.instance.OnStartTouch  += SwipeStart;
         InputManager.instance.OnEndTouch    += SwipeEnd;
+    }
+
+    public override string GetBattleGameName()
+    {
+        return battleGameName;
     }
 
     #endregion

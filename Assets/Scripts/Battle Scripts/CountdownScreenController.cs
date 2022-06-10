@@ -12,7 +12,6 @@ public class CountdownScreenController : MonoBehaviour
     private void Start()
     {
         Canvas c        = GetComponentInParent<Canvas>();
-        Debug.Log(c.gameObject.name);
         c.worldCamera   = Camera.main;
         c.sortingOrder  = UniversalInspectorVariables.instance.popupScreenOrderInLayer;
     }
@@ -21,6 +20,7 @@ public class CountdownScreenController : MonoBehaviour
     public void StartCountdown()
     {
         t.text = "3";
+
         StartCoroutine(Countdown());
     }
 

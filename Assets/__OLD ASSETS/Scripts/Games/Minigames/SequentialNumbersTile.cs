@@ -10,9 +10,8 @@ public class SequentialNumbersTile : MonoBehaviour
 {
     #region Inspector Variables
 
+    [SerializeField] private Image              buttonBG;
     [SerializeField] private TextMeshProUGUI    numberDisplay;
-    [SerializeField] private Image              bgImage;
-    [SerializeField] private Image              borderImage;
     [SerializeField] private UIButton           uiButton;
 
     #endregion
@@ -28,7 +27,7 @@ public class SequentialNumbersTile : MonoBehaviour
 
     public decimal Number                       { get { return number; } }
     public int SolutionIndex                    { get { return solutionIndex; } }
-    public bool Showing                         { get { return numberDisplay.enabled; } }
+    public bool Showing                         { get { return buttonBG.enabled; } }
 
     #endregion
 
@@ -49,10 +48,10 @@ public class SequentialNumbersTile : MonoBehaviour
 
     public void HideTile()
     {
-        borderImage.enabled     = false;
-        bgImage.enabled         = false;
-        numberDisplay.enabled   = false;
+        Debug.Log("hiding tile : " + name + " value: " + number.ToString());
 
+        buttonBG.enabled        = false;
+        numberDisplay.enabled   = false;
         uiButton.enabled        = false;
 
         solutionIndex           = -1;
@@ -62,10 +61,8 @@ public class SequentialNumbersTile : MonoBehaviour
 
     public void ShowTile()
     {
-        borderImage.enabled     = true;
-        bgImage.enabled         = true;
+        buttonBG.enabled        = true;
         numberDisplay.enabled   = true;
-
         uiButton.enabled        = true;
         uiButton.interactable   = true;
 
