@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11c8af7e0c004e042ac2d806714e1087, type: 3}
+  m_Name: Trivia Test Unit
+  m_EditorClassIdentifier: 
+  baseMaxHP: 10
+  abilityNames:
+  - Ability_EnemyTimedAttack
+  - Ability_EnemyAttack
+  battleGame: 30
+  inBattleSprite: {fileID: 21300000, guid: 31dd2891b67e7a64d8aeb59996772a7d, type: 3}
+  triviaQuestions:
+  - Question: Who is the Best Dog?
+    Answers:
+    - answerText: Bucket
+      correct: 1
+    - answerText: Briar
+      correct: 0
+    - answerText: Corsair
+      correct: 0
+    - answerText: Paisley
+      correct: 0
+  - Question: Who is a Good Boy?
+    Answers:
+    - answerText: Bucket
+      correct: 0
+    - answerText: Briar
+      correct: 1
+    - answerText: Corsair
+      correct: 1
+    - answerText: Paisley
+      correct: 0
+  - Question: Who is a Good Girl?
+    Answers:
+    - answerText: Bucket
+      correct: 1
+    - answerText: Briar
+      correct: 0
+    - answerText: Corsair
+      correct: 0
+    - answerText: Paisley
+      correct: 1
+  - Question: Who is the floppiest talliest?
+    Answers:
+    - answerText: Bucket
+      correct: 0
+    - answerText: Briar
+      correct: 1
+    - answerText: Corsair
+      correct: 0
+    - answerText: Paisley
+      correct: 0
+  - Question: Who is made of hair?
+    Answers:
+    - answerText: Bucket
+      correct: 0
+    - answerText: Briar
+      correct: 0
+    - answerText: Corsair
+      correct: 1
+    - answerText: Paisley
+      correct: 0
+  - Question: Who is the bitiest chompiest?
+    Answers:
+    - answerText: Bucket
+      correct: 1
+    - answerText: Briar
+      correct: 0
+    - answerText: Corsair
+      correct: 0
+    - answerText: Paisley
+      correct: 0

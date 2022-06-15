@@ -61,6 +61,11 @@ public class Unit
         get { return Helpful.GetStringFromBattleGameType(battleUnitBase.battleGame); }
     }
 
+    public List<TriviaQuestion> TriviaQuestions
+    {
+        get { return battleUnitBase.triviaQuestions; }
+    }
+
     #endregion
 
     #region Public Functions

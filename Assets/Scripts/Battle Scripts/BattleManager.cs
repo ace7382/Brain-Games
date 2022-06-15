@@ -82,12 +82,12 @@ public class BattleManager : MonoBehaviour
 
     #region Public Properties
 
-    public GameObject   AbilityButtonPrefab         { get { return abilityButtonPrefab; } }
-    public GameObject   ChargeMarkerPrefab          { get { return abilityButtonChargeMarkerPrefab; } }
-    public GameObject   TimerBarPrefab              { get { return abilityButtonTimerBarPrefab; } }
-    public bool         IsPaused                    { get { return pauseScreen.activeInHierarchy; } }
-    public string       CurrentGameName             { get { return currentGameController.GetBattleGameName(); } }
-
+    public GameObject           AbilityButtonPrefab         { get { return abilityButtonPrefab; } }
+    public GameObject           ChargeMarkerPrefab          { get { return abilityButtonChargeMarkerPrefab; } }
+    public GameObject           TimerBarPrefab              { get { return abilityButtonTimerBarPrefab; } }
+    public bool                 IsPaused                    { get { return pauseScreen.activeInHierarchy; } }
+    public string               CurrentGameName             { get { return currentGameController.GetBattleGameName(); } }
+    public BattleUnitController CurrentEnemy                { get { return currentEnemyUnitController; } }
     #endregion
 
     #region Unity Functions

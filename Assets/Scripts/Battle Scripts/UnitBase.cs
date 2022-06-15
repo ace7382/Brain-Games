@@ -9,4 +9,5 @@ public class UnitBase : ScriptableObject
     public List<string>                 abilityNames;
     public Helpful.BattleGameTypes      battleGame;
     public Sprite                       inBattleSprite;
+    public List<TriviaQuestion>         triviaQuestions;
 }

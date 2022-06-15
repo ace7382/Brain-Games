@@ -13,6 +13,7 @@ public static class Helpful
         ArrowSwipe          = 0,
         ColorDissonance     = 10,
         SequentialNumbers   = 20,
+        Trivia              = 30,
     }
 
     public static string GetBattleGameboardLoadingPath(BattleGameTypes gameType)
@@ -25,6 +26,8 @@ public static class Helpful
                 return "Prefabs/Battle Game Boards/Color Dissonance Board";
             case BattleGameTypes.SequentialNumbers:
                 return "Prefabs/Battle Game Boards/Sequential Numbers Board";
+            case BattleGameTypes.Trivia:
+                return "Prefabs/Battle Game Boards/Trivia Board";
             default:
                 Debug.Log("Game Type invalid");
                 return "YEET";
@@ -41,6 +44,8 @@ public static class Helpful
                 return "Color Dissonance";
             case BattleGameTypes.SequentialNumbers:
                 return "Sequential Numbers";
+            case BattleGameTypes.Trivia:
+                return "Trivia";
             default:
                 Debug.Log("Game Type invalid");
                 return "No Game (player character)";

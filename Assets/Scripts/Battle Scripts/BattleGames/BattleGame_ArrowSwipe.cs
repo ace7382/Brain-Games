@@ -18,12 +18,6 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     #endregion
 
-    #region Constants
-
-    private const string battleGameName = "Arrow Swipe"; //TODO - name this better lollll
-
-    #endregion
-
     #region Inspector Variables
 
     [SerializeField] private Image                              arrowImage;
@@ -132,7 +126,7 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     public override string GetBattleGameName()
     {
-        return battleGameName;
+        return Helpful.GetStringFromBattleGameType(Helpful.BattleGameTypes.ArrowSwipe);
     }
 
     #endregion

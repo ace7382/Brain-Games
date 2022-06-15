@@ -6,13 +6,6 @@ using UnityEngine;
 
 public class BattleGame_SequentialNumbers : BattleGameControllerBase
 {
-
-    #region Constants
-
-    private const string battleGameName = "Sequential Numbers";
-
-    #endregion
-
     #region Inspector Variables
 
     [SerializeField] private GameObject tilePrefab;
@@ -64,7 +57,7 @@ public class BattleGame_SequentialNumbers : BattleGameControllerBase
 
     public override string GetBattleGameName()
     {
-        return battleGameName;
+        return Helpful.GetStringFromBattleGameType(Helpful.BattleGameTypes.SequentialNumbers);
     }
 
     public override void StartGame()

@@ -32,12 +32,6 @@ public class BattleGame_ColorDissonance : BattleGameControllerBase
 
     #endregion
 
-    #region Constants
-
-    private const string battleGameName = "Color Dissonance"; //TODO - name this better lollll
-
-    #endregion
-
     #region Inspector Variables
 
     [SerializeField] private TextMeshProUGUI        topPanelText;
@@ -63,7 +57,7 @@ public class BattleGame_ColorDissonance : BattleGameControllerBase
 
     public override string GetBattleGameName()
     {
-        return battleGameName;
+        return Helpful.GetStringFromBattleGameType(Helpful.BattleGameTypes.ColorDissonance);
     }
 
     public override void StartGame()
