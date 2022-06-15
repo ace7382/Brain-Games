@@ -13879,6 +13879,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityButtonPrefab: {fileID: 8451612124324713366, guid: ec697e6d716b1224aa0e0c97fec47c89, type: 3}
   abilityButtonChargeMarkerPrefab: {fileID: 5601428644608121396, guid: 4198452faccd86c44b74aa49338236ad, type: 3}
+  abilityButtonTimerBarPrefab: {fileID: 8224738538401606387, guid: fffbf41351faa394ca5d764f10c02139, type: 3}
   gameBoardRectTrans: {fileID: 936234039}
   currentPlayerUnitController: {fileID: 701846855}
   currentEnemyUnitController: {fileID: 1085020242}

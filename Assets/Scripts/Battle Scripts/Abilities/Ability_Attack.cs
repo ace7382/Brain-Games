@@ -41,7 +41,7 @@ public class Ability_Attack : Ability
 
     public override void Deactivate()
     {
-        ResetCharges();
+        //ResetCharges();
 
         battle_correctresponse_stream.DisconnectReceiver(battle_correctresponse_receiver);
 
@@ -50,6 +50,9 @@ public class Ability_Attack : Ability
 
     public override void Activate()
     {
+        if (chargePercentage == 0f)
+            return;
+
         object[] info   = new object[2];
         info[0]         = owner.IsPlayer;
         info[1]         = (int)(3 * chargePercentage); //owner.UnitInfo.{whatever stat}

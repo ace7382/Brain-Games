@@ -48,7 +48,7 @@ public class SequentialNumbersTile : MonoBehaviour
 
     public void HideTile()
     {
-        Debug.Log("hiding tile : " + name + " value: " + number.ToString());
+        //Debug.Log("hiding tile : " + name + " value: " + number.ToString());
 
         buttonBG.enabled        = false;
         numberDisplay.enabled   = false;

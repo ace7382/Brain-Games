@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 5601428644608121394}
   - component: {fileID: 5584860922507232493}
   m_Layer: 5
-  m_Name: Charge Marker
+  m_Name: Ability Button Charge Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

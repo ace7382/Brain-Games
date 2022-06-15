@@ -16,6 +16,8 @@ MonoBehaviour:
     Items:
     - Category: Ability
       Name: Details
+    - Category: Ability
+      Name: TimerBarFilled
     - Category: Battle
       Name: AbilityCharge
     - Category: Battle

@@ -71,6 +71,11 @@ public class BattleGame_ColorDissonance : BattleGameControllerBase
         NextSet();
     }
 
+    public override void BoardReset()
+    {
+        NextSet();
+    }
+
     //Called by the True Button's OnClick Behavior
     public void CheckYes()
     {

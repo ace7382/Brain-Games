@@ -23,6 +23,8 @@ public abstract class Ability
     public string               abilityName;
     public bool                 autocast = false;
 
+    public float                secondsToChargeOneBar;
+
     #endregion
 
     public virtual void Init(BattleUnitController owner)

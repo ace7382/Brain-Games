@@ -21,6 +21,7 @@ public class BattleManager : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private GameObject             abilityButtonPrefab;
     [SerializeField] private GameObject             abilityButtonChargeMarkerPrefab;
+    [SerializeField] private GameObject             abilityButtonTimerBarPrefab;
 
     [Space]
 
@@ -74,6 +75,8 @@ public class BattleManager : MonoBehaviour
     private SignalStream                            battle_unpause_stream;
     private SignalReceiver                          battle_countdownended_receiver;
     private SignalStream                            battle_countdownended_stream;
+    private SignalReceiver                          battle_boardreset_receiver;
+    private SignalStream                            battle_boardreset_stream;
 
     #endregion
 
@@ -81,6 +84,7 @@ public class BattleManager : MonoBehaviour
 
     public GameObject   AbilityButtonPrefab         { get { return abilityButtonPrefab; } }
     public GameObject   ChargeMarkerPrefab          { get { return abilityButtonChargeMarkerPrefab; } }
+    public GameObject   TimerBarPrefab              { get { return abilityButtonTimerBarPrefab; } }
     public bool         IsPaused                    { get { return pauseScreen.activeInHierarchy; } }
     public string       CurrentGameName             { get { return currentGameController.GetBattleGameName(); } }
 
@@ -104,12 +108,14 @@ public class BattleManager : MonoBehaviour
         battle_pause_stream             = SignalStream.Get("Battle", "Pause");
         battle_unpause_stream           = SignalStream.Get("Battle", "Unpause");
         battle_countdownended_stream    = SignalStream.Get("Battle", "CountdownEnded");
+        battle_boardreset_stream        = SignalStream.Get("Battle", "BoardReset");
 
         battle_playerkoed_receiver      = new SignalReceiver().SetOnSignalCallback(PlayerKO);
         battle_enemykoed_receiver       = new SignalReceiver().SetOnSignalCallback(EnemyKO);
         battle_pause_receiver           = new SignalReceiver().SetOnSignalCallback(Pause);
         battle_unpause_receiver         = new SignalReceiver().SetOnSignalCallback(Unpause);
         battle_countdownended_receiver  = new SignalReceiver().SetOnSignalCallback(CountdownEndedBattleBegin);
+        battle_boardreset_receiver      = new SignalReceiver().SetOnSignalCallback(BoardReset);
 
         enemyParty                      = new List<Unit>(GameManager.instance.CurrentLevel.enemyUnits);
         prePanelEnemyDisplayedIndex     = 0;
@@ -127,6 +133,7 @@ public class BattleManager : MonoBehaviour
         battle_pause_stream.ConnectReceiver(battle_pause_receiver);
         battle_unpause_stream.ConnectReceiver(battle_unpause_receiver);
         battle_countdownended_stream.ConnectReceiver(battle_countdownended_receiver);
+        battle_boardreset_stream.ConnectReceiver(battle_boardreset_receiver);
     }
 
     private void OnDisable()
@@ -136,6 +143,12 @@ public class BattleManager : MonoBehaviour
         battle_pause_stream.DisconnectReceiver(battle_pause_receiver);
         battle_unpause_stream.DisconnectReceiver(battle_unpause_receiver);
         battle_countdownended_stream.DisconnectReceiver(battle_countdownended_receiver);
+        battle_boardreset_stream.DisconnectReceiver(battle_boardreset_receiver);
+    }
+
+    private void OnDestroy()
+    {
+        OnDisable();
     }
 
     #endregion
@@ -207,6 +220,8 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < currentPlayerUnitController.UnitInfo.Abilities.Count; i++)
         {
             GameObject go                   = Instantiate(abilityButtonPrefab, playerAbilityButtonPanel);
+            go.name                         = string.Format("{0} - {1} button", currentPlayerUnitController.UnitInfo.Name
+                                                , currentPlayerUnitController.UnitInfo.Abilities[i].abilityName);
             go.transform.localPosition      = Vector3.zero;
             go.transform.localScale         = Vector3.one;
 
@@ -235,6 +250,8 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < currentEnemyUnitController.UnitInfo.Abilities.Count; i++)
         {
             GameObject go                   = Instantiate(abilityButtonPrefab, enemyAbilityButtonPanel);
+            go.name                         = string.Format("{0} - {1} button", currentEnemyUnitController.UnitInfo.Name
+                                                , currentEnemyUnitController.UnitInfo.Abilities[i].abilityName);
             go.transform.localPosition      = Vector3.zero;
             go.transform.localScale         = Vector3.one;
 
@@ -285,6 +302,9 @@ public class BattleManager : MonoBehaviour
     {
         pauseButton.SetActive(false);
 
+        PausePlayerTimerAbilities();
+        PauseEnemyTimerAbilities();
+
         Signal.Send("Battle", "StartCountdown");
     }
 
@@ -292,6 +312,9 @@ public class BattleManager : MonoBehaviour
     {
         battleBoard.SetActive(true);
         pauseButton.SetActive(true);
+
+        StartPlayerTimerAbilities();
+        StartEnemyTimerAbilities();
 
         currentGameController.StartGame();
     }
@@ -313,6 +336,10 @@ public class BattleManager : MonoBehaviour
 
             if (switchGame)
                 ChangeGame();
+            else
+            {
+                StartEnemyTimerAbilities();
+            }
         }
         else
         {
@@ -327,6 +354,8 @@ public class BattleManager : MonoBehaviour
             currentPlayerUnitController.ResetBattleUnitController();
 
             SetupPlayerBattleUnit(PlayerPartyManager.instance.GetFirstLivingUnit());
+
+            StartPlayerTimerAbilities();
         }
         else
         {
@@ -350,6 +379,10 @@ public class BattleManager : MonoBehaviour
 
         pauseScreen.SetActive(true);
         pauseButton.SetActive(false);
+
+        PauseEnemyTimerAbilities();
+        PausePlayerTimerAbilities();
+
         SetEnemyAbilityButtonsInteractability(true);
     }
 
@@ -359,6 +392,9 @@ public class BattleManager : MonoBehaviour
         pauseButton.SetActive(true);
 
         battleBoard.SetActive(true);
+
+        StartEnemyTimerAbilities();
+        StartPlayerTimerAbilities();
 
         currentGameController.Unpause();
     }
@@ -390,6 +426,43 @@ public class BattleManager : MonoBehaviour
         currentEnemyUnitController.ResetBattleUnitController();
 
         Signal.Send("Battle", "ReturnToWorldMap");
+    }
+
+    private void StartPlayerTimerAbilities()
+    {
+        for (int i = 0; i < playerAbilityButtons.Count; i++)
+            playerAbilityButtons[i].StartTimer();
+
+        Debug.Log("Player Abilities Unpaused");
+    }
+
+    private void StartEnemyTimerAbilities()
+    {
+        for (int i = 0; i < enemyAbilityButtons.Count; i++)
+            enemyAbilityButtons[i].StartTimer();
+
+        Debug.Log("Enemy Abilities Unpaused");
+    }
+
+    private void PausePlayerTimerAbilities()
+    {
+        for (int i = 0; i < playerAbilityButtons.Count; i++)
+            playerAbilityButtons[i].PauseTimer();
+
+        Debug.Log("Player Abilities Paused");
+    }
+
+    private void PauseEnemyTimerAbilities()
+    {
+        for (int i = 0; i < enemyAbilityButtons.Count; i++)
+            enemyAbilityButtons[i].PauseTimer();
+
+        Debug.Log("Enemy Abilities Paused");
+    }
+
+    private void BoardReset(Signal signal)
+    {
+        currentGameController.BoardReset();
     }
 
     #endregion

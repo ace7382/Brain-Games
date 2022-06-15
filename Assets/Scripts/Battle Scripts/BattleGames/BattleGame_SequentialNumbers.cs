@@ -72,6 +72,11 @@ public class BattleGame_SequentialNumbers : BattleGameControllerBase
         NextSet();
     }
 
+    public override void BoardReset()
+    {
+        NextSet();
+    }
+
     #endregion
 
     #region Private Functions

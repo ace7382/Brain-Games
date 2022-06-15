@@ -51,6 +51,7 @@ public abstract class BattleGameControllerBase : MonoBehaviour
 
     }
 
+    public abstract void BoardReset();
     public abstract string GetBattleGameName();
 
     #endregion

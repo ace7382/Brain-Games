@@ -66,8 +66,6 @@ public class BattleUnitController : MonoBehaviour
 
     public void ResetBattleUnitController()
     {
-        Debug.Log("reset battle unit controller " + unit == null);
-
         if (unit == null)
             return;
 

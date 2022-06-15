@@ -43,7 +43,7 @@ public class Ability_EnemyAttack : Ability
 
     public override void Deactivate()
     {
-        ResetCharges();
+        //ResetCharges();
 
         battle_incorrectresponse_stream.DisconnectReceiver(battle_incorrectresponse_receiver);
 

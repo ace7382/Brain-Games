@@ -89,6 +89,11 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
         NextArrow();
     }
 
+    public override void BoardReset()
+    {
+        NextArrow();
+    }
+
     public override void EndGame()
     {
         swiping                             = false;

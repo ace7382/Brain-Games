@@ -77,8 +77,14 @@ public class HPBarDisplayController : MonoBehaviour
 
     private void OnDisable()
     {
-        currentStr.DisconnectAllReceivers();
-        maxStr.DisconnectAllReceivers();
+        currentStr.DisconnectReceiver(currentRec);
+        maxStr.DisconnectReceiver(maxRec);
+    }
+
+    private void OnDestroy()
+    {
+        currentStr.DisconnectReceiver(currentRec);
+        maxStr.DisconnectReceiver(maxRec);
     }
 
     #endregion
