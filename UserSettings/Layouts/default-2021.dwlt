@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Console
+  m_Title: Inspector
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 109
+  controlID: 115
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 110
+  controlID: 32
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -165,8 +165,8 @@ MonoBehaviour:
     y: 0
     width: 902
     height: 412
-  m_MinSize: {x: 101, y: 121}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 14}
@@ -194,8 +194,8 @@ MonoBehaviour:
     y: 412
     width: 902
     height: 527
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -203,7 +203,7 @@ MonoBehaviour:
   - {fileID: 19}
   - {fileID: 20}
   m_Selected: 0
-  m_LastSelected: 2
+  m_LastSelected: 3
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -228,7 +228,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 53
+  controlID: 59
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -248,8 +248,8 @@ MonoBehaviour:
     y: 0
     width: 429
     height: 408
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 21}
   m_Panes:
   - {fileID: 21}
@@ -583,9 +583,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.6705763, y: 6.8736105, z: 89.9628}
+    m_Target: {x: 6.138575, y: 1.7993858, z: 67.58542}
     speed: 2
-    m_Value: {x: 0.6705763, y: 6.8736105, z: 89.9628}
+    m_Value: {x: 6.138575, y: 1.7993858, z: 67.58542}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -636,9 +636,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 10.198645
+    m_Target: 7.0561767
     speed: 2
-    m_Value: 10.198645
+    m_Value: 7.0561767
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -911,7 +911,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 485
-    width: 903
+    width: 901
     height: 506
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -950,7 +950,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: f453ffff1c5cffffb2d3ffffdadbffff04edffffa6c80000bec80000ecc8000012bc0100b0bc0100
+      m_ExpandedIDs: cc0efeffd60efefff00efefffa0efeff140ffeff1e0ffeff80bffeff94bffeffa8bffeffbcbffeffd0bffefffcbffeff06c0feff1cc0feff2ec0feff40c0feff52c0feff74c0feff7ac0feffa0c0feffa8c0feffc4c0feffccc0feffd6c0feff00c1feff06c1feff1cc1feff2ec1feff40c1feff52c1feff74c1feff7ac1feffa8c1feffb2c1feffccc1feffd6c1fefff0c1fefffac1fefffcc1fefffee2feff28e3feff2ee3feffb2e4fefff4b7ffffeccdffffcee3ffff14f3ffff22fbffffc6d80000026901005e6e0100726e01007a8f0100249001009c900100b29001007c96010080960100849601001a970100229701002e970100369701003a970100649701006e9701007e9701008e970100a6970100ae970100bc970100f297010024980100449801005a9801005e980100829801008c98010096980100ac980100c8980100ea980100cab50100ceb50100d2b5010068b6010070b601007cb6010084b60100b2b60100ccb60100fcb601000ab7010040b7010072b7010092b70100a8b70100acb70100d0b70100dab70100e4b70100fab7010038b80100
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1015,33 +1015,33 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Resources/Prefabs/Battle Game Boards
+    - Assets/Resources/Scriptable Objects/Units/Enemies
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Resources/Prefabs/Battle Game Boards
+  - Assets/Resources/Scriptable Objects/Units/Enemies
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\jakew\OneDrive\Desktop\Adam\Games\Brain-Games
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 442}
-    m_SelectedIDs: 44270100
-    m_LastClickedID: 75588
-    m_ExpandedIDs: 00000000be6e0000c06e0000c26e0000c46e0000c66e0000c86e0000ca6e0000cc6e0000ce6e0000d06e0000d26e0000e06e0000e26e0000e46e0000106f00001c6f000008ca000000ca9a3b
+    scrollPos: {x: 0, y: 474}
+    m_SelectedIDs: 24640000
+    m_LastClickedID: 25636
+    m_ExpandedIDs: 00000000a2630000a4630000a6630000a8630000aa630000ac630000ae630000b0630000b2630000b4630000b6630000b8630000ba630000bc630000c8630000ca630000ce63000060f1000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Prefabs
-      m_OriginalName: Prefabs
+      m_Name: Enemies
+      m_OriginalName: Enemies
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 28432
+      m_UserData: 25636
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
@@ -1058,7 +1058,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000be6e0000c06e0000c26e0000c46e0000c66e0000c86e0000ca6e0000cc6e0000ce6e0000d06e0000d26e0000
+    m_ExpandedIDs: 00000000a2630000a4630000a6630000a8630000aa630000ac630000ae630000b0630000b2630000b4630000b6630000b8630000ba630000bc630000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1089,18 +1089,18 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: 106700002e0b0100621201003067000000000000e06300006cac0000a2e10000f4bc040090ab0000facc00003ad50000606700006e670000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Enemies
-      m_OriginalName: Enemies
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 28436
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 11}
     m_CreateAssetUtility:

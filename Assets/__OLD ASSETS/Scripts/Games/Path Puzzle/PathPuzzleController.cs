@@ -21,7 +21,7 @@ public class PathPuzzleController : MonoBehaviour
     public TextMeshProUGUI                  connectionCounterTitle;
     public TextMeshProUGUI                  connectionCounter;
 
-    public List<PathPuzzleTileController>   tiles;
+    public List<PathPuzzleTileController_old>   tiles;
 
     private int                             pathPiecesConnected;
     private bool                            won;
@@ -119,22 +119,22 @@ public class PathPuzzleController : MonoBehaviour
         for (int i = 0; i < tiles.Count; i++)
             tiles[i].partOfPath = false;
 
-        PathPuzzleTileController startTile = tiles.Find(x => x.start);
-        PathPuzzleTileController finishTile = tiles.Find(x => x.finish);
+        PathPuzzleTileController_old startTile = tiles.Find(x => x.start);
+        PathPuzzleTileController_old finishTile = tiles.Find(x => x.finish);
 
-        HashSet<PathPuzzleTileController> checkedSet = 
-            new HashSet<PathPuzzleTileController>();
+        HashSet<PathPuzzleTileController_old> checkedSet = 
+            new HashSet<PathPuzzleTileController_old>();
 
-        Stack<PathPuzzleTileController> remainingStack =
-            new Stack<PathPuzzleTileController>();
+        Stack<PathPuzzleTileController_old> remainingStack =
+            new Stack<PathPuzzleTileController_old>();
 
         checkedSet.Add(startTile);
         remainingStack.Push(startTile);
 
         while (remainingStack.Count > 0)
         {
-            PathPuzzleTileController tile = remainingStack.Pop();
-            List<PathPuzzleTileController> connections = new List<PathPuzzleTileController>();
+            PathPuzzleTileController_old tile = remainingStack.Pop();
+            List<PathPuzzleTileController_old> connections = new List<PathPuzzleTileController_old>();
 
             if (tile.north)
             {
@@ -193,7 +193,7 @@ public class PathPuzzleController : MonoBehaviour
             }
         }
 
-        foreach (PathPuzzleTileController t in checkedSet)
+        foreach (PathPuzzleTileController_old t in checkedSet)
             t.partOfPath = true;
 
         for (int i = 0; i < tiles.Count; i++)
@@ -305,7 +305,7 @@ public class PathPuzzleController : MonoBehaviour
                 go.transform.SetParent(gameBoard.transform);
                 go.transform.localScale = Vector3.one;
 
-                PathPuzzleTileController control = go.GetComponent<PathPuzzleTileController>();
+                PathPuzzleTileController_old control = go.GetComponent<PathPuzzleTileController_old>();
 
                 control.gridPosition = new Vector2(i % currentPPLevel.boards[currentBoardNum].columns
                     , i / currentPPLevel.boards[currentBoardNum].columns);

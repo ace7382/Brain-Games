@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using Doozy.Runtime.Signals;
 using UnityEngine.UI;
+using Doozy.Runtime.UIManager.Components;
 
 public class AbilityButtonController : MonoBehaviour
 {
@@ -130,6 +131,16 @@ public class AbilityButtonController : MonoBehaviour
             ability.SendDetailsSignal();
     }
 
+    public void DisableButton()
+    {
+        GetComponentInChildren<UIButton>().interactable = false;
+    }
+
+    public void EnableButton()
+    {
+        GetComponentInChildren<UIButton>().interactable = true;
+    }
+
     public void StartTimer()
     {
         if (ability.chargeType != Ability.AbilityChargeType.TIMED || currentChargeMarkerIndex >= ability.numOfCharges)
@@ -176,12 +187,6 @@ public class AbilityButtonController : MonoBehaviour
         {
             if ((Ability)info[0] == ability)
             {
-                ////This if is here bc Timed abilites and the Buttons listen for AbilityCharge
-                ////  and if the ability activates and clears charges first them the currentchargeindex
-                ////  will not be correctly reset. See Page 59 in notebook for (barely more) details
-                //if (ability.autocast && currentChargeMarkerIndex + 1 == ability.numOfCharges)
-                //    return;
-
                 Debug.Log("Updating Timed Charges for " + name);
 
                 if (currentChargeMarkerIndex >= ability.numOfCharges)

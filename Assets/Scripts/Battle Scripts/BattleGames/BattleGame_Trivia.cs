@@ -67,7 +67,7 @@ public class BattleGame_Trivia : BattleGameControllerBase
 
     public override void BoardReset()
     {
-        throw new System.NotImplementedException();
+        NextQuestion();
     }
 
     public override string GetBattleGameName()

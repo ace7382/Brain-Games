@@ -302,8 +302,11 @@ public class BattleManager : MonoBehaviour
     {
         pauseButton.SetActive(false);
 
+        DisablePlayerAbilityButtons();
+        DisableEnemyAbilityButtons();
+
         PausePlayerTimerAbilities();
-        PauseEnemyTimerAbilities();
+        PauseEnemyTimerAbilities(); 
 
         Signal.Send("Battle", "StartCountdown");
     }
@@ -313,10 +316,45 @@ public class BattleManager : MonoBehaviour
         battleBoard.SetActive(true);
         pauseButton.SetActive(true);
 
+        EnablePlayerAbilityButtons();
+        EnableEnemyAbilityButtons();
+
         StartPlayerTimerAbilities();
         StartEnemyTimerAbilities();
 
         currentGameController.StartGame();
+    }
+
+    private void DisablePlayerAbilityButtons()
+    {
+        for (int i = 0; i < playerAbilityButtons.Count; i++)
+        {
+            playerAbilityButtons[i].DisableButton();
+        }
+    }
+
+    private void DisableEnemyAbilityButtons()
+    {
+        for (int i = 0; i < enemyAbilityButtons.Count; i++)
+        {
+            enemyAbilityButtons[i].DisableButton();
+        }
+    }
+
+    private void EnablePlayerAbilityButtons()
+    {
+        for (int i = 0; i < playerAbilityButtons.Count; i++)
+        {
+            playerAbilityButtons[i].EnableButton();
+        }
+    }
+
+    private void EnableEnemyAbilityButtons()
+    {
+        for (int i = 0; i < enemyAbilityButtons.Count; i++)
+        {
+            enemyAbilityButtons[i].EnableButton();
+        }
     }
 
     private void EnemyKO(Signal signal)
@@ -380,6 +418,8 @@ public class BattleManager : MonoBehaviour
         pauseScreen.SetActive(true);
         pauseButton.SetActive(false);
 
+        pauseScreen.GetComponentInChildren<AbilityDisplayController>().ResetDisplay();
+
         PauseEnemyTimerAbilities();
         PausePlayerTimerAbilities();
 
@@ -395,6 +435,8 @@ public class BattleManager : MonoBehaviour
 
         StartEnemyTimerAbilities();
         StartPlayerTimerAbilities();
+
+        SetEnemyAbilityButtonsInteractability(false);
 
         currentGameController.Unpause();
     }

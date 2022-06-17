@@ -31,9 +31,9 @@ public class Ability_EnemyTimedAttack : Ability
         //HARD CODED SHIT
 
         chargeType                              = AbilityChargeType.TIMED;
-        numOfCharges                            = 1;
+        numOfCharges                            = 5;
         abilityName                             = "Enemy Timed Attack";
-        secondsToChargeOneBar                   = 10f;
+        secondsToChargeOneBar                   = 2.5f;
         autocast                                = true;
 
         //

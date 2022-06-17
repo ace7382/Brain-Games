@@ -50,6 +50,16 @@ public class AbilityDisplayController : MonoBehaviour
 
     #endregion
 
+    #region Public Functions
+
+    public void ResetDisplay()
+    {
+        currentlyDisplayedAbility = null;
+        abilityNameDisplay.text = displayDefaultText;
+    }
+
+    #endregion
+
     #region Private Functions
 
     private void UpdateDisplay(Signal signal)
@@ -61,7 +71,7 @@ public class AbilityDisplayController : MonoBehaviour
 
         if (currentlyDisplayedAbility == (Ability)info[0])
         {
-            HideDisplay();
+            ResetDisplay();
             return;
         }
 
@@ -70,11 +80,7 @@ public class AbilityDisplayController : MonoBehaviour
         abilityNameDisplay.text = currentlyDisplayedAbility.abilityName;
     }
 
-    private void HideDisplay()
-    {
-        currentlyDisplayedAbility   = null;
-        abilityNameDisplay.text     = displayDefaultText;
-    }
+
 
     #endregion
 }

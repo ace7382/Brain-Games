@@ -66,6 +66,11 @@ public class Unit
         get { return battleUnitBase.triviaQuestions; }
     }
 
+    public List<PathPuzzleBoard> PathPuzzleBoards
+    {
+        get { return battleUnitBase.pathPuzzleBoards; }
+    }
+
     #endregion
 
     #region Public Functions

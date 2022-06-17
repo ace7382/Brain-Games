@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Doozy.Runtime.Signals;
 
 [System.Serializable]
-public class PathPuzzleTileController : MonoBehaviour
+public class PathPuzzleTileController_old : MonoBehaviour
 {
     public Vector2                              gridPosition;
 
