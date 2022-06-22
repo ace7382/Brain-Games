@@ -71,6 +71,11 @@ public class Unit
         get { return battleUnitBase.pathPuzzleBoards; }
     }
 
+    public List<ShadowShapePuzzle> ShadowShapePuzzles
+    {
+        get { return battleUnitBase.shadowShapePuzzles; }
+    }
+
     #endregion
 
     #region Public Functions

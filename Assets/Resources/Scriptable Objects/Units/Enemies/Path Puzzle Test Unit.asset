@@ -16,7 +16,7 @@ MonoBehaviour:
   abilityNames:
   - Ability_Enemy_TooManyTurns
   battleGame: 40
-  inBattleSprite: {fileID: 21300000, guid: 31dd2891b67e7a64d8aeb59996772a7d, type: 3}
+  inBattleSprite: {fileID: 21300000, guid: 1dedec99acd44254cbb6af176a3640fd, type: 3}
   triviaQuestions: []
   pathPuzzleBoards:
   - cellSize: 200

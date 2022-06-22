@@ -15,6 +15,8 @@ public static class Helpful
         SequentialNumbers   = 20,
         Trivia              = 30,
         PathPuzzle          = 40,
+        BasicMath           = 50,
+        ShadowShapes        = 60,
     }
 
     public static string GetBattleGameboardLoadingPath(BattleGameTypes gameType)
@@ -31,6 +33,10 @@ public static class Helpful
                 return "Prefabs/Battle Game Boards/Trivia Board";
             case BattleGameTypes.PathPuzzle:
                 return "Prefabs/Battle Game Boards/Path Puzzle Board";
+            case BattleGameTypes.BasicMath:
+                return "Prefabs/Battle Game Boards/Basic Math Board";
+            case BattleGameTypes.ShadowShapes:
+                return "Prefabs/Battle Game Boards/Shadow Shapes Board";
             default:
                 Debug.Log("Game Type invalid");
                 return "YEET";
@@ -51,6 +57,10 @@ public static class Helpful
                 return "Trivia";
             case BattleGameTypes.PathPuzzle:
                 return "Path Puzzle";
+            case BattleGameTypes.BasicMath:
+                return "Basic Math";
+            case BattleGameTypes.ShadowShapes:
+                return "Shadow Shapes";
             default:
                 Debug.Log("Game Type invalid");
                 return "No Game (player character)";

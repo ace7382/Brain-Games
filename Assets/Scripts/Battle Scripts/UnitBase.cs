@@ -11,4 +11,5 @@ public class UnitBase : ScriptableObject
     public Sprite                       inBattleSprite;
     public List<TriviaQuestion>         triviaQuestions;
     public List<PathPuzzleBoard>        pathPuzzleBoards;
+    public List<ShadowShapePuzzle>      shadowShapePuzzles;
 }

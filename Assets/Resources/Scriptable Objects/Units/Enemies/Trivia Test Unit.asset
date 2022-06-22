@@ -17,7 +17,7 @@ MonoBehaviour:
   - Ability_EnemyTimedAttack
   - Ability_EnemyAttack
   battleGame: 30
-  inBattleSprite: {fileID: 21300000, guid: 31dd2891b67e7a64d8aeb59996772a7d, type: 3}
+  inBattleSprite: {fileID: 21300000, guid: 4d40d36abfd168243a77aa8dbf5e37e0, type: 3}
   triviaQuestions:
   - Question: Who is the Best Dog?
     Answers:
@@ -79,3 +79,4 @@ MonoBehaviour:
       correct: 0
     - answerText: Paisley
       correct: 0
+  pathPuzzleBoards: []
