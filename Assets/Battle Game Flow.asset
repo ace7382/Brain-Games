@@ -36,7 +36,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 1
-  Position: {x: 532.00006, y: -177.00003}
+  Position: {x: 196.78477, y: -177}
   Trigger: 0
   SignalPayload:
     StreamId:
@@ -191,6 +191,57 @@ MonoBehaviour:
     Category: None
     Name: None
     Custom: 0
+--- !u!114 &-6560654506852739822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ca49677b98354a4bb12a4f833f88f48, type: 3}
+  m_Name: Unload Scene
+  m_EditorClassIdentifier: 
+  FlowGraphId: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
+  NodeId: dc26ea1a-b9c4-4d4f-b047-f6adad9bfcb9
+  NodeType: 0
+  NodeName: Unoad Scene - World Map
+  NodeDescription: 
+  InputPorts:
+  - NodeId: dc26ea1a-b9c4-4d4f-b047-f6adad9bfcb9
+    PortId: 3bc5b2f4-7881-4414-ad9b-4cb833633757
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - a8e7cfcc-bcfd-45a2-9baf-263d21083fd3
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: dc26ea1a-b9c4-4d4f-b047-f6adad9bfcb9
+    PortId: efb1fe04-cc61-4b91-be95-4db86474264a
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 64625122-35f1-4614-8c6b-3366fbd0c6cd
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 1397.3225, y: -0.0000035762787}
+  GetSceneBy: 0
+  SceneBuildIndex: 0
+  SceneName: World Map
+  WaitForSceneToUnload: 0
 --- !u!114 &-6084102977800187420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,7 +266,6 @@ MonoBehaviour:
     Capacity: 1
     Connections:
     - f4f99fae-fe46-45c4-adf3-b5c200983f18
-    - 805631a9-4b53-42ac-937e-9bbd67ede215
     Value: '{"CanGoBack":false}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -227,7 +277,7 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections:
-    - 64625122-35f1-4614-8c6b-3366fbd0c6cd
+    - 3bc5b2f4-7881-4414-ad9b-4cb833633757
     Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"GameManagement","Name":"LoadBattleScene","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
     ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
       DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -280,7 +330,7 @@ MonoBehaviour:
     Direction: 0
     Capacity: 1
     Connections:
-    - a8e7cfcc-bcfd-45a2-9baf-263d21083fd3
+    - efb1fe04-cc61-4b91-be95-4db86474264a
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0
@@ -302,7 +352,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 1453.8501, y: -0.00000667572}
+  Position: {x: 1702, y: 0}
   GetSceneBy: 0
   LoadSceneMode: 1
   AllowSceneActivation: 1
@@ -415,7 +465,7 @@ MonoBehaviour:
     Direction: 1
     Capacity: 0
     Connections:
-    - 9a1cad8e-8574-4d52-9e1e-c1f877d627e8
+    - f8ce5b0c-403a-4930-9e27-2f650f06b66c
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0
@@ -427,7 +477,7 @@ MonoBehaviour:
   CanBeDeleted: 1
   Passthrough: 1
   ClearGraphHistory: 0
-  Position: {x: 837, y: -177.00002}
+  Position: {x: 434.00003, y: -177}
   GetSceneBy: 0
   SceneBuildIndex: 0
   SceneName: Battle Scene
@@ -606,8 +656,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02761efe598a45c98fa1baf4d446c6a7, type: 3}
   m_Name: Battle Game Flow
   m_EditorClassIdentifier: 
-  EditorPosition: {x: 11, y: 308, z: 0}
-  EditorScale: {x: 0.375937, y: 0.375937, z: 1}
+  EditorPosition: {x: -31, y: 155, z: 0}
+  EditorScale: {x: 0.49717674, y: 0.49717674, z: 1}
   Id: 29c2b150-79eb-4ff0-9f65-de67f6b60c1a
   GraphName: Flow Graph
   GraphDescription: 
@@ -629,6 +679,7 @@ MonoBehaviour:
   - {fileID: -298884580898688050}
   - {fileID: -6758055594882032080}
   - {fileID: 951729272484851746}
+  - {fileID: -6560654506852739822}
   RootNode: {fileID: -2819881898719066116}
   ActiveNode: {fileID: 0}
 --- !u!114 &951729272484851746
@@ -705,6 +756,7 @@ MonoBehaviour:
     Capacity: 1
     Connections:
     - 9080b3db-2115-40c6-a1ff-dfeafe915119
+    - 805631a9-4b53-42ac-937e-9bbd67ede215
     Value: 
     ValueTypeQualifiedName: 
     CanBeDeleted: 0

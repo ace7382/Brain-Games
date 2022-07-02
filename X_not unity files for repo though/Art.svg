@@ -24,9 +24,9 @@
      inkscape:pagecheckerboard="1"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:zoom="0.5"
-     inkscape:cx="1169"
-     inkscape:cy="594"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="-964.49365"
+     inkscape:cy="-1753.6248"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="-8"
@@ -1133,6 +1133,20 @@
          x="61.867668"
          y="41.408745" />
     </g>
+    <path
+       id="rect665"
+       style="fill:#ffffff;stroke:none;stroke-width:2.64583;fill-opacity:1;stroke-opacity:1"
+       d="M -259.82083 -300.0375 L -259.82083 -247.12083 L -241.3 -247.12083 C -236.90263 -247.12083 -233.3625 -250.66096 -233.3625 -255.05833 L -233.3625 -292.1 C -233.3625 -296.49737 -236.90263 -300.0375 -241.3 -300.0375 L -259.82083 -300.0375 z "
+       inkscape:export-filename="..\..\..\30pt Rounded Half Rect - 208h x 104w.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <path
+       id="rect2119"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:2.64583;stroke-opacity:1"
+       d="M -351.10208 -484.1875 L -351.10208 -470.95833 L -348.45625 -470.95833 C -346.25756 -470.95833 -344.4875 -472.7284 -344.4875 -474.92708 L -344.4875 -480.21875 C -344.4875 -482.41744 -346.25756 -484.1875 -348.45625 -484.1875 L -351.10208 -484.1875 z "
+       inkscape:export-filename="..\..\..\15pt Rounded Half Rect - 52h x 26w.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -1606,7 +1620,7 @@
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:53.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';white-space:pre;shape-inside:url(#rect3958);fill:#f34c57;fill-opacity:1"><tspan
            x="923.37695"
            y="77.444697"
-           id="tspan7901">Party</tspan></text>
+           id="tspan2340">Party</tspan></text>
       <rect
          style="fill:#aaaaaa;fill-opacity:1;stroke:none;stroke-width:2.64583;stroke-dasharray:none;stroke-opacity:1"
          id="rect4732"
