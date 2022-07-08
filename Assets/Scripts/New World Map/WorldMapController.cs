@@ -7,13 +7,13 @@ public class WorldMapController : MonoBehaviour
 {
     #region Inspector Variables
 
-    [SerializeField] private GameObject     blockMapTouchInputGO;
+    [SerializeField] private GameObject         blockMapTouchInputGO;
 
     #endregion
 
     #region Private Variables
 
-    [SerializeField]private List<NewLevelBase> levelsToAnimateUnlocking;
+    [SerializeField]private List<NewLevelBase>  levelsToAnimateUnlocking;
 
     #endregion
 

@@ -20,6 +20,8 @@ MonoBehaviour:
       Name: ReplayLevel
     - Category: EndLevelScreen
       Name: ReturnHome
+    - Category: Inventory
+      Name: Open
     - Category: None
       Name: None
     - Category: TutorialScreen

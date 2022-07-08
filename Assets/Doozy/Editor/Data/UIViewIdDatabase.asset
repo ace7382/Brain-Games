@@ -22,5 +22,7 @@ MonoBehaviour:
       Name: GamePlayScreen
     - Category: GameManagement
       Name: TutorialScreen
+    - Category: Inventory
+      Name: PartyManagement
     - Category: None
       Name: None

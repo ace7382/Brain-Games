@@ -50,4 +50,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Countdown.unity
     guid: 5fbb8a631a7b48c48913e608b9bd851d
+  - enabled: 1
+    path: Assets/Scenes/Party Management Scene.unity
+    guid: edc98e95972ca584eb2c18e239338c83
   m_configObjects: {}

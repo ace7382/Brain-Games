@@ -102,6 +102,7 @@ public class GameManager : MonoBehaviour
     //      currently world map hides when moving to a game, might have it unload completely
     public void SetWorldMapUnlockLevels(NewLevelBase level)
     {
+        //TODO: Re-add this; currently turned off bc world map is unloaded before battle
         FindObjectOfType<WorldMapController>().AddLevelsToUnlock(level);
     }
 

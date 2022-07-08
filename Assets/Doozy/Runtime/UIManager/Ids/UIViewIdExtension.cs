@@ -17,6 +17,10 @@ namespace Doozy.Runtime.UIManager.Containers
         public static IEnumerable<UIView> GetViews(UIViewId.GameManagement id) => GetViews(nameof(UIViewId.GameManagement), id.ToString());
         public static void Show(UIViewId.GameManagement id, bool instant = false) => Show(nameof(UIViewId.GameManagement), id.ToString(), instant);
         public static void Hide(UIViewId.GameManagement id, bool instant = false) => Hide(nameof(UIViewId.GameManagement), id.ToString(), instant);
+
+        public static IEnumerable<UIView> GetViews(UIViewId.Inventory id) => GetViews(nameof(UIViewId.Inventory), id.ToString());
+        public static void Show(UIViewId.Inventory id, bool instant = false) => Show(nameof(UIViewId.Inventory), id.ToString(), instant);
+        public static void Hide(UIViewId.Inventory id, bool instant = false) => Hide(nameof(UIViewId.Inventory), id.ToString(), instant);
     }
 }
 
@@ -30,6 +34,11 @@ namespace Doozy.Runtime.UIManager
             EndLevel,
             GamePlayScreen,
             TutorialScreen
+        }
+
+        public enum Inventory
+        {
+            PartyManagement
         }    
     }
 }

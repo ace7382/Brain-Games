@@ -454,7 +454,7 @@ public class BattleManager : MonoBehaviour
                     if (!GameManager.instance.CurrentLevel.levelsUnlockedByThisLevel[i].unlocked)
                     {
                         GameManager.instance.CurrentLevel.levelsUnlockedByThisLevel[i].unlocked = true;
-                        GameManager.instance.SetWorldMapUnlockLevels(GameManager.instance.CurrentLevel.levelsUnlockedByThisLevel[i]);
+                        //GameManager.instance.SetWorldMapUnlockLevels(GameManager.instance.CurrentLevel.levelsUnlockedByThisLevel[i]);
                     }
                 }
             }
