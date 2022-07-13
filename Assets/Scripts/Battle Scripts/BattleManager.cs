@@ -162,7 +162,7 @@ public class BattleManager : MonoBehaviour
 
         SetupPlayerBattleUnit(PlayerPartyManager.instance.GetFirstLivingUnit());
 
-        InitializeEnemyUnits();
+        SetupEnemyBattleUnit(enemyParty[0]);
 
         SetupGame();
     }
@@ -181,8 +181,6 @@ public class BattleManager : MonoBehaviour
         {
             enemyParty[i].Init();
         }
-
-        SetupEnemyBattleUnit(enemyParty[0]);
     }
 
     #endregion
@@ -191,6 +189,8 @@ public class BattleManager : MonoBehaviour
 
     private void SetupPreBattleScreen()
     {
+        InitializeEnemyUnits();
+
         preBattleScreen.SetActive(true);
 
         pauseButton.SetActive(false);

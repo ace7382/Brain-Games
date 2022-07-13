@@ -8,12 +8,12 @@ public class Unit
     #region Inspector Variables
 
     [SerializeField] private UnitBase battleUnitBase;
+    [SerializeField] private Stats stats; //TODO: This doesn't need to be set in the inspector, just exposing to see easily
 
     #endregion
 
     #region Private Variables
 
-    private int currentHP;
     private List<Ability> abilities;
 
     #endregion
@@ -27,17 +27,17 @@ public class Unit
 
     public int MaxHP
     {
-        get { return battleUnitBase.baseMaxHP; }
+        get { return stats[Helpful.StatTypes.MaxHP]; }
     }
 
     public int CurrentHP
     {
-        get { return currentHP; }
+        get { return stats[Helpful.StatTypes.CurrentHP]; }
         set
         {
-            if (currentHP == value) return;
+            if (stats[Helpful.StatTypes.CurrentHP] == value) return;
 
-            currentHP = Mathf.Clamp(value, 0, int.MaxValue);
+            stats[Helpful.StatTypes.CurrentHP] = Mathf.Clamp(value, 0, int.MaxValue);
         }
     }
 
@@ -82,7 +82,7 @@ public class Unit
 
     public void Init()
     {
-        currentHP   = MaxHP;
+        stats = new Stats();
 
         abilities   = new List<Ability>();
 
@@ -94,6 +94,20 @@ public class Unit
 
             Debug.Log(abilities[i].GetType());
         }
+
+        for (int i = 0; i < battleUnitBase.baseStats.Length; i++)
+        {
+            stats[(Helpful.StatTypes) i] = battleUnitBase.baseStats[i];
+        }
+
+        stats[Helpful.StatTypes.CurrentHP] = stats[Helpful.StatTypes.MaxHP];
+    }
+
+    //TODO: Make each stat have a property?
+    //      currentHP and MaxHP do
+    public int GetStat(Helpful.StatTypes s)
+    {
+        return stats[s];
     }
 
     #endregion

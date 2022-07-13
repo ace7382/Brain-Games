@@ -19,6 +19,23 @@ public static class Helpful
         ShadowShapes        = 60,
     }
 
+    public enum StatTypes
+    {
+        Level           = 0,
+        EXP             = 1,
+        CurrentHP       = 2,
+        MaxHP           = 3,
+        Memory          = 4,
+        Observation     = 5,
+        Calculation     = 6,
+        Emotional       = 7,
+        Linguistic      = 8,
+        Responsiveness  = 9,
+        Logic           = 10,
+
+        COUNT           = 11
+    }
+
     public static string GetBattleGameboardLoadingPath(BattleGameTypes gameType)
     {
         switch (gameType)

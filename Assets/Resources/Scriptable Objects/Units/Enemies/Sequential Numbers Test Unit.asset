@@ -18,3 +18,7 @@ MonoBehaviour:
   - Ability_EnemyTimedAttack
   battleGame: 20
   inBattleSprite: {fileID: 21300000, guid: 31dd2891b67e7a64d8aeb59996772a7d, type: 3}
+  triviaQuestions: []
+  pathPuzzleBoards: []
+  shadowShapePuzzles: []
+  baseStats: 0000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000

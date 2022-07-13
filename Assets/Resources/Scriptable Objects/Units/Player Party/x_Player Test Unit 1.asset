@@ -20,3 +20,5 @@ MonoBehaviour:
   inBattleSprite: {fileID: 21300000, guid: 09618745bf252d248b0d02544bb52aa9, type: 3}
   triviaQuestions: []
   pathPuzzleBoards: []
+  shadowShapePuzzles: []
+  baseStats: 0100000000000000000000001e000000150000000000000000000000000000000000000000000000

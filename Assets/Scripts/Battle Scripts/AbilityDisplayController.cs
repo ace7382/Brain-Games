@@ -54,8 +54,8 @@ public class AbilityDisplayController : MonoBehaviour
 
     public void ResetDisplay()
     {
-        currentlyDisplayedAbility = null;
-        abilityNameDisplay.text = displayDefaultText;
+        currentlyDisplayedAbility   = null;
+        abilityNameDisplay.text     = displayDefaultText;
     }
 
     #endregion
@@ -75,9 +75,9 @@ public class AbilityDisplayController : MonoBehaviour
             return;
         }
 
-        currentlyDisplayedAbility = (Ability)info[0];
+        currentlyDisplayedAbility   = (Ability)info[0];
 
-        abilityNameDisplay.text = currentlyDisplayedAbility.abilityName;
+        abilityNameDisplay.text = currentlyDisplayedAbility.GetDetails();
     }
 
 

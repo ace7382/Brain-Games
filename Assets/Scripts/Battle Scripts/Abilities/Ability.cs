@@ -35,6 +35,7 @@ public abstract class Ability
     public abstract void Activate();
 
     public virtual void Deactivate() {    }
+    public virtual string GetDetails() { return abilityName; }
 
     public void SendDetailsSignal()
     {
