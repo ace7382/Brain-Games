@@ -23,6 +23,8 @@ MonoBehaviour:
     - Category: GameManagement
       Name: TutorialScreen
     - Category: Inventory
+      Name: CharacterDetails
+    - Category: Inventory
       Name: PartyManagement
     - Category: None
       Name: None
