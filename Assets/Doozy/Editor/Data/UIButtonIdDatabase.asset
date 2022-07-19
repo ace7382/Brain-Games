@@ -21,6 +21,10 @@ MonoBehaviour:
     - Category: EndLevelScreen
       Name: ReturnHome
     - Category: Inventory
+      Name: CloseCharacterDetailsScreen
+    - Category: Inventory
+      Name: CloseInventory
+    - Category: Inventory
       Name: Open
     - Category: None
       Name: None

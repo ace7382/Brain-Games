@@ -24,6 +24,15 @@ public class PartyMemberCardController : MonoBehaviour
 
     #endregion
 
+    #region Public Properties
+
+    public Unit UnitDisplayed
+    {
+        get { return unitToDisplay; }
+    }
+
+    #endregion
+
     #region Public Functions
 
     public void Setup(Unit unit)
@@ -35,6 +44,17 @@ public class PartyMemberCardController : MonoBehaviour
 
         hpText.text             = string.Format("{0} / {1}", unitToDisplay.CurrentHP, unitToDisplay.MaxHP);
         hpBarFill.fillAmount    = unitToDisplay.CurrentHP / unitToDisplay.MaxHP;
+    }
+
+    //Called by OnClick Behavior
+    public void LoadDetailsPage()
+    {
+        CharacterDetailsScreenController cd = FindObjectOfType<CharacterDetailsScreenController>();
+
+        if (cd != null)
+            cd.Setup(unitToDisplay);
+        else
+            Debug.Log("Character Detail Screen not found");
     }
 
     #endregion

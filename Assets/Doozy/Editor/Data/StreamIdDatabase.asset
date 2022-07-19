@@ -88,6 +88,8 @@ MonoBehaviour:
       Name: StartMinigame
     - Category: GameManagement
       Name: UnloadGameScenes
+    - Category: Inventory
+      Name: InventoryClosed
     - Category: None
       Name: None
     - Category: PathPuzzle

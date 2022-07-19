@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff34bd36ce574b448920d823b8c0f546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayerHPBar: 1
+  owner: 0
   displayText: {fileID: 433414947925515187}
   imageMask: {fileID: 433414947961715798}
 --- !u!1 &433414947925515181

@@ -7,14 +7,20 @@ public class Unit
 {
     #region Inspector Variables
 
-    [SerializeField] private UnitBase battleUnitBase;
-    [SerializeField] private Stats stats; //TODO: This doesn't need to be set in the inspector, just exposing to see easily
+    [SerializeField] private UnitBase   battleUnitBase;
 
     #endregion
 
     #region Private Variables
 
-    private List<Ability> abilities;
+    private List<Ability>               abilities;
+
+    //TODO: This doesn't need to be set in the inspector, just exposing to see easily
+    [SerializeField] private Stats      stats;     
+    [SerializeField] private Stats      EXPstats;     
+    [SerializeField] private Stats      EXPNextLevelValues;     
+    [SerializeField] private Stats      growthRates;     
+    [SerializeField] private int        currentHP;
 
     #endregion
 
@@ -32,12 +38,12 @@ public class Unit
 
     public int CurrentHP
     {
-        get { return stats[Helpful.StatTypes.CurrentHP]; }
+        get { return currentHP; }
         set
         {
-            if (stats[Helpful.StatTypes.CurrentHP] == value) return;
+            if (currentHP == value) return;
 
-            stats[Helpful.StatTypes.CurrentHP] = Mathf.Clamp(value, 0, int.MaxValue);
+            currentHP = Mathf.Clamp(value, 0, stats[Helpful.StatTypes.MaxHP]);
         }
     }
 
@@ -82,9 +88,12 @@ public class Unit
 
     public void Init()
     {
-        stats = new Stats();
+        stats               = new Stats();
+        EXPstats            = new Stats();
+        EXPNextLevelValues  = new Stats();
+        growthRates         = new Stats();
 
-        abilities   = new List<Ability>();
+        abilities           = new List<Ability>();
 
         for (int i = 0; i < battleUnitBase.abilityNames.Count; i++)
         {
@@ -100,15 +109,30 @@ public class Unit
             stats[(Helpful.StatTypes) i] = battleUnitBase.baseStats[i];
         }
 
-        stats[Helpful.StatTypes.CurrentHP] = stats[Helpful.StatTypes.MaxHP];
+        currentHP = stats[Helpful.StatTypes.MaxHP];
     }
 
     //TODO: Make each stat have a property?
-    //      currentHP and MaxHP do
     public int GetStat(Helpful.StatTypes s)
     {
         return stats[s];
     }
+
+    public int GetExpForStat(Helpful.StatTypes s)
+    {
+        return EXPstats[s];
+    }
+
+    public int GetEXPNextLevelValue(Helpful.StatTypes s)
+    {
+        return EXPNextLevelValues[s];
+    }
+
+    public int GetGrowthRate (Helpful.StatTypes s)
+    {
+        return growthRates[s];
+    }
+
 
     #endregion
 }

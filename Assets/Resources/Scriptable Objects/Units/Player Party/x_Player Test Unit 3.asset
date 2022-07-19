@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11c8af7e0c004e042ac2d806714e1087, type: 3}
-  m_Name: Arrow Swipe Test Unit
+  m_Name: x_Player Test Unit 3
   m_EditorClassIdentifier: 
-  baseMaxHP: 6
   abilityNames:
-  - Ability_EnemyAttack
-  battleGame: 0
-  inBattleSprite: {fileID: 21300000, guid: 31dd2891b67e7a64d8aeb59996772a7d, type: 3}
+  - Ability_Attack1
+  - Ability_Attack
+  battleGame: -999
+  inBattleSprite: {fileID: 21300000, guid: c8cec01ea6d1d2045b0cb73a5ed6423f, type: 3}
   triviaQuestions: []
   pathPuzzleBoards: []
   shadowShapePuzzles: []
-  baseStats: 000000000a00000000000000000000000000000000000000000000000000000000000000
+  baseStats: 010000000f00000005000000000000000900000006000000080000003000000037000000

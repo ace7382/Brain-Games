@@ -22,18 +22,16 @@ public static class Helpful
     public enum StatTypes
     {
         Level           = 0,
-        EXP             = 1,
-        CurrentHP       = 2,
-        MaxHP           = 3,
-        Memory          = 4,
-        Observation     = 5,
-        Calculation     = 6,
-        Emotional       = 7,
-        Linguistic      = 8,
-        Responsiveness  = 9,
-        Logic           = 10,
+        MaxHP           = 1,
+        Memory          = 2,
+        Observation     = 3,
+        Calculation     = 4,
+        Emotional       = 5,
+        Linguistic      = 6,
+        Responsiveness  = 7,
+        Logic           = 8,
 
-        COUNT           = 11
+        COUNT           = 9
     }
 
     public static string GetBattleGameboardLoadingPath(BattleGameTypes gameType)
