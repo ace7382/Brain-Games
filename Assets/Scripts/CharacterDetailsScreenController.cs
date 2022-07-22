@@ -11,6 +11,7 @@ public class CharacterDetailsScreenController : MonoBehaviour
     [SerializeField] private GameObject                     statDetailPrefab;
     [SerializeField] private RectTransform                  statDetailsListContainer;
     [SerializeField] private Image                          characterImage;
+    [SerializeField] private GameObject                     growthRateIndicatorPrefab;
 
     #endregion
 
@@ -19,6 +20,11 @@ public class CharacterDetailsScreenController : MonoBehaviour
     private Unit                                            displayedUnit;
     private List<CharacterDetails_StatDisplay_Controller>   statDisplays;
 
+    #endregion
+
+    #region Public Properties
+
+    public GameObject                                       GrowthRateIndicatorPrefab { get { return growthRateIndicatorPrefab; } }
     #endregion
 
     #region Unity Functions

@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public static class Helpful
 {
+    #region Public Enums
+
     public enum BattleGameTypes
     {
         NO_GAME             = -999,
@@ -33,6 +35,23 @@ public static class Helpful
 
         COUNT           = 9
     }
+
+    public enum StatGrowthRates
+    {
+        NonExistent     = 0,
+        Very_Slow       = 1,
+        Slow            = 2,
+        Standard        = 3,
+        Fast            = 4,
+        Very_Fast       = 5,
+        YEET            = 6,
+
+        COUNT           = 7
+    }
+
+    #endregion
+
+    #region Public Functions
 
     public static string GetBattleGameboardLoadingPath(BattleGameTypes gameType)
     {
@@ -283,4 +302,6 @@ public static class Helpful
         
         return Activator.CreateInstance(t);
     }
+
+    #endregion
 }

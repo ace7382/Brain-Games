@@ -39,12 +39,12 @@ public class CharacterDetails_StatDisplay_Controller : MonoBehaviour
         statLabelText.text      = statLabel;
         statValueText.text      = statValue.ToString();
         statBarText.text        = string.Format("{0} / {1}", currentEXP.ToString(), nextLevelExp.ToString());
-        statBarMask.fillAmount  =  nextLevelExp == 0f ? 0f : currentEXP / nextLevelExp;
+        statBarMask.fillAmount  =  nextLevelExp == 0f ? 0f : (float)((float)currentEXP / (float)nextLevelExp);
 
         for (int i = 0; i < growthRateIndicatorNum; i++)
         {
-            //Create indicator icons
-            //indicatorIcons.parent = statGrowthRateIndicatorContainer
+            Instantiate(FindObjectOfType<CharacterDetailsScreenController>().GrowthRateIndicatorPrefab
+                , statGrowthRateIndicatorContainer);
         }
     }
 
@@ -52,6 +52,9 @@ public class CharacterDetails_StatDisplay_Controller : MonoBehaviour
     {
         //TODO - make all fo these into progressors and have them fill up/empty out based on the amounts
         //      so that it's less jarring
+
+        foreach (Transform child in statGrowthRateIndicatorContainer)
+            Destroy(child.gameObject);
 
         Setup(displayedStatType, statLabelText.text, statValue, currentEXP, nextLevelEXP, growthRateIndicatorNum);
     }

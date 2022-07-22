@@ -106,7 +106,10 @@ public class Unit
 
         for (int i = 0; i < battleUnitBase.baseStats.Length; i++)
         {
-            stats[(Helpful.StatTypes) i] = battleUnitBase.baseStats[i];
+            Helpful.StatTypes currentStat   = (Helpful.StatTypes) i;
+            stats[currentStat]              = battleUnitBase.baseStats[i];
+            growthRates[currentStat]        = (int)battleUnitBase.statGrowthRates[i];
+            EXPNextLevelValues[currentStat] = Formulas.GetNextLevelEXP((Helpful.StatGrowthRates)growthRates[currentStat], stats[currentStat]);
         }
 
         currentHP = stats[Helpful.StatTypes.MaxHP];
@@ -133,6 +136,26 @@ public class Unit
         return growthRates[s];
     }
 
+    public void AddEXP(Helpful.StatTypes s, int amount)
+    {
+        EXPstats[s] += amount;
+
+        while (EXPstats[s] >= EXPNextLevelValues[s])
+        {
+            LevelUpStat(s);
+        }
+    }
+
+    public void LevelUpStat(Helpful.StatTypes statToLevelUp)
+    {
+        stats[statToLevelUp]                += 1;
+
+        EXPstats[statToLevelUp]             -= EXPNextLevelValues[statToLevelUp];
+
+        EXPNextLevelValues[statToLevelUp]   = Formulas.GetNextLevelEXP(
+                                              (Helpful.StatGrowthRates)growthRates[statToLevelUp]
+                                              , stats[statToLevelUp]);
+    }
 
     #endregion
 }

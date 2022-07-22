@@ -7,194 +7,212 @@ using UnityEditor.SceneManagement;
 
 public class DevelopmentHelperScripts : MonoBehaviour
 {
-    [MenuItem("Dev Commands/Rename Level Buttons")]
-    public static void SetLevelButtonNames()
+    [MenuItem("Dev Commands/Give Exp - 1000")]
+    public static void Give100EXP()
     {
-        MainMenuController m = GameObject.FindObjectOfType<MainMenuController>();
-
-        for (int i = 0; i < m.levelButtons.Count; i++)
+        if (!Application.isPlaying)
         {
-            m.levelButtons[i].name = m.levelButtons[i].level.levelName + " - Button";
-        }
-    }
-
-    [MenuItem("Dev Commands/Link all Level Buttons to Main Menu Controller")]
-    public static void LinkLevelButtonsToMainMenuController()
-    {
-        MainMenuController m = GameObject.FindObjectOfType<MainMenuController>();
-
-        LevelSelectButtonController[] levelButtons          = FindObjectsOfType<LevelSelectButtonController>();
-        MinigameSelectButtonController[] minigameButtons    = FindObjectsOfType<MinigameSelectButtonController>();
-
-        m.levelButtons      = levelButtons.ToList();
-        m.minigameButtons   = minigameButtons.ToList();
-    }
-
-    [MenuItem("Dev Commands/Reset all Levels")]
-    public static void ResetAllLevels()
-    {
-        ResetTriviaLevels();
-        Debug.Log("Timed Trivia Levels Reset");
-
-        ResetWordScrambleLevels();
-        Debug.Log("Word Scramble Levels Reset");
-
-        ResetPathPuzzleLevels();
-        Debug.Log("Path Puzzle Levels Reset");
-
-        ResetCodeBreakerLevels();
-        Debug.Log("Code Breaker Levels Reset");
-    }
-
-    [MenuItem("Dev Commands/Reset Trivia Levels")]
-    public static void ResetTriviaLevels()
-    {
-        List<TimedTriviaLevel> triviasets = new List<TimedTriviaLevel>(Resources.LoadAll<TimedTriviaLevel>("Scriptable Objects/Timed Trivia Levels"));
-
-        if (triviasets == null)
-            return;
-
-        foreach (TimedTriviaLevel a in triviasets)
-        {
-            if (a.name.Contains("Level 1"))
-            {
-                a.unlocked = true;
-            }
-            else
-            {
-                a.unlocked = false;
-            }
-
-            a.ResetObjectives();
-        }
-    }
-
-    [MenuItem("Dev Commands/Reset Word Scramble Levels")]
-    public static void ResetWordScrambleLevels()
-    {
-        List<WordScrambleLevel> levels = 
-            new List<WordScrambleLevel>(Resources.LoadAll<WordScrambleLevel>("Scriptable Objects/Word Scramble Levels"));
-
-        //Get all of the words from the text file
-        TextAsset wordList = Resources.Load<TextAsset>("Full Word List");
-        string[] a = wordList.text.Split('\n');
-        List<string> allWords = new List<string>();
-
-        for (int i = 0; i < a.Length; i++)
-        {
-            string word = a[i].TrimEnd('\r', '\n');
-
-            if (word.Length >= 2 && !string.IsNullOrEmpty(word))
-            {
-                allWords.Add(word);
-            }
-        }
-        ////------------
-
-        if (levels == null || wordList == null || allWords.Count <= 0)
-        {
-            Debug.Log("word list or levels did not load correctly");
+            Debug.LogWarning("Editor is in Playmode. This function cannot be used");
             return;
         }
 
-        foreach (WordScrambleLevel level in levels)
-        {
-            level.foundWords = new List<string>();
+        Unit u              =   PlayerPartyManager.instance.partyBattleUnits[
+                                Random.Range(0, PlayerPartyManager.instance.partyBattleUnits.Count)];
+        Helpful.StatTypes s =   (Helpful.StatTypes)Random.Range(0, (int)Helpful.StatTypes.COUNT);
 
-            level.hiddenWords = new List<string>();
+        u.AddEXP(s, 1000);
 
-            for (int i = 0; i < allWords.Count; i++)
-            {
-                if (CheckWord(allWords[i], level.letters))
-                {
-                    level.hiddenWords.Add(allWords[i]);
-                }
-            }
-
-            if (level.name.Contains("Level 1"))
-                level.unlocked = true;
-            else
-                level.unlocked = false;
-
-            level.ResetObjectives();
-        }
+        Debug.Log(string.Format("Added 1000 EXP to {0}'s stat {1}", u.Name, s));
     }
 
-    [MenuItem("Dev Commands/Reset Path Puzzle Levels")]
-    public static void ResetPathPuzzleLevels()
-    {
-        List<PathPuzzleLevel> levels =
-            new List<PathPuzzleLevel>(Resources.LoadAll<PathPuzzleLevel>("Scriptable Objects/Path Puzzle Levels"));
+    //[MenuItem("Dev Commands/Rename Level Buttons")]
+    //public static void SetLevelButtonNames()
+    //{
+    //    MainMenuController m = GameObject.FindObjectOfType<MainMenuController>();
 
-        foreach (PathPuzzleLevel level in levels)
-        {
-            if (level.name.Contains("Level 1"))
-            {
-                level.unlocked = true;
-            }
-            else
-            {
-                level.unlocked = false;
-            }
+    //    for (int i = 0; i < m.levelButtons.Count; i++)
+    //    {
+    //        m.levelButtons[i].name = m.levelButtons[i].level.levelName + " - Button";
+    //    }
+    //}
 
-            level.ResetObjectives();
-        }
-    }
+    //[MenuItem("Dev Commands/Link all Level Buttons to Main Menu Controller")]
+    //public static void LinkLevelButtonsToMainMenuController()
+    //{
+    //    MainMenuController m = GameObject.FindObjectOfType<MainMenuController>();
 
-    [MenuItem("Dev Commands/Reset Code Breaker Levels")]
-    public static void ResetCodeBreakerLevels()
-    {
-        List<CodeBreakerLevel> levels =
-            new List<CodeBreakerLevel>(Resources.LoadAll<CodeBreakerLevel>("Scriptable Objects/Code Breaker Levels"));
+    //    LevelSelectButtonController[] levelButtons          = FindObjectsOfType<LevelSelectButtonController>();
+    //    MinigameSelectButtonController[] minigameButtons    = FindObjectsOfType<MinigameSelectButtonController>();
 
-        foreach (CodeBreakerLevel level in levels)
-        {
-            if (level.name.Contains("Level 1"))
-            {
-                level.unlocked = true;
-            }
-            else
-            {
-                level.unlocked = false;
-            }
+    //    m.levelButtons      = levelButtons.ToList();
+    //    m.minigameButtons   = minigameButtons.ToList();
+    //}
 
-            level.ResetObjectives();
-        }
-    }
+    //[MenuItem("Dev Commands/Reset all Levels")]
+    //public static void ResetAllLevels()
+    //{
+    //    ResetTriviaLevels();
+    //    Debug.Log("Timed Trivia Levels Reset");
 
-    [MenuItem("Dev Commands/Open Main Menu")]
-    public static void OpenMainMenu()
-    {
-        EditorSceneManager.OpenScene("Assets/Scenes/_Main.unity", OpenSceneMode.Single);
-    }
+    //    ResetWordScrambleLevels();
+    //    Debug.Log("Word Scramble Levels Reset");
 
-    private static bool CheckWord(string wordToCheck, string availableLetters)
-    {
-        List<string> localLetters = new List<string>();
+    //    ResetPathPuzzleLevels();
+    //    Debug.Log("Path Puzzle Levels Reset");
 
-        for (int i = 0; i < availableLetters.Length; i++)
-        {
-            localLetters.Add(availableLetters[i].ToString());
-        }
+    //    ResetCodeBreakerLevels();
+    //    Debug.Log("Code Breaker Levels Reset");
+    //}
 
-        //Debug.Log(string.Format("Checking {0} with {1} letters", wordToCheck, availableLetters));
+    //[MenuItem("Dev Commands/Reset Trivia Levels")]
+    //public static void ResetTriviaLevels()
+    //{
+    //    List<TimedTriviaLevel> triviasets = new List<TimedTriviaLevel>(Resources.LoadAll<TimedTriviaLevel>("Scriptable Objects/Timed Trivia Levels"));
 
-        for (int i = 0; i < wordToCheck.Length; i++)
-        {
-            //Debug.Log(string.Format("{0} more letters availble", localLetters.Count));
+    //    if (triviasets == null)
+    //        return;
 
-            int index = localLetters.IndexOf(wordToCheck[i].ToString().ToLower());
+    //    foreach (TimedTriviaLevel a in triviasets)
+    //    {
+    //        if (a.name.Contains("Level 1"))
+    //        {
+    //            a.unlocked = true;
+    //        }
+    //        else
+    //        {
+    //            a.unlocked = false;
+    //        }
 
-            //Debug.Log(string.Format("{0} found at index {1}", wordToCheck[i].ToString().ToLower(), index));
+    //        a.ResetObjectives();
+    //    }
+    //}
 
-            if (index < 0)
-                return false;
-            else
-            {
-                localLetters.RemoveAt(index);
-            }
-        }
+    //[MenuItem("Dev Commands/Reset Word Scramble Levels")]
+    //public static void ResetWordScrambleLevels()
+    //{
+    //    List<WordScrambleLevel> levels = 
+    //        new List<WordScrambleLevel>(Resources.LoadAll<WordScrambleLevel>("Scriptable Objects/Word Scramble Levels"));
 
-        return true;
-    }
+    //    //Get all of the words from the text file
+    //    TextAsset wordList = Resources.Load<TextAsset>("Full Word List");
+    //    string[] a = wordList.text.Split('\n');
+    //    List<string> allWords = new List<string>();
+
+    //    for (int i = 0; i < a.Length; i++)
+    //    {
+    //        string word = a[i].TrimEnd('\r', '\n');
+
+    //        if (word.Length >= 2 && !string.IsNullOrEmpty(word))
+    //        {
+    //            allWords.Add(word);
+    //        }
+    //    }
+    //    ////------------
+
+    //    if (levels == null || wordList == null || allWords.Count <= 0)
+    //    {
+    //        Debug.Log("word list or levels did not load correctly");
+    //        return;
+    //    }
+
+    //    foreach (WordScrambleLevel level in levels)
+    //    {
+    //        level.foundWords = new List<string>();
+
+    //        level.hiddenWords = new List<string>();
+
+    //        for (int i = 0; i < allWords.Count; i++)
+    //        {
+    //            if (CheckWord(allWords[i], level.letters))
+    //            {
+    //                level.hiddenWords.Add(allWords[i]);
+    //            }
+    //        }
+
+    //        if (level.name.Contains("Level 1"))
+    //            level.unlocked = true;
+    //        else
+    //            level.unlocked = false;
+
+    //        level.ResetObjectives();
+    //    }
+    //}
+
+    //[MenuItem("Dev Commands/Reset Path Puzzle Levels")]
+    //public static void ResetPathPuzzleLevels()
+    //{
+    //    List<PathPuzzleLevel> levels =
+    //        new List<PathPuzzleLevel>(Resources.LoadAll<PathPuzzleLevel>("Scriptable Objects/Path Puzzle Levels"));
+
+    //    foreach (PathPuzzleLevel level in levels)
+    //    {
+    //        if (level.name.Contains("Level 1"))
+    //        {
+    //            level.unlocked = true;
+    //        }
+    //        else
+    //        {
+    //            level.unlocked = false;
+    //        }
+
+    //        level.ResetObjectives();
+    //    }
+    //}
+
+    //[MenuItem("Dev Commands/Reset Code Breaker Levels")]
+    //public static void ResetCodeBreakerLevels()
+    //{
+    //    List<CodeBreakerLevel> levels =
+    //        new List<CodeBreakerLevel>(Resources.LoadAll<CodeBreakerLevel>("Scriptable Objects/Code Breaker Levels"));
+
+    //    foreach (CodeBreakerLevel level in levels)
+    //    {
+    //        if (level.name.Contains("Level 1"))
+    //        {
+    //            level.unlocked = true;
+    //        }
+    //        else
+    //        {
+    //            level.unlocked = false;
+    //        }
+
+    //        level.ResetObjectives();
+    //    }
+    //}
+
+    //[MenuItem("Dev Commands/Open Main Menu")]
+    //public static void OpenMainMenu()
+    //{
+    //    EditorSceneManager.OpenScene("Assets/Scenes/_Main.unity", OpenSceneMode.Single);
+    //}
+
+    //private static bool CheckWord(string wordToCheck, string availableLetters)
+    //{
+    //    List<string> localLetters = new List<string>();
+
+    //    for (int i = 0; i < availableLetters.Length; i++)
+    //    {
+    //        localLetters.Add(availableLetters[i].ToString());
+    //    }
+
+    //    //Debug.Log(string.Format("Checking {0} with {1} letters", wordToCheck, availableLetters));
+
+    //    for (int i = 0; i < wordToCheck.Length; i++)
+    //    {
+    //        //Debug.Log(string.Format("{0} more letters availble", localLetters.Count));
+
+    //        int index = localLetters.IndexOf(wordToCheck[i].ToString().ToLower());
+
+    //        //Debug.Log(string.Format("{0} found at index {1}", wordToCheck[i].ToString().ToLower(), index));
+
+    //        if (index < 0)
+    //            return false;
+    //        else
+    //        {
+    //            localLetters.RemoveAt(index);
+    //        }
+    //    }
+
+    //    return true;
+    //}
 }

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c8af7e0c004e042ac2d806714e1087, type: 3}
   m_Name: x_Player Test Unit 1
   m_EditorClassIdentifier: 
-  baseMaxHP: 50
   abilityNames:
   - Ability_Attack
   - Ability_TimedAttack
@@ -22,3 +21,4 @@ MonoBehaviour:
   pathPuzzleBoards: []
   shadowShapePuzzles: []
   baseStats: 010000001e00000000000000000000001500000000000000000000000000000000000000
+  statGrowthRates: 030000000300000002000000040000000300000001000000020000000400000005000000

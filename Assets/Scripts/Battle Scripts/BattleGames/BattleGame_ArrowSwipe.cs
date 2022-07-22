@@ -207,6 +207,13 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
         Signal.Send("Battle", "CorrectResponse");
 
+        object[] info   = new object[3];
+        info[0]         = Helpful.StatTypes.Responsiveness;
+        info[1]         = 1;
+        info[2]         = BattleManager.instance.CurrentPlayerUnit.UnitInfo;
+
+        Signal.Send("PartyManagement", "AwardExperience", info);
+
         NextArrow();
     }
 

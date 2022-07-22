@@ -88,6 +88,7 @@ public class BattleManager : MonoBehaviour
     public bool                 IsPaused                    { get { return pauseScreen.activeInHierarchy; } }
     public string               CurrentGameName             { get { return currentGameController.GetBattleGameName(); } }
     public BattleUnitController CurrentEnemy                { get { return currentEnemyUnitController; } }
+    public BattleUnitController CurrentPlayerUnit           { get { return currentPlayerUnitController; } }
     #endregion
 
     #region Unity Functions

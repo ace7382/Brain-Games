@@ -92,6 +92,8 @@ MonoBehaviour:
       Name: InventoryClosed
     - Category: None
       Name: None
+    - Category: PartyManagement
+      Name: AwardExperience
     - Category: PathPuzzle
       Name: PathPuzzleSetup
     - Category: PathPuzzle

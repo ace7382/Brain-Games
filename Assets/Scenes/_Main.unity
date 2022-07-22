@@ -3934,6 +3934,16 @@ MonoBehaviour:
   KGHappy: {fileID: 12800000, guid: 532e5093b61d3c245b16b8849e0d0523, type: 3}
   gameScreenOrderInLayer: 0
   popupScreenOrderInLayer: 10
+  statColors:
+  - {r: 0.6109066, g: 0, b: 1, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.8206587, b: 1, a: 1}
+  - {r: 1, g: 0, b: 0.5392647, a: 1}
+  - {r: 0.98160696, g: 1, b: 0, a: 1}
+  - {r: 0.46328998, g: 1, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0.5827389, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &965713460
 GameObject:
   m_ObjectHideFlags: 0

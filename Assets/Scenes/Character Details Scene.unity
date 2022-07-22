@@ -8333,6 +8333,7 @@ MonoBehaviour:
   statDetailPrefab: {fileID: 318986320453871436, guid: 021ef8891461b6e4d9ec741906bfd57f, type: 3}
   statDetailsListContainer: {fileID: 457699265}
   characterImage: {fileID: 2135562286}
+  growthRateIndicatorPrefab: {fileID: 5091505743733344116, guid: 71abfd8f1a9b1c9418a73d942a5ecc12, type: 3}
 --- !u!1 &1902842798
 GameObject:
   m_ObjectHideFlags: 0
