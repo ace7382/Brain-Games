@@ -205,7 +205,9 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
     {
         AudioManager.instance.Play("Go");
 
-        Signal.Send("Battle", "CorrectResponse");
+        //Signal.Send("Battle", "CorrectResponse");
+
+        Signal.Send("Battle", "AbilityChargeGenerated", AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE);
 
         object[] info   = new object[3];
         info[0]         = Helpful.StatTypes.Responsiveness;
@@ -221,7 +223,9 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
     {
         AudioManager.instance.Play("No");
 
-        Signal.Send("Battle", "IncorrectResponse");
+        //Signal.Send("Battle", "IncorrectResponse");
+
+        Signal.Send("Battle", "AbilityChargeGenerated", AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE);
 
         NextArrow();
     }

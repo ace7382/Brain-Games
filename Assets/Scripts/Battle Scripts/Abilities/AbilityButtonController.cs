@@ -36,6 +36,12 @@ public class AbilityButtonController : MonoBehaviour
 
     #endregion
 
+    #region Public Properties
+
+    public Ability                                      ButtonsAbility                          { get { return ability; } }
+
+    #endregion
+
     #region Unity Functions
 
     private void Awake()

@@ -21,6 +21,8 @@ MonoBehaviour:
     - Category: Battle
       Name: AbilityCharge
     - Category: Battle
+      Name: AbilityChargeGenerated
+    - Category: Battle
       Name: CorrectResponse
     - Category: Battle
       Name: CountdownEnded
@@ -40,6 +42,8 @@ MonoBehaviour:
       Name: PlayerKOed
     - Category: Battle
       Name: PlayerMaxHPUpdate
+    - Category: Battle
+      Name: RequestMatchingAbilityChargers
     - Category: Battle
       Name: ResetAbilityCharges
     - Category: Battle

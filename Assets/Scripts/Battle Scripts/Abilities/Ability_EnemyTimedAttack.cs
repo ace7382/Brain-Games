@@ -81,6 +81,11 @@ public class Ability_EnemyTimedAttack : Ability
         Signal.Send("Battle", "BoardReset");
     }
 
+    public override void Charge(int chargeActionID)
+    {
+        throw new System.NotImplementedException();
+    }
+
     #endregion
 
     #region Private functions

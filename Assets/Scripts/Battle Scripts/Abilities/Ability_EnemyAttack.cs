@@ -60,6 +60,11 @@ public class Ability_EnemyAttack : Ability
         ResetCharges();
     }
 
+    public override void Charge(int chargeActionID)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void ChargeAbility(Signal signal)
     {
         Debug.Log(string.Format("{0}'s ability {1} received a charge", owner.UnitInfo.Name, this.abilityName));

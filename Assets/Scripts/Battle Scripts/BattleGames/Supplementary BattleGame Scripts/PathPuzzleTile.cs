@@ -211,6 +211,7 @@ public class PathPuzzleTile : MonoBehaviour
         west            = oldSouth;
 
         Signal.Send("PathPuzzle", "TileRotated", gameObject);
+        Signal.Send("Battle", "AbilityChargeGenerated", AbilityCharger.AbilityChargeActions.TILE_ROTATED);
     }
 
     #endregion

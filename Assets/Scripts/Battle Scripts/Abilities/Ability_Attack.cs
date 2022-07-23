@@ -7,14 +7,15 @@ public class Ability_Attack : Ability
 {
     #region Private Variables
 
-    private int                 currentCharges;
+    private int                                     currentCharges;
+    private AbilityCharger.AbilityChargeActions     actionThatChargesThisAbility;
 
     #endregion
 
     #region Signal Variables
 
-    private SignalReceiver      battle_correctresponse_receiver;
-    private SignalStream        battle_correctresponse_stream;
+    private SignalReceiver                          battle_requestmatchingabilitychargers_receiver;
+    private SignalStream                            battle_requestmatchingabilitychargers_stream;
 
     #endregion
 
@@ -26,19 +27,20 @@ public class Ability_Attack : Ability
         chargeType                      = AbilityChargeType.NUM_OF_CHARGES;
         numOfCharges                    = 3;
         abilityName                     = "Attack";
+        actionThatChargesThisAbility    = AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE;
         //
 
         currentCharges                  = 0;
 
-        battle_correctresponse_stream   = SignalStream.Get("Battle", "CorrectResponse");
-        battle_correctresponse_receiver = new SignalReceiver().SetOnSignalCallback(ChargeAbility);
-        battle_correctresponse_stream.ConnectReceiver(battle_correctresponse_receiver);
+        battle_requestmatchingabilitychargers_stream    = SignalStream.Get("Battle", "RequestMatchingAbilityChargers");
+        battle_requestmatchingabilitychargers_receiver  = new SignalReceiver().SetOnSignalCallback(HandleChargeRequest);
+
+        battle_requestmatchingabilitychargers_stream.ConnectReceiver(battle_requestmatchingabilitychargers_receiver);
     }
 
     public override void Deactivate()
     {
-
-        battle_correctresponse_stream.DisconnectReceiver(battle_correctresponse_receiver);
+        battle_requestmatchingabilitychargers_stream.DisconnectReceiver(battle_requestmatchingabilitychargers_receiver);
 
         Debug.Log(string.Format("{0}'s ability {1} was deactivated", owner.UnitInfo.Name, this.abilityName));
     }
@@ -64,7 +66,21 @@ public class Ability_Attack : Ability
             "{0} damage per charge", CalculateDamage().ToString());
     }
 
-    public void ChargeAbility(Signal signal)
+    public void HandleChargeRequest(Signal signal)
+    {
+        //Signal:
+        //AbilityCharger.AbilityChargeAction    - the type of charge action that was completed
+
+        if (currentCharges >= numOfCharges)
+            return;
+
+        AbilityCharger.AbilityChargeActions signalType = signal.GetValueUnsafe<AbilityCharger.AbilityChargeActions>();
+
+        if (signalType == actionThatChargesThisAbility)
+            AbilityCharger.instance.AddChargeTarget(this, 1, 0); //Standard Charge
+    }
+
+    public override void Charge(int notUsedByThisAbility)
     {
         Debug.Log(string.Format("{0}'s ability {1} received a charge", owner.UnitInfo.Name, this.abilityName));
 

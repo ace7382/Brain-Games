@@ -33,8 +33,10 @@ public abstract class Ability
     }
 
     public abstract void Activate();
-
     public virtual void Deactivate() {    }
+
+    public abstract void Charge(int chargeActionID);
+
     public virtual string GetDetails() { return abilityName; }
 
     public void SendDetailsSignal()

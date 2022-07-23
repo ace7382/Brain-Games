@@ -224,7 +224,7 @@ public class BattleGame_PathPuzzle : BattleGameControllerBase
             }
             else
             {
-                Signal.Send("Battle", "CorrectResponse");
+                Signal.Send("Battle", "AbilityChargeGenerated", AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE);
                 NextBoard();
             }
         }

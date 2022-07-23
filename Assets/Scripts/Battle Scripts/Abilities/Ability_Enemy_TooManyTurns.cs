@@ -7,14 +7,15 @@ public class Ability_Enemy_TooManyTurns : Ability
 {
     #region Private Variables
 
-    private float           chargePercentage;
+    private int                                     currentCharges;
+    private AbilityCharger.AbilityChargeActions     actionThatChargesThisAbility;
 
     #endregion
 
     #region Signal Variables
 
-    private SignalReceiver  pathpuzzle_tilerotated_receiver;
-    private SignalStream    pathpuzzle_tilerotated_stream;
+    private SignalReceiver                          battle_requestmatchingabilitychargers_receiver;
+    private SignalStream                            battle_requestmatchingabilitychargers_stream;
 
     #endregion
 
@@ -25,66 +26,76 @@ public class Ability_Enemy_TooManyTurns : Ability
 
         //HARD CODED SHIT
 
-        chargeType      = AbilityChargeType.NUM_OF_CHARGES;
-        numOfCharges    = 15;
-        abilityName     = "Too Many Turns";
-        autocast        = true;
+        chargeType                                      = AbilityChargeType.NUM_OF_CHARGES;
+        numOfCharges                                    = 15;
+        abilityName                                     = "Too Many Turns";
+        autocast                                        = true;
+        actionThatChargesThisAbility                    = AbilityCharger.AbilityChargeActions.TILE_ROTATED;
 
         //
 
-        chargePercentage = 0f;
+        currentCharges                                  = 0;
 
-        pathpuzzle_tilerotated_stream   = SignalStream.Get("PathPuzzle", "TileRotated");
+        battle_requestmatchingabilitychargers_stream    = SignalStream.Get("Battle", "RequestMatchingAbilityChargers");
 
-        pathpuzzle_tilerotated_receiver = new SignalReceiver().SetOnSignalCallback(ChargeAbility);
+        battle_requestmatchingabilitychargers_receiver  = new SignalReceiver().SetOnSignalCallback(HandleChargeRequest);
 
-        pathpuzzle_tilerotated_stream.ConnectReceiver(pathpuzzle_tilerotated_receiver);
+        battle_requestmatchingabilitychargers_stream.ConnectReceiver(battle_requestmatchingabilitychargers_receiver);
     }
 
     public override void Activate()
     {
         object[] info   = new object[2];
         info[0]         = owner.IsPlayer;
-        info[1]         = (int)(10 * chargePercentage); //owner.UnitInfo.{whatever stat}
+        info[1]         = 4 * currentCharges;
 
         Signal.Send("Battle","UnitTakeDamage", info);
 
         ResetCharges();
     }
 
-    #endregion
-
-    #region Private Functions
-
-    public void ChargeAbility(Signal signal)
+    public override void Charge(int chargeActionID)
     {
-        Debug.Log(string.Format("{0}'s ability {1} received a charge", owner.UnitInfo.Name, this.abilityName));
-
-        if (chargePercentage < 1f)
+        if (currentCharges < numOfCharges)
         {
-            chargePercentage    += 1f / numOfCharges;
+            currentCharges  += 1;
 
-            object[] info       = new object[2];
-            info[0]             = this; //The ability to charge
-            info[1]             = 1;    //The number of charges
+            object[] info   = new object[2];
+            info[0]         = this;     //The ability to charge
+            info[1]         = 1;        //The number of charges
 
             Signal.Send("Battle", "AbilityCharge", info);
         }
 
-        if (chargePercentage >= 1f && autocast)
+        if (currentCharges == numOfCharges && autocast)
             Activate();
     }
 
-    public void ResetCharges()
+    #endregion
+
+    #region Private Functions
+
+    private void ResetCharges()
     {
         Debug.Log(string.Format("{0}'s ability {1} was reset", owner.UnitInfo.Name, this.abilityName));
 
-        chargePercentage = 0f;
+        currentCharges      = 0;
 
         object[] info       = new object[1];
         info[0]             = this; //The ability to charge
 
         Signal.Send("Battle", "ResetAbilityCharges", info);
+    }
+
+    private void HandleChargeRequest(Signal signal)
+    {
+        if (currentCharges >= numOfCharges)
+            return;
+
+        AbilityCharger.AbilityChargeActions signalType = signal.GetValueUnsafe<AbilityCharger.AbilityChargeActions>();
+
+        if (signalType == actionThatChargesThisAbility)
+            AbilityCharger.instance.AddChargeTarget(this, 1, 0); //Standard Charge
     }
 
     #endregion
