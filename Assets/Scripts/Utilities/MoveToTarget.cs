@@ -25,6 +25,7 @@ public class MoveToTarget : MonoBehaviour
         if (Mathf.Abs(transform.position.x - target.position.x) < destinationThreshold &&
             Mathf.Abs(transform.position.y - target.position.y) < destinationThreshold)
         {
+            transform.position = new Vector3(target.position.x, target.position.y, transform.position.z);
             OnDestinationReached();
         }
     }
@@ -36,5 +37,7 @@ public class MoveToTarget : MonoBehaviour
 
         if (deleteOnDestination)
             Destroy(gameObject);
+        else
+            Destroy(gameObject.GetComponent<MoveToTarget>());
     }
 }

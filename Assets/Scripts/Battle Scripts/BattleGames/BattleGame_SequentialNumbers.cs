@@ -188,8 +188,11 @@ public class BattleGame_SequentialNumbers : BattleGameControllerBase
 
         SequentialNumbersTile t = signal.GetValueUnsafe<SequentialNumbersTile>();
 
-        Debug.Log("Current Solution Index: " + currentSolutionIndex);
-        Debug.Log("Tile's solution index: " + t.SolutionIndex);
+        //Debug.Log("Current Solution Index: " + currentSolutionIndex);
+        //Debug.Log("Tile's solution index: " + t.SolutionIndex);
+
+        object[] info   = new object[2];
+        info[1]         = (Vector2)t.transform.position;
 
         if (t.SolutionIndex == currentSolutionIndex)
         {
@@ -199,7 +202,9 @@ public class BattleGame_SequentialNumbers : BattleGameControllerBase
 
             if (tiles.FindIndex(x => x.Showing) < 0)
             {
-                Signal.Send("Battle", "CorrectResponse");
+                info[0] = AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE;
+
+                Signal.Send("Battle", "AbilityChargeGenerated", info);
 
                 AudioManager.instance.Play("Go");
 
@@ -208,7 +213,9 @@ public class BattleGame_SequentialNumbers : BattleGameControllerBase
         }
         else
         {
-            Signal.Send("Battle", "IncorrectResponse");
+            info[0] = AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE;
+
+            Signal.Send("Battle", "AbilityChargeGenerated", info);
 
             AudioManager.instance.Play("No");
 

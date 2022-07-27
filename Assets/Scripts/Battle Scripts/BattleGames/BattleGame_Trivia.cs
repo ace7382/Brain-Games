@@ -117,13 +117,32 @@ public class BattleGame_Trivia : BattleGameControllerBase
         //Signal Data should be int
         //  the answer number that was selected
 
-        int selection = signal.GetValueUnsafe<int>();
+        int selection   = signal.GetValueUnsafe<int>();
+        object[] info   = new object[2];
+        info[0]         = currentAnswers[selection].correct ? AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE :
+                            AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE;
+        
+        switch (selection)
+        {
+            case 0:
+                info[1] = (Vector2)answer0.transform.position;
+                break;
+            case 1:
+                info[1] = (Vector2)answer1.transform.position;
+                break;
+            case 2:
+                info[1] = (Vector2)answer2.transform.position;
+                break;
+            case 3:
+                info[1] = (Vector2)answer3.transform.position;
+                break;
+        }
 
         if (currentAnswers[selection].correct)
         {
             AudioManager.instance.Play("Go");
 
-            Signal.Send("Battle", "CorrectResponse");
+            Signal.Send("Battle", "AbilityChargeGenerated", info);
 
             NextQuestion();
         }
@@ -131,7 +150,7 @@ public class BattleGame_Trivia : BattleGameControllerBase
         {
             AudioManager.instance.Play("No");
 
-            Signal.Send("Battle", "IncorrectResponse");
+            Signal.Send("Battle", "AbilityChargeGenerated", info);
         }
     }
 

@@ -20,6 +20,7 @@ public class BattleGame_ShadowShapes : BattleGameControllerBase
 
     private int                                 currentPuzzleIndex;
     private int                                 currentPiecesChildIndex;
+    private bool                                pieceMovingToSolution;
 
     #endregion
 
@@ -57,6 +58,7 @@ public class BattleGame_ShadowShapes : BattleGameControllerBase
     public override void StartGame()
     {
         currentPuzzleIndex          = -1;
+        pieceMovingToSolution       = false;
 
         NextPuzzle();
     }
@@ -74,61 +76,87 @@ public class BattleGame_ShadowShapes : BattleGameControllerBase
     //Called by the Next Button's OnClick behavior
     public void NextPiece()
     {
+        if (pieceMovingToSolution)
+            return;
+
         CurrentPiecesChildIndex += 1;
     }
 
     //Called by the Previous Button's OnClick behavior
     public void PreviousPiece()
     {
+        if (pieceMovingToSolution)
+            return;
+
         CurrentPiecesChildIndex -= 1;
     }
 
     //Called by the View Panel Button's OnClickBehavior
     public void CheckPiece()
     {
-        Transform currentPieceTrans = pieceViewPanel.GetChild(CurrentPiecesChildIndex);
-        ShadowShapePiece currentSSP = currentPieceTrans.GetComponent<ShadowShapePiece>();
+        if (pieceMovingToSolution)
+            return;
+
+        Transform currentPieceTrans             = pieceViewPanel.GetChild(CurrentPiecesChildIndex);
+        ShadowShapePiece currentSSP             = currentPieceTrans.GetComponent<ShadowShapePiece>();
 
         Debug.Log(currentSSP.name + ": " + (currentSSP.isSolution ? "in solution" : "not in solution"));
 
         if (currentSSP.isSolution)
         {
-            GameObject destinationGO = solutionPanel.GetComponentsInChildren<ShadowShapePiece>().ToList().Find(x => !x.isSolution && x.id == currentSSP.id).gameObject;
+            GameObject destinationGO            = solutionPanel.GetComponentsInChildren<ShadowShapePiece>().ToList().Find(x => !x.isSolution && x.id == currentSSP.id).gameObject;
 
             currentPieceTrans.SetParent(solutionPanel);
 
-            Vector3 destination = destinationGO.transform.localPosition;
+            Vector3 destination                 = destinationGO.transform.localPosition;
 
-            currentPieceTrans.localPosition = destination;
-
-            destinationGO.transform.SetParent(null);
-
-            Destroy(destinationGO);
-
-            Debug.Log(solutionPanel.GetComponentsInChildren<ShadowShapePiece>().ToList().FindIndex(x => x.isSolution == false));
-
-            if (solutionPanel.GetComponentsInChildren<ShadowShapePiece>().ToList().FindIndex(x => !x.isSolution) < 0)
-            {
-                AudioManager.instance.Play("Go");
-
-                Signal.Send("Battle", "CorrectResponse");
-
-                NextPuzzle();
-            }
-            else
-            {
-                CurrentPiecesChildIndex = CurrentPiecesChildIndex;
-            }
+            MoveToTarget move                   = currentPieceTrans.gameObject.AddComponent<MoveToTarget>();
+            move.target                         = (RectTransform)destinationGO.transform;
+            move.deleteOnDestination            = false;
+            move.onDestinationReached           = new UnityEngine.Events.UnityEvent();
+            move.onDestinationReached.AddListener(delegate { CheckSolution(destinationGO); });
+            
+            pieceMovingToSolution               = true;
         }
         else
         {
-            Signal.Send("Battle", "IncorrectResponse");
+            object[] info                       = new object[2];
+            info[1]                             = (Vector2)pieceViewPanel.position;
+            info[0]                             = AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE;
+
+            Signal.Send("Battle", "AbilityChargeGenerated", info);
         }
     }
 
     #endregion
 
     #region Private Functions
+
+    private void CheckSolution(GameObject objectToDestroy)
+    {
+        object[] info   = new object[2];
+        info[1]         = (Vector2)objectToDestroy.transform.position;
+
+        objectToDestroy.transform.SetParent(null);
+        Destroy(objectToDestroy);
+
+        if (solutionPanel.GetComponentsInChildren<ShadowShapePiece>().ToList().FindIndex(x => !x.isSolution) < 0)
+        {
+            AudioManager.instance.Play("Go");
+
+            info[0]     = AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE;
+
+            Signal.Send("Battle", "AbilityChargeGenerated", info);
+
+            NextPuzzle();
+        }
+        else
+        {
+            CurrentPiecesChildIndex = CurrentPiecesChildIndex;
+        }
+
+        pieceMovingToSolution = false;
+    }
 
     private void NextPuzzle()
     {

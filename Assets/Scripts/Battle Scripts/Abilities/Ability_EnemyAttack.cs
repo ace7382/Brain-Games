@@ -7,14 +7,15 @@ public class Ability_EnemyAttack : Ability
 {
     #region Private Variables
 
-    private float           chargePercentage;
+    private int                                     currentCharges;
+    private AbilityCharger.AbilityChargeActions     actionThatChargesThisAbility;
 
     #endregion
 
     #region Signal Variables
 
-    private SignalReceiver  battle_incorrectresponse_receiver;
-    private SignalStream    battle_incorrectresponse_stream;
+    private SignalReceiver                          battle_requestmatchingabilitychargers_receiver;
+    private SignalStream                            battle_requestmatchingabilitychargers_stream;
 
     #endregion
 
@@ -24,63 +25,59 @@ public class Ability_EnemyAttack : Ability
 
         //HARD CODED SHIT
 
-        chargeType      = AbilityChargeType.NUM_OF_CHARGES;
-        numOfCharges    = 3;
-        abilityName     = "Bad Attack";
-        autocast        = true;
+        chargeType                                      = AbilityChargeType.NUM_OF_CHARGES;
+        numOfCharges                                    = 3;
+        abilityName                                     = "Bad Attack";
+        autocast                                        = true;
+        actionThatChargesThisAbility                    = AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE;
 
         //
 
-        chargePercentage                    = 0f;
+        currentCharges                                  = 0;
 
-        battle_incorrectresponse_stream     = SignalStream.Get("Battle", "IncorrectResponse");
+        battle_requestmatchingabilitychargers_stream    = SignalStream.Get("Battle", "RequestMatchingAbilityChargers");
+        battle_requestmatchingabilitychargers_receiver  = new SignalReceiver().SetOnSignalCallback(HandleChargeRequest);
 
-        battle_incorrectresponse_receiver   = new SignalReceiver().SetOnSignalCallback(ChargeAbility);
-
-        battle_incorrectresponse_stream.ConnectReceiver(battle_incorrectresponse_receiver);
+        battle_requestmatchingabilitychargers_stream.ConnectReceiver(battle_requestmatchingabilitychargers_receiver);
     }
 
     public override void Deactivate()
     {
-        //ResetCharges();
-
-        battle_incorrectresponse_stream.DisconnectReceiver(battle_incorrectresponse_receiver);
+        battle_requestmatchingabilitychargers_stream.DisconnectReceiver(battle_requestmatchingabilitychargers_receiver);
 
         Debug.Log(string.Format("{0}'s ability {1} was deactivated", owner.UnitInfo.Name, this.abilityName));
     }
 
     public override void Activate()
     {
+        if (currentCharges == 0)
+            return;
+
         object[] info   = new object[2];
         info[0]         = owner.IsPlayer;
-        info[1]         = (int)(10 * chargePercentage); //owner.UnitInfo.{whatever stat}
+        info[1]         = 3 * currentCharges; //owner.UnitInfo.{whatever stat}
 
         Signal.Send("Battle","UnitTakeDamage", info);
 
         ResetCharges();
     }
 
-    public override void Charge(int chargeActionID)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void ChargeAbility(Signal signal)
+    public override void Charge(int notUsedByThisAbility)
     {
         Debug.Log(string.Format("{0}'s ability {1} received a charge", owner.UnitInfo.Name, this.abilityName));
 
-        if (chargePercentage < 1f)
+        if (currentCharges < numOfCharges)
         {
-            chargePercentage    += 1f / numOfCharges;
+            currentCharges  += 1;
 
-            object[] info       = new object[2];
-            info[0]             = this; //The ability to charge
-            info[1]             = 1;    //The number of charges
+            object[] info   = new object[2];
+            info[0]         = this; //The ability to charge
+            info[1]         = 1;    //The number of charges
 
             Signal.Send("Battle", "AbilityCharge", info);
         }
 
-        if (chargePercentage >= 1f && autocast)
+        if (currentCharges == numOfCharges && autocast)
             Activate();
     }
 
@@ -88,11 +85,29 @@ public class Ability_EnemyAttack : Ability
     {
         Debug.Log(string.Format("{0}'s ability {1} was reset", owner.UnitInfo.Name, this.abilityName));
 
-        chargePercentage = 0f;
+        currentCharges      = 0;
 
         object[] info       = new object[1];
         info[0]             = this; //The ability to charge
 
         Signal.Send("Battle", "ResetAbilityCharges", info);
     }
+
+    #region Private Functions
+
+    private void HandleChargeRequest(Signal signal)
+    {
+        //Signal:
+        //AbilityCharger.AbilityChargeAction    - the type of charge action that was completed
+
+        if (currentCharges >= numOfCharges)
+            return;
+
+        AbilityCharger.AbilityChargeActions signalType = signal.GetValueUnsafe<AbilityCharger.AbilityChargeActions>();
+
+        if (signalType == actionThatChargesThisAbility)
+            AbilityCharger.instance.AddChargeTarget(this, 1, 0); //Standard Charge
+    }
+
+    #endregion
 }

@@ -42,8 +42,6 @@ public class Ability_TimedAttack : Ability
 
     public override void Deactivate()
     {
-        //ResetCharges();
-
         battle_abilitytimerbarfilled_stream.DisconnectReceiver(battle_abilitytimerbarfilled_receiver);
 
         Debug.Log(string.Format("{0}'s ability {1} was deactivated", owner.UnitInfo.Name, this.abilityName));
@@ -58,9 +56,9 @@ public class Ability_TimedAttack : Ability
 
         ResetCharges();
 
-        object[] info   = new object[2];
-        info[0]         = owner.IsPlayer;
-        info[1]         = (100 * chargesToAttackWith); //owner.UnitInfo.{whatever stat}
+        object[] info           = new object[2];
+        info[0]                 = owner.IsPlayer;
+        info[1]                 = (100 * chargesToAttackWith); //owner.UnitInfo.{whatever stat}
 
         Signal.Send("Battle", "UnitTakeDamage", info);
     }

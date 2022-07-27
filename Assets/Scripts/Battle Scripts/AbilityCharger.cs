@@ -111,20 +111,26 @@ public class AbilityCharger : MonoBehaviour
 
     private void GenerateCharge(Signal signal)
     {
-        //Signal is object[1]
+        //Signal is object[2]
         //info[0]   - AbilityChargeActions  - The type of charge generated
-
+        //info[1]   - Vector2               - the origin point of the charge
 
         //Game actions will need to send signal with
         //  charge type - correct, incorrect, etc
-        AbilityChargeActions chargeGenerated = signal.GetValueUnsafe<AbilityChargeActions>();
+
+        object[] info                           = signal.GetValueUnsafe<object[]>();
+
+        AbilityChargeActions chargeGenerated    = (AbilityChargeActions)info[0];
+        Vector2 chargePosition                  = (Vector2)info[1];
+
+        Debug.Log(chargePosition);
 
         //This sends signal - Request Charge
         //  signal info will be charge typetype
         Signal.Send("Battle", "RequestMatchingAbilityChargers", chargeGenerated);
 
         //  All abilities/ability buttons will need to listen for this request
-        //      if charge type matches AND there is an empty charge slot on the ability
+        //      if the ability has a reason to receive a charge of the requested kind
         //      ability will return itself
 
         //For each abilty received, find a corresponding button, and generate a charge particle
@@ -143,13 +149,14 @@ public class AbilityCharger : MonoBehaviour
                 continue;
             }
 
-            RectTransform targetTransform = (RectTransform)tar.transform;
+            RectTransform targetTransform               = (RectTransform)tar.transform;
 
-            Debug.Log(string.Format("Target Destination for {0} charge: {1}", chargeTargets[i].ability.abilityName, targetTransform.anchoredPosition));
+            //Debug.Log(string.Format("Target Destination for {0} charge: {1}", chargeTargets[i].ability.abilityName, targetTransform.anchoredPosition));
 
             GameObject particle                         = Instantiate(abilityChargeParticlePrefab, GameObject.Find("Battle Canvas").transform);
             RectTransform tran                          = (RectTransform)particle.transform;
-            tran.anchoredPosition                       = Vector2.zero;
+            //tran.anchoredPosition                       = Vector2.zero;
+            tran.position                               = chargePosition;
             tran.localScale                             = Vector3.one;
 
             MoveToTarget mover                          = particle.GetComponent<MoveToTarget>();

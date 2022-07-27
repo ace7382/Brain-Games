@@ -2174,7 +2174,7 @@ MonoBehaviour:
   bottomPanelText: {fileID: 257422543301899398}
   bottomPanelShapeImage: {fileID: 8891197252739003680}
   doesMatchButton: {fileID: 1913077557571370678}
-  doesNotMatchButton: {fileID: 0}
+  doesNotMatchButton: {fileID: 4910974454702251189}
   colorsAnswerKey:
   - word: Black
     color: {r: 0, g: 0, b: 0, a: 1}

@@ -7,7 +7,8 @@ public class Ability_EnemyTimedAttack : Ability
 {
     #region Private Variables
 
-    private int                 activeCharges;
+    private int                                         currentCharges;
+    private List<AbilityCharger.AbilityChargeActions>   actionsThatResetThisAbility;
 
     #endregion
 
@@ -15,10 +16,8 @@ public class Ability_EnemyTimedAttack : Ability
 
     private SignalReceiver      battle_abilitytimerbarfilled_receiver;
     private SignalStream        battle_abilitytimerbarfilled_stream;
-    private SignalReceiver      battle_correctresponse_receiver;
-    private SignalStream        battle_correctresponse_stream;
-    private SignalReceiver      battle_incorrectresponse_receiver;
-    private SignalStream        battle_incorrectresponse_stream;
+    private SignalReceiver      battle_requestmatchingabilitychargers_receiver;
+    private SignalStream        battle_requestmatchingabilitychargers_stream;
 
     #endregion
 
@@ -30,48 +29,47 @@ public class Ability_EnemyTimedAttack : Ability
 
         //HARD CODED SHIT
 
-        chargeType                              = AbilityChargeType.TIMED;
-        numOfCharges                            = 5;
-        abilityName                             = "Enemy Timed Attack";
-        secondsToChargeOneBar                   = 2.5f;
-        autocast                                = true;
+        chargeType                                          = AbilityChargeType.TIMED;
+        numOfCharges                                        = 5;
+        abilityName                                         = "Enemy Timed Attack";
+        secondsToChargeOneBar                               = 2.5f;
+        autocast                                            = true;
+
+        actionsThatResetThisAbility                         = new List<AbilityCharger.AbilityChargeActions>();
+
+        actionsThatResetThisAbility.Add(AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE);
+        actionsThatResetThisAbility.Add(AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE);
 
         //
 
-        activeCharges = 0;
+        currentCharges = 0;
 
-        battle_abilitytimerbarfilled_stream     = SignalStream.Get("Ability", "TimerBarFilled");
-        battle_correctresponse_stream           = SignalStream.Get("Battle", "CorrectResponse");
-        battle_incorrectresponse_stream         = SignalStream.Get("Battle", "IncorrectResponse");
+        battle_abilitytimerbarfilled_stream                 = SignalStream.Get("Ability", "TimerBarFilled");
+        battle_requestmatchingabilitychargers_stream        = SignalStream.Get("Battle", "RequestMatchingAbilityChargers");
 
-        battle_abilitytimerbarfilled_receiver   = new SignalReceiver().SetOnSignalCallback(ChargeAbility);
-        battle_correctresponse_receiver         = new SignalReceiver().SetOnSignalCallback(ResetChargesOnPlayerResponse);
-        battle_incorrectresponse_receiver       = new SignalReceiver().SetOnSignalCallback(ResetChargesOnPlayerResponse);
+        battle_abilitytimerbarfilled_receiver               = new SignalReceiver().SetOnSignalCallback(ChargeAbility);
+        battle_requestmatchingabilitychargers_receiver      = new SignalReceiver().SetOnSignalCallback(HandleChargeRequest);
 
         battle_abilitytimerbarfilled_stream.ConnectReceiver(battle_abilitytimerbarfilled_receiver);
-        battle_correctresponse_stream.ConnectReceiver(battle_correctresponse_receiver);
-        battle_incorrectresponse_stream.ConnectReceiver(battle_incorrectresponse_receiver);
+        battle_requestmatchingabilitychargers_stream.ConnectReceiver(battle_requestmatchingabilitychargers_receiver);
     }
 
     public override void Deactivate()
     {
-        //ResetCharges();
-
         battle_abilitytimerbarfilled_stream.DisconnectReceiver(battle_abilitytimerbarfilled_receiver);
-        battle_correctresponse_stream.DisconnectReceiver(battle_correctresponse_receiver);
-        battle_incorrectresponse_stream.DisconnectReceiver(battle_incorrectresponse_receiver);
+        battle_requestmatchingabilitychargers_stream.DisconnectReceiver(battle_requestmatchingabilitychargers_receiver);
 
         Debug.Log(string.Format("{0}'s ability {1} was deactivated", owner.UnitInfo.Name, this.abilityName));
     }
 
     public override void Activate()
     {
-        if (activeCharges < 1)
+        if (currentCharges == 0)
             return;
 
-        int chargesToAttackWith = activeCharges;
+        int chargesToAttackWith = currentCharges;
 
-        ResetCharges();
+        ResetCharges(); //TODO: Should this go before the calls at the bottom? Other abilities just reset at the end???
 
         object[] info   = new object[2];
         info[0]         = owner.IsPlayer;
@@ -83,12 +81,25 @@ public class Ability_EnemyTimedAttack : Ability
 
     public override void Charge(int chargeActionID)
     {
-        throw new System.NotImplementedException();
+        //This function actually just resets this ability on recipient of the appropriate "charge"
+        //Timers charge this via ChargeAbility(), but game responses reset the ability
+
+        ResetCharges();
     }
 
     #endregion
 
     #region Private functions
+
+    private void HandleChargeRequest(Signal signal)
+    {
+        //Don't check for charges bc thefirst timer bar may be partially filled and it should still reset
+
+        AbilityCharger.AbilityChargeActions signalType = signal.GetValueUnsafe<AbilityCharger.AbilityChargeActions>();
+
+        if (actionsThatResetThisAbility.Contains(signalType))
+            AbilityCharger.instance.AddChargeTarget(this, 1, 1); //reset charge
+    }
 
     private void ChargeAbility(Signal signal)
     {
@@ -101,25 +112,20 @@ public class Ability_EnemyTimedAttack : Ability
         {
             Debug.Log(string.Format("{0}'s ability {1} received a charge", owner.UnitInfo.Name, this.abilityName));
 
-            activeCharges = Mathf.Clamp(activeCharges + 1, 0, numOfCharges);
+            currentCharges = Mathf.Clamp(currentCharges + 1, 0, numOfCharges);
 
             Signal.Send("Battle", "AbilityCharge", info);
         }
 
-        if (activeCharges == numOfCharges && autocast)
+        if (currentCharges == numOfCharges && autocast)
             Activate();
-    }
-
-    private void ResetChargesOnPlayerResponse(Signal signal)
-    {
-        ResetCharges();
     }
 
     private void ResetCharges()
     {
         Debug.Log(string.Format("{0}'s ability {1} was reset", owner.UnitInfo.Name, this.abilityName));
 
-        activeCharges   = 0;
+        currentCharges   = 0;
 
         object[] info   = new object[1];
         info[0]         = this; //The ability to reset

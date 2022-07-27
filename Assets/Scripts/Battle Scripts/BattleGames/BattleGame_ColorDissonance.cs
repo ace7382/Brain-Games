@@ -23,11 +23,11 @@ public class BattleGame_ColorDissonance : BattleGameControllerBase
     [System.Serializable]
     private class WordShapeCombo
     {
-        [SerializeField] private string     word;
-        [SerializeField] private Sprite     shape;
+        [SerializeField] private string             word;
+        [SerializeField] private Sprite             shape;
 
-        public string                       Word { get { return word; } }
-        public Sprite                       Shape { get { return shape; } }
+        public string                               Word { get { return word; } }
+        public Sprite                               Shape { get { return shape; } }
     }
 
     #endregion
@@ -73,17 +73,22 @@ public class BattleGame_ColorDissonance : BattleGameControllerBase
     //Called by the True Button's OnClick Behavior
     public void CheckYes()
     {
+        object[] info   = new object[2];
+        info[1]         = (Vector2)doesMatchButton.transform.position;
+
         if (isShapeQuestion)
         {
             if (bottomPanelShapeImage.sprite == shapesAnswerKey.Find(x => x.Word == topPanelText.text).Shape)
             {
-                Signal.Send("Battle", "CorrectResponse");
+                info[0] = AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE;
+                Signal.Send("Battle", "AbilityChargeGenerated", info);
 
                 AudioManager.instance.Play("Go");
             }
             else
             {
-                Signal.Send("Battle", "IncorrectResponse");
+                info[0] = AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE;
+                Signal.Send("Battle", "AbilityChargeGenerated", info);
 
                 AudioManager.instance.Play("No");
             }
@@ -92,13 +97,15 @@ public class BattleGame_ColorDissonance : BattleGameControllerBase
         {
             if (bottomPanelText.color == colorsAnswerKey.Find(x => x.Word == topPanelText.text).Color)
             {
-                Signal.Send("Battle", "CorrectResponse");
+                info[0] = AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE;
+                Signal.Send("Battle", "AbilityChargeGenerated", info);
 
                 AudioManager.instance.Play("Go");
             }
             else
             {
-                Signal.Send("Battle", "IncorrectResponse");
+                info[0] = AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE;
+                Signal.Send("Battle", "AbilityChargeGenerated", info);
 
                 AudioManager.instance.Play("No");
             }
@@ -110,17 +117,22 @@ public class BattleGame_ColorDissonance : BattleGameControllerBase
     //Called by the False Button's OnClick Behavior
     public void CheckNo()
     {
+        object[] info   = new object[2];
+        info[1]         = (Vector2)doesNotMatchButton.transform.position;
+
         if (isShapeQuestion)
         {
             if (bottomPanelShapeImage.sprite != shapesAnswerKey.Find(x => x.Word == topPanelText.text).Shape)
             {
-                Signal.Send("Battle", "CorrectResponse");
+                info[0] = AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE;
+                Signal.Send("Battle", "AbilityChargeGenerated", info);
 
                 AudioManager.instance.Play("Go");
             }
             else
             {
-                Signal.Send("Battle", "IncorrectResponse");
+                info[0] = AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE;
+                Signal.Send("Battle", "AbilityChargeGenerated", info);
 
                 AudioManager.instance.Play("No");
             }
@@ -129,13 +141,15 @@ public class BattleGame_ColorDissonance : BattleGameControllerBase
         {
             if (bottomPanelText.color != colorsAnswerKey.Find(x => x.Word == topPanelText.text).Color)
             {
-                Signal.Send("Battle", "CorrectResponse");
+                info[0] = AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE;
+                Signal.Send("Battle", "AbilityChargeGenerated", info);
 
                 AudioManager.instance.Play("Go");
             }
             else
             {
-                Signal.Send("Battle", "IncorrectResponse");
+                info[0] = AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE;
+                Signal.Send("Battle", "AbilityChargeGenerated", info);
 
                 AudioManager.instance.Play("No");
             }
@@ -155,19 +169,19 @@ public class BattleGame_ColorDissonance : BattleGameControllerBase
             bottomPanelShapeImage.gameObject.SetActive(false);
             bottomPanelText.gameObject.SetActive(true);
 
-            isShapeQuestion             = false;
+            isShapeQuestion                 = false;
 
-            int leftPanelColorIndex     = Random.Range(0, colorsAnswerKey.Count);
-            int leftPanelWordIndex      = Random.Range(0, colorsAnswerKey.Count);
+            int leftPanelColorIndex         = Random.Range(0, colorsAnswerKey.Count);
+            int leftPanelWordIndex          = Random.Range(0, colorsAnswerKey.Count);
 
-            int rightPanelColorIndex    = Random.Range(0, colorsAnswerKey.Count);
-            int rightPanelWordIndex     = Random.Range(0, colorsAnswerKey.Count);
+            int rightPanelColorIndex        = Random.Range(0, colorsAnswerKey.Count);
+            int rightPanelWordIndex         = Random.Range(0, colorsAnswerKey.Count);
 
-            topPanelText.color          = colorsAnswerKey[leftPanelColorIndex].Color;
-            topPanelText.text           = colorsAnswerKey[leftPanelWordIndex].Word;
+            topPanelText.color              = colorsAnswerKey[leftPanelColorIndex].Color;
+            topPanelText.text               = colorsAnswerKey[leftPanelWordIndex].Word;
 
-            bottomPanelText.color       = colorsAnswerKey[rightPanelColorIndex].Color;
-            bottomPanelText.text        = colorsAnswerKey[rightPanelWordIndex].Word;
+            bottomPanelText.color           = colorsAnswerKey[rightPanelColorIndex].Color;
+            bottomPanelText.text            = colorsAnswerKey[rightPanelWordIndex].Word;
         }
         else //Shape
         {

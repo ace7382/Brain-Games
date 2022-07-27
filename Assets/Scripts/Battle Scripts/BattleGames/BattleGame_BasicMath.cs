@@ -90,7 +90,11 @@ public class BattleGame_BasicMath : BattleGameControllerBase
 
         if (currentSolutionTextAsInt == solution)
         {
-            Signal.Send("Battle", "CorrectResponse");
+            object[] info   = new object[2];
+            info[0]         = AbilityCharger.AbilityChargeActions.CORRECT_RESPONSE;
+            info[1]         = (Vector2)equationText.transform.position;
+
+            Signal.Send("Battle", "AbilityChargeGenerated", info);
 
             AudioManager.instance.Play("Go");
 
@@ -98,7 +102,11 @@ public class BattleGame_BasicMath : BattleGameControllerBase
         }
         else
         {
-            Signal.Send("Battle", "IncorrectResponse");
+            object[] info   = new object[2];
+            info[0]         = AbilityCharger.AbilityChargeActions.INCORRECT_RESPONSE;
+            info[1]         = (Vector2)equationText.transform.position;
+
+            Signal.Send("Battle", "AbilityChargeGenerated", info);
 
             AudioManager.instance.Play("No");
 
