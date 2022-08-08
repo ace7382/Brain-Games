@@ -93,7 +93,7 @@ public class PathPuzzleController : MonoBehaviour
 
     public void Setup(Signal signal)
     {
-        currentPPLevel      = (PathPuzzleLevel)GameManager.instance.currentLevelOLD;
+        //currentPPLevel      = (PathPuzzleLevel)GameManager.instance.currentLevelOLD;
 
         currentBoardNum     = -1;
         won                 = false;
@@ -394,7 +394,7 @@ public class PathPuzzleController : MonoBehaviour
         results.subtitleText        = string.Format("Time Remaining {0}:{1}\n{2} pieces traversed!", ts.Minutes.ToString(),
                                       ts.Seconds.ToString("00"), pathPiecesConnected.ToString());
 
-        GameManager.instance.SetLevelResults(results);
+        //GameManager.instance.SetLevelResults(results);
 
         Signal.Send("GameManagement", "LevelEnded", 0);
     }

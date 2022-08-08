@@ -17,7 +17,7 @@ public class MinigameSelectButtonController : MonoBehaviour
         if (!minigame.unlocked)
             return;
 
-        GameManager.instance.SetMinigame(minigame);
+        //GameManager.instance.SetMinigame(minigame);
 
         AudioManager.instance.Play("Button Click");
 

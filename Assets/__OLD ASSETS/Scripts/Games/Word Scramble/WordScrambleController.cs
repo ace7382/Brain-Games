@@ -128,7 +128,7 @@ public class WordScrambleController : MonoBehaviour
         results.successIndicator    = true;
         results.subtitleText        = string.Format("{0} Words Found", currentWordScrambleLevel.foundWords.Count.ToString());
 
-        GameManager.instance.SetLevelResults(results);
+        //GameManager.instance.SetLevelResults(results);
 
         Signal.Send("GameManagement", "LevelEnded", 0);
     }
@@ -137,7 +137,7 @@ public class WordScrambleController : MonoBehaviour
     {
         initialLoad = true;
 
-        currentWordScrambleLevel = (WordScrambleLevel)GameManager.instance.currentLevelOLD;
+        //currentWordScrambleLevel = (WordScrambleLevel)GameManager.instance.currentLevelOLD;
 
         //TODO: Pool these too
         foreach (Transform child in foundWordList.transform)

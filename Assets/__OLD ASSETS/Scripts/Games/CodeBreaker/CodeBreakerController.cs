@@ -126,7 +126,7 @@ public class CodeBreakerController : MonoBehaviour
     {
         EnableScreenItems(true);
 
-        currentCodeBreakerLevel     = (CodeBreakerLevel)GameManager.instance.currentLevelOLD;
+        //currentCodeBreakerLevel     = (CodeBreakerLevel)GameManager.instance.currentLevelOLD;
         attemptNumber               = 0;
         won                         = false;
 
@@ -449,7 +449,7 @@ public class CodeBreakerController : MonoBehaviour
         results.successIndicator    = won;
         results.subtitleText        = string.Format("{0} attempts made!", attemptNumber.ToString());
 
-        GameManager.instance.SetLevelResults(results);
+        //GameManager.instance.SetLevelResults(results);
 
         selectionCursor.SetActive(false);
 

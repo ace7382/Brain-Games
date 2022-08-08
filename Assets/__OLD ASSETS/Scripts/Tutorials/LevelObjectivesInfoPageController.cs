@@ -21,12 +21,12 @@ public class LevelObjectivesInfoPageController : MonoBehaviour
     //Called by the page's OnShow Callback
     public void Setup()
     {
-        objective1Text.text = Helpful.GetLevelObjectiveTitles(GameManager.instance.currentLevelOLD, 1);
-        objective2Text.text = Helpful.GetLevelObjectiveTitles(GameManager.instance.currentLevelOLD, 2);
-        objective3Text.text = Helpful.GetLevelObjectiveTitles(GameManager.instance.currentLevelOLD, 3);
+        //objective1Text.text = Helpful.GetLevelObjectiveTitles(GameManager.instance.currentLevelOLD, 1);
+        //objective2Text.text = Helpful.GetLevelObjectiveTitles(GameManager.instance.currentLevelOLD, 2);
+        //objective3Text.text = Helpful.GetLevelObjectiveTitles(GameManager.instance.currentLevelOLD, 3);
 
-        objective1CompleteMark.GetComponent<Image>().enabled = GameManager.instance.currentLevelOLD.objective1;
-        objective2CompleteMark.GetComponent<Image>().enabled = GameManager.instance.currentLevelOLD.objective2;
-        objective3CompleteMark.GetComponent<Image>().enabled = GameManager.instance.currentLevelOLD.objective3;
+        //objective1CompleteMark.GetComponent<Image>().enabled = GameManager.instance.currentLevelOLD.objective1;
+        //objective2CompleteMark.GetComponent<Image>().enabled = GameManager.instance.currentLevelOLD.objective2;
+        //objective3CompleteMark.GetComponent<Image>().enabled = GameManager.instance.currentLevelOLD.objective3;
     }
 }

@@ -101,7 +101,7 @@ public class TimedTriviaController : MonoBehaviour
 
     public void SetUp(Signal signal)
     {
-        currentTimedTriviaLevel = (TimedTriviaLevel)GameManager.instance.currentLevelOLD;
+        //currentTimedTriviaLevel = (TimedTriviaLevel)GameManager.instance.currentLevelOLD;
         
         if (answer0 != null) { answer0.transform.parent.gameObject.GetComponent<UIButton>().interactable = true; }
         if (answer1 != null) { answer1.transform.parent.gameObject.GetComponent<UIButton>().interactable = true; }
@@ -315,7 +315,7 @@ public class TimedTriviaController : MonoBehaviour
                                       ts.Seconds.ToString("00"), questionsAnsweredCorrectly.ToString()
                                       , currentTimedTriviaLevel.questions.Count.ToString());
 
-        GameManager.instance.SetLevelResults(results);
+        //GameManager.instance.SetLevelResults(results);
 
         Signal.Send("GameManagement", "LevelEnded", 0);
     }

@@ -71,19 +71,19 @@ public class MinigameResultsScreenController : MonoBehaviour
         SetDifficultyBarText();
         StopAllCoroutines();
 
-        //TODO: This formula is overkill. Once the changes are applied while playing the game this complexity won't be needed
-        float fill = (float)(GameManager.instance.currentMinigame.currentDifficultyLevel > GameManager.instance.currentMinigame.maxDifficulty ?
-                    GameManager.instance.currentMinigame.maxDifficulty : GameManager.instance.currentMinigame.currentDifficultyLevel)
-                    / (float)(GameManager.instance.currentMinigame.maxDifficulty);
+        ////TODO: This formula is overkill. Once the changes are applied while playing the game this complexity won't be needed
+        //float fill = (float)(GameManager.instance.currentMinigame.currentDifficultyLevel > GameManager.instance.currentMinigame.maxDifficulty ?
+        //            GameManager.instance.currentMinigame.maxDifficulty : GameManager.instance.currentMinigame.currentDifficultyLevel)
+        //            / (float)(GameManager.instance.currentMinigame.maxDifficulty);
 
-        difficultyBarFillPrimary.fillAmount     = fill;
-        difficultyBarFillSecondary.fillAmount   = fill;
+        //difficultyBarFillPrimary.fillAmount     = fill;
+        //difficultyBarFillSecondary.fillAmount   = fill;
 
-        correctCount.text           = GameManager.instance.currentMinigameResults.numCorrect.ToString();
-        incorrectCount.text         = GameManager.instance.currentMinigameResults.numIncorrect.ToString();
+        //correctCount.text           = GameManager.instance.currentMinigameResults.numCorrect.ToString();
+        //incorrectCount.text         = GameManager.instance.currentMinigameResults.numIncorrect.ToString();
 
-        diff                        = GameManager.instance.currentMinigameResults.numCorrect 
-                                      - GameManager.instance.currentMinigameResults.numIncorrect;
+        //diff                        = GameManager.instance.currentMinigameResults.numCorrect 
+        //                              - GameManager.instance.currentMinigameResults.numIncorrect;
 
         correctCanvasGroup.alpha    = 0;
         incorrectCanvasGroup.alpha  = 0;
@@ -131,13 +131,13 @@ public class MinigameResultsScreenController : MonoBehaviour
         if (!difficultyChanged)
             AwardDifficultyChanges();
 
-        //TODO: reduce this formula complexity based on other TODO's in here
-        float fill = (float)(GameManager.instance.currentMinigame.currentDifficultyLevel > GameManager.instance.currentMinigame.maxDifficulty ?
-            GameManager.instance.currentMinigame.maxDifficulty : GameManager.instance.currentMinigame.currentDifficultyLevel)
-            / (float)(GameManager.instance.currentMinigame.maxDifficulty);
+        ////TODO: reduce this formula complexity based on other TODO's in here
+        //float fill = (float)(GameManager.instance.currentMinigame.currentDifficultyLevel > GameManager.instance.currentMinigame.maxDifficulty ?
+        //    GameManager.instance.currentMinigame.maxDifficulty : GameManager.instance.currentMinigame.currentDifficultyLevel)
+        //    / (float)(GameManager.instance.currentMinigame.maxDifficulty);
 
-        difficultyBarFillPrimary.fillAmount     = fill;
-        difficultyBarFillSecondary.fillAmount   = fill;
+        //difficultyBarFillPrimary.fillAmount     = fill;
+        //difficultyBarFillSecondary.fillAmount   = fill;
 
         SetDifficultyBarText();
     }
@@ -148,27 +148,27 @@ public class MinigameResultsScreenController : MonoBehaviour
 
     private void SetTitleText()
     {
-        //TODO: Add variety based on how well the player did/the overall difficulty etc
-        if (GameManager.instance.currentMinigameResults.numCorrect > GameManager.instance.currentMinigameResults.numIncorrect)
-            title.text = "~Way to Go~";
-        else
-            title.text = "~Nice Try~";
+        ////TODO: Add variety based on how well the player did/the overall difficulty etc
+        //if (GameManager.instance.currentMinigameResults.numCorrect > GameManager.instance.currentMinigameResults.numIncorrect)
+        //    title.text = "~Way to Go~";
+        //else
+        //    title.text = "~Nice Try~";
     }
 
     private void SetDifficultyBarText()
     {
-        if (GameManager.instance.currentMinigame.currentDifficultyLevel >= GameManager.instance.currentMinigame.maxDifficulty)
-        {
-            difficultyBarText.text      = "MAX!!";
-            difficultyBarText.fontSize  = 100;
-            difficultyBarText.margin    = new Vector4(0, 0, 0, -21); //This value is hardcoded based on the current font size.
-        }
-        else
-        {
-            difficultyBarText.text      = GameManager.instance.currentMinigame.currentDifficultyLevel.ToString();
-            difficultyBarText.fontSize  = 36;
-            difficultyBarText.margin    = Vector4.zero;
-        }
+        //if (GameManager.instance.currentMinigame.currentDifficultyLevel >= GameManager.instance.currentMinigame.maxDifficulty)
+        //{
+        //    difficultyBarText.text      = "MAX!!";
+        //    difficultyBarText.fontSize  = 100;
+        //    difficultyBarText.margin    = new Vector4(0, 0, 0, -21); //This value is hardcoded based on the current font size.
+        //}
+        //else
+        //{
+        //    difficultyBarText.text      = GameManager.instance.currentMinigame.currentDifficultyLevel.ToString();
+        //    difficultyBarText.fontSize  = 36;
+        //    difficultyBarText.margin    = Vector4.zero;
+        //}
     }
 
     private IEnumerator MenuAnimation()
@@ -206,8 +206,8 @@ public class MinigameResultsScreenController : MonoBehaviour
     //TODO: Make the changes active while playing the game.
     private void AwardDifficultyChanges()
     {
-        GameManager.instance.currentMinigame.currentDifficultyLevel = Mathf.Clamp(GameManager.instance.currentMinigame.currentDifficultyLevel + diff
-                                                                    , 0, GameManager.instance.currentMinigame.maxDifficulty);
+        //GameManager.instance.currentMinigame.currentDifficultyLevel = Mathf.Clamp(GameManager.instance.currentMinigame.currentDifficultyLevel + diff
+        //                                                            , 0, GameManager.instance.currentMinigame.maxDifficulty);
 
         difficultyChanged = true;
     }
@@ -221,47 +221,49 @@ public class MinigameResultsScreenController : MonoBehaviour
 
     private IEnumerator FirstBarFill()
     {
-        float fill = (float)(GameManager.instance.currentMinigame.currentDifficultyLevel)
-            / (float)(GameManager.instance.currentMinigame.maxDifficulty);
+        //float fill = (float)(GameManager.instance.currentMinigame.currentDifficultyLevel)
+        //    / (float)(GameManager.instance.currentMinigame.maxDifficulty);
 
-        if (diff > 0)
-        {
-            float startMarker   = difficultyBarFillSecondary.fillAmount;
-            float journeyLength = fill - startMarker; //Bar is moving up to show gain
-            float startTime     = Time.time;
+        //if (diff > 0)
+        //{
+        //    float startMarker   = difficultyBarFillSecondary.fillAmount;
+        //    float journeyLength = fill - startMarker; //Bar is moving up to show gain
+        //    float startTime     = Time.time;
 
-            while (difficultyBarFillSecondary.fillAmount != fill)
-            {
-                float distCovered           = (Time.time - startTime) * .15f;
-                float fractionOfJourney     = distCovered / journeyLength;
+        //    while (difficultyBarFillSecondary.fillAmount != fill)
+        //    {
+        //        float distCovered           = (Time.time - startTime) * .15f;
+        //        float fractionOfJourney     = distCovered / journeyLength;
 
-                difficultyBarFillSecondary.fillAmount = Mathf.Lerp(startMarker, fill, fractionOfJourney);
+        //        difficultyBarFillSecondary.fillAmount = Mathf.Lerp(startMarker, fill, fractionOfJourney);
 
-                yield return null;
-            }
+        //        yield return null;
+        //    }
 
-            difficultyBarFillSecondary.fillAmount = fill;
-        }
-        else
-        {
-            difficultyBarFillSecondary.color = Color.red;
+        //    difficultyBarFillSecondary.fillAmount = fill;
+        //}
+        //else
+        //{
+        //    difficultyBarFillSecondary.color = Color.red;
 
-            float startMarker   = difficultyBarFillPrimary.fillAmount;
-            float journeyLength = startMarker - fill; //Bar is moving back to show loss
-            float startTime     = Time.time;
+        //    float startMarker   = difficultyBarFillPrimary.fillAmount;
+        //    float journeyLength = startMarker - fill; //Bar is moving back to show loss
+        //    float startTime     = Time.time;
 
-            while (difficultyBarFillPrimary.fillAmount != fill)
-            {
-                float distCovered           = (Time.time - startTime) * .15f;
-                float fractionOfJourney     = distCovered / journeyLength;
+        //    while (difficultyBarFillPrimary.fillAmount != fill)
+        //    {
+        //        float distCovered           = (Time.time - startTime) * .15f;
+        //        float fractionOfJourney     = distCovered / journeyLength;
 
-                difficultyBarFillPrimary.fillAmount = Mathf.Lerp(startMarker, fill, fractionOfJourney);
+        //        difficultyBarFillPrimary.fillAmount = Mathf.Lerp(startMarker, fill, fractionOfJourney);
 
-                yield return null;
-            }
+        //        yield return null;
+        //    }
 
-            difficultyBarFillPrimary.fillAmount = fill;
-        }
+        //    difficultyBarFillPrimary.fillAmount = fill;
+        //}
+
+        yield return null; //added when removing the above code
     }
 
     private IEnumerator SecondBarFill()

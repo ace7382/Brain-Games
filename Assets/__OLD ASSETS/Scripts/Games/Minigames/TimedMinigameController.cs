@@ -86,7 +86,7 @@ public abstract class TimedMinigameController : MonoBehaviour
         results.numCorrect      = correctResponses;
         results.numIncorrect    = incorrectResponses;
 
-        GameManager.instance.SetMinigameResults(results);
+        //GameManager.instance.SetMinigameResults(results);
 
         Signal.Send("GameManagement", "DisableExitLevelButton", false);
 
@@ -100,7 +100,7 @@ public abstract class TimedMinigameController : MonoBehaviour
     protected virtual void Setup(Signal signal)
     {
         results                         = new MinigameResultsData();
-        results.startingDifficulty      = GameManager.instance.currentMinigame.currentDifficultyLevel;
+        //results.startingDifficulty      = GameManager.instance.currentMinigame.currentDifficultyLevel;
 
         correctResponses                = 0;
         incorrectResponses              = 0;
@@ -108,7 +108,7 @@ public abstract class TimedMinigameController : MonoBehaviour
         exitButtonCanvasGroup.alpha     = 1;
         gameElementsCanvasGroup.alpha   = 1;
 
-        countdownProgress.SetupTimer(GameManager.instance.currentMinigame.timedStartTime);
+        //countdownProgress.SetupTimer(GameManager.instance.currentMinigame.timedStartTime);
 
         Signal.Send("GameManagement", "DisableExitLevelButton", true);
     }

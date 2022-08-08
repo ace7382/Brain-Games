@@ -94,6 +94,8 @@ MonoBehaviour:
       Name: UnloadGameScenes
     - Category: Inventory
       Name: InventoryClosed
+    - Category: Inventory
+      Name: ItemUsed
     - Category: None
       Name: None
     - Category: PartyManagement

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Doozy.Runtime.Signals;
+using System.Linq;
 
 public class PlayerPartyManager : MonoBehaviour
 {
@@ -17,10 +18,25 @@ public class PlayerPartyManager : MonoBehaviour
 
     #endregion
 
+    #region Private Variables
+
+    private Dictionary<Item, int>       partyItems;
+
+    #endregion
+
     #region Signal Variables
 
     private SignalReceiver              partymanagement_awardexperience_receiver;
     private SignalStream                partymanagement_awardexperience_stream;
+
+    #endregion
+
+    #region Public Properties
+
+    public Dictionary<Item, int>        PartyItems          { get { return partyItems; } }
+
+    public List<Unit>                   InjuredPartyMembers { get { return partyBattleUnits.Where(x => x.GetStat(Helpful.StatTypes.MaxHP) != x.CurrentHP).ToList(); } }
+    public List<Unit>                   KOedPartyMembers    { get { return partyBattleUnits.Where(x => x.CurrentHP == 0).ToList(); } }
 
     #endregion
 
@@ -38,6 +54,30 @@ public class PlayerPartyManager : MonoBehaviour
         partymanagement_awardexperience_stream      = SignalStream.Get("PartyManagement", "AwardExperience");
 
         partymanagement_awardexperience_receiver    = new SignalReceiver().SetOnSignalCallback(ProcessEXP);
+
+        partyItems                                  = new Dictionary<Item, int>();
+
+        //TODO - Remove, make "always in inventory" items put 0 in at the start
+        Item c = Resources.Load<Item_Currency>("Scriptable Objects/Items/Coin");
+
+        if (c != null)
+            AddItemToInventory(c, 100);
+
+        c = Resources.Load<Item_Consumable>("Scriptable Objects/Items/Test Consumable");
+
+        if (c != null)
+            AddItemToInventory(c, 1);
+
+        c = Resources.Load<Item_Consumable>("Scriptable Objects/Items/Test Consumable 1");
+
+        if (c != null)
+            AddItemToInventory(c, 2);
+
+        c = Resources.Load<Item_Consumable>("Scriptable Objects/Items/Quarter Healing Potion");
+
+        if (c != null)
+            AddItemToInventory(c, 2);
+        //^^^^^^^^
     }
 
     private void OnEnable()
@@ -65,6 +105,36 @@ public class PlayerPartyManager : MonoBehaviour
     public Unit GetFirstLivingUnit()
     {
         return partyBattleUnits.Find(x => x.CurrentHP > 0);
+    }
+
+    public void AddItemToInventory(Item it, int count)
+    {
+        if (partyItems.ContainsKey(it))
+            partyItems[it] += count;
+        else
+            partyItems.Add(it, count);
+    }
+
+    public void RemoveItemFromInventory(Item it, int count)
+    {
+        if (partyItems.ContainsKey(it))
+        {
+            if (partyItems[it] >= count)
+            {
+                partyItems[it] -= count;
+
+                if (partyItems[it] <= 0 && !it.AlwaysInInventory)
+                    partyItems.Remove(it);
+            }
+        }
+    }
+
+    public int GetInventoryCount(Item i)
+    {
+        if (PartyItems.ContainsKey(i))
+            return PartyItems[i];
+
+        return 0;
     }
 
     #endregion

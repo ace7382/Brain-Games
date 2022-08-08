@@ -22,7 +22,7 @@ public class MainMenuController : MonoBehaviour
         for (int i = 0; i < minigameButtons.Count; i++)
             minigameButtons[i].ShowLockedStatus();
 
-        GameManager.instance.ClearLevelData();
+        //GameManager.instance.ClearLevelData();
 
         leftSideScrollRect.anchoredPosition = Vector3.zero;
     }
