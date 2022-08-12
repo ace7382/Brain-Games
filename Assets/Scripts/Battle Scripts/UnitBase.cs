@@ -8,6 +8,7 @@ public class UnitBase : ScriptableObject
     public List<string>                 abilityNames;
     public Helpful.BattleGameTypes      battleGame;
     public Sprite                       inBattleSprite;
+    public Sprite                       miniSprite;
     public List<TriviaQuestion>         triviaQuestions;
     public List<PathPuzzleBoard>        pathPuzzleBoards;
     public List<ShadowShapePuzzle>      shadowShapePuzzles;

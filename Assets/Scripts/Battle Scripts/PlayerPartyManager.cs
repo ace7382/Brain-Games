@@ -58,25 +58,13 @@ public class PlayerPartyManager : MonoBehaviour
         partyItems                                  = new Dictionary<Item, int>();
 
         //TODO - Remove, make "always in inventory" items put 0 in at the start
-        Item c = Resources.Load<Item_Currency>("Scriptable Objects/Items/Coin");
+        List<Item> c = new List<Item>(Resources.LoadAll<Item>("Scriptable Objects/Items"));
 
-        if (c != null)
-            AddItemToInventory(c, 100);
+        for (int i = 0; i < c.Count; i++)
+        {
+            AddItemToInventory(c[i], Random.Range(1, 6));
+        }
 
-        c = Resources.Load<Item_Consumable>("Scriptable Objects/Items/Test Consumable");
-
-        if (c != null)
-            AddItemToInventory(c, 1);
-
-        c = Resources.Load<Item_Consumable>("Scriptable Objects/Items/Test Consumable 1");
-
-        if (c != null)
-            AddItemToInventory(c, 2);
-
-        c = Resources.Load<Item_Consumable>("Scriptable Objects/Items/Quarter Healing Potion");
-
-        if (c != null)
-            AddItemToInventory(c, 2);
         //^^^^^^^^
     }
 

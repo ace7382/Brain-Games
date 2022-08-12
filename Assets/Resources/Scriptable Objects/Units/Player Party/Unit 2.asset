@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11c8af7e0c004e042ac2d806714e1087, type: 3}
-  m_Name: x_Player Test Unit 1
+  m_Name: Unit 2
   m_EditorClassIdentifier: 
   abilityNames:
-  - Ability_Attack
   - Ability_Attack1
+  - Ability_Attack
+  - Ability_TimedAttack
   battleGame: -999
-  inBattleSprite: {fileID: 21300000, guid: 09618745bf252d248b0d02544bb52aa9, type: 3}
+  inBattleSprite: {fileID: 21300000, guid: 31dd2891b67e7a64d8aeb59996772a7d, type: 3}
+  miniSprite: {fileID: 21300000, guid: 31dd2891b67e7a64d8aeb59996772a7d, type: 3}
   triviaQuestions: []
   pathPuzzleBoards: []
   shadowShapePuzzles: []
-  baseStats: 010000001e00000000000000000000001500000000000000000000000000000000000000
-  statGrowthRates: 030000000300000002000000040000000300000001000000020000000400000005000000
+  baseStats: 010000001400000000000000000000000900000000000000000000000000000000000000
+  statGrowthRates: 050000000200000003000000020000000000000006000000020000000300000003000000

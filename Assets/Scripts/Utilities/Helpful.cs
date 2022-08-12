@@ -23,8 +23,8 @@ public static class Helpful
 
     public enum StatTypes
     {
-        Level           = 0,
-        MaxHP           = 1,
+        [StringValue("")]   Level           = 0,
+        [StringValue("")]    MaxHP           = 1,
         Memory          = 2,
         Observation     = 3,
         Calculation     = 4,

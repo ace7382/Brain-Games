@@ -41,6 +41,4 @@ public class ItemTargetCardController_Unit : MonoBehaviour
     }
 
     #endregion
-
-
 }

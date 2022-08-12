@@ -31,6 +31,11 @@ public class Unit
         get { return battleUnitBase.name; }
     }
 
+    public Sprite MiniSprite
+    {
+        get { return battleUnitBase.miniSprite; }
+    }
+
     public int MaxHP
     {
         get { return stats[Helpful.StatTypes.MaxHP]; }

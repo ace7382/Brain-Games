@@ -11,20 +11,24 @@ public class InventoryScreenController : MonoBehaviour
 {
     #region Inspector Variables
 
+    [Header("Canvas")]
     [SerializeField] private Canvas             canvas;
     
     [Space]
 
+    [Header("Party Member List")]
     [SerializeField] private GameObject         partyMemberCardPrefab;
     [SerializeField] private RectTransform      partyMemberListContainer;
 
     [Space]
 
+    [Header("Inventory List")]
     [SerializeField] private GameObject         itemSlotPrefab;
     [SerializeField] private RectTransform      itemDisplayContainer;
 
     [Space]
 
+    [Header("Item Details View")]
     [SerializeField] private UIView             itemDetailsView;
     [SerializeField] private Image              itemDetailsItemImage;
     [SerializeField] private TextMeshProUGUI    itemDetailsItemNameText;
@@ -32,13 +36,31 @@ public class InventoryScreenController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI    itemDetailsItemCountText;
     [SerializeField] private UIButton           itemDetailsUseItemButton;
     [SerializeField] private TextMeshProUGUI    itemDetailsUseItemButtonText;
-
+    [SerializeField] private UIButton           equipmentDetailsButton;
+    [SerializeField] private UIButton           equipItemButton;
     [Space]
 
+    [Header("Item Target View")]
     [SerializeField] private GameObject         itemTargetCardPrefab_Unit;
     [SerializeField] private UIView             itemTargetView;
     [SerializeField] private RectTransform      itemTargetViewListContainer;
     [SerializeField] private TextMeshProUGUI    itemTargetViewHeaderText;
+
+    [Space]
+
+    [Header("Equipment Details View")]
+    [SerializeField] private UIView             equipmentDetailsView;
+    [SerializeField] private RectTransform      equipmentDetailsCanEquipContainer;
+    [SerializeField] private RectTransform      equipmentDetailsStatChangeContainer;
+    [SerializeField] private RectTransform      equipmentDetailsAdditionalEffectsContainer;
+    [SerializeField] private RectTransform      equipmentDetailsStatRequirementsContainer;
+    [SerializeField] private TextMeshProUGUI    equipmentDetailsStatRequirementsHeader;
+    [SerializeField] private TextMeshProUGUI    equipmentDetailsStatChangeHeader;
+    [SerializeField] private TextMeshProUGUI    equipmentDetailsAdditionalEffectsHeader;
+    [SerializeField] private GameObject         equippableUnitIconPrefab;
+    [SerializeField] private GameObject         statReqPrefab;
+    [SerializeField] private GameObject         statChangePrefab;
+    [SerializeField] private GameObject         additionalEffectPrefab;
 
     #endregion
 
@@ -141,9 +163,14 @@ public class InventoryScreenController : MonoBehaviour
 
         itemDetailsUseItemButton.gameObject.SetActive(true);
         itemDetailsUseItemButton.GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick).Event.RemoveAllListeners();
+        equipmentDetailsButton.GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick).Event.RemoveAllListeners();
 
         if (itemDisplayedOnItemDetails is Item_Consumable)
         {
+            equipItemButton.gameObject.SetActive(false);
+            equipmentDetailsButton.gameObject.SetActive(false);
+            itemDetailsUseItemButton.gameObject.SetActive(true);
+
             Item_Consumable consumable      = (Item_Consumable)itemDisplayedOnItemDetails;
 
             if (consumable.CanUseFromInventory)
@@ -177,11 +204,114 @@ public class InventoryScreenController : MonoBehaviour
         }
         else if (itemDisplayedOnItemDetails is Item_Currency)
         {
+            equipItemButton.gameObject.SetActive(false);
+            equipmentDetailsButton.gameObject.SetActive(false);
+            itemDetailsUseItemButton.gameObject.SetActive(true);
+
             DisableUseItemButton(); //Link to shop?
             itemDetailsUseItemButtonText.text       = "$$$";
         }
+        else if (itemDisplayedOnItemDetails is Item_Equipment)
+        {
+            equipItemButton.gameObject.SetActive(true);
+            equipmentDetailsButton.gameObject.SetActive(true);
+            itemDetailsUseItemButton.gameObject.SetActive(false);
+
+            equipmentDetailsButton.GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick)
+                            .Event.AddListener(delegate { ShowEquipmentDetailView((Item_Equipment)itemDisplayedOnItemDetails); });
+        }
 
         itemDetailsView.Show();
+    }
+
+    //Called by the Equipment Detail Button's OnClick Behavior (added by code though)
+    public void ShowEquipmentDetailView(Item_Equipment eq)
+    {
+        //Can Equip
+        foreach (Transform child in equipmentDetailsCanEquipContainer)
+            Destroy(child.gameObject);
+
+        for (int i = 0; i < eq.EquippableUnits.Count; i++)
+        {
+            int unitIndex = PlayerPartyManager.instance.partyBattleUnits.FindIndex(x => x.Name == eq.EquippableUnits[i]);
+
+            if (eq.EquippableUnits[i] == "ALL")
+            {
+                //TODO: Display "ALL" icon
+                GameObject go = Instantiate(statReqPrefab, equipmentDetailsCanEquipContainer);
+                go.GetComponent<TextMeshProUGUI>().text = "ALL";
+            }
+            else if (unitIndex >= 0)
+            {
+                //TODO: Add mini icon to container
+                GameObject go = Instantiate(equippableUnitIconPrefab, equipmentDetailsCanEquipContainer);
+
+                go.GetComponent<Image>().sprite = PlayerPartyManager.instance.partyBattleUnits[unitIndex].MiniSprite;
+            }
+            else
+            {
+                //TODO: Add ? icon for any equippable characters not yet found
+                GameObject go = Instantiate(statReqPrefab, equipmentDetailsCanEquipContainer);
+                go.GetComponent<TextMeshProUGUI>().text = "?";
+            }
+        }
+
+        //Stat Requirements
+        foreach (Transform child in equipmentDetailsStatRequirementsContainer)
+            Destroy(child.gameObject);
+
+        equipmentDetailsStatRequirementsHeader.gameObject.SetActive(eq.StatReqs.Count > 0);
+        equipmentDetailsStatRequirementsContainer.gameObject.SetActive(eq.StatReqs.Count > 0);
+
+        for (int i = 0; i < eq.StatReqs.Count; i++)
+        {
+            GameObject go = Instantiate(statReqPrefab, equipmentDetailsStatRequirementsContainer);
+
+            go.GetComponent<TextMeshProUGUI>().text = string.Format("{0}: {1}", eq.StatReqs[i].stat.ToString(), eq.StatReqs[i].amount.ToString());
+        }
+
+        //Stat Changes
+        foreach (Transform child in equipmentDetailsStatChangeContainer)
+            Destroy(child.gameObject);
+
+        equipmentDetailsStatChangeHeader.gameObject.SetActive(eq.StatChanges.Count > 0);
+        equipmentDetailsStatChangeContainer.gameObject.SetActive(eq.StatChanges.Count > 0);
+
+        for (int i = 0; i < eq.StatChanges.Count; i++)
+        {
+            GameObject go = Instantiate(statChangePrefab, equipmentDetailsStatChangeContainer);
+
+            TextMeshProUGUI t = go.GetComponent<TextMeshProUGUI>();
+            t.text = string.Format("{0} {1} {2}{3}"
+                                            , eq.StatChanges[i].statAndAmount.stat.ToString()
+                                            , eq.StatChanges[i].statAndAmount.amount > 0 ? "+" : "-"
+                                            , eq.StatChanges[i].statAndAmount.amount.ToString()
+                                            , eq.StatChanges[i].type == Item_Equipment.EquipmentStatChange.EquipmentStatChangeType.Percent ? "%" : ""
+                                            );
+        }
+
+        //Additional Effects
+        foreach (Transform child in equipmentDetailsAdditionalEffectsContainer)
+            Destroy(child.gameObject);
+
+        equipmentDetailsAdditionalEffectsHeader.gameObject.SetActive(eq.AdditionalEffects.Count > 0);
+        equipmentDetailsAdditionalEffectsContainer.gameObject.SetActive(eq.AdditionalEffects.Count > 0);
+
+        for (int i = 0; i < eq.AdditionalEffects.Count; i++)
+        {
+            GameObject go   = Instantiate(additionalEffectPrefab, equipmentDetailsAdditionalEffectsContainer);
+
+            go.GetComponent<TextMeshProUGUI>().text = eq.AdditionalEffects[i];
+        }
+
+        //vvvvv IDFKY but this is needed to make the different sections space out correctly vvvvv
+        ContentSizeFitter c = equipmentDetailsAdditionalEffectsContainer.GetComponent<ContentSizeFitter>();
+        c.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
+        Canvas.ForceUpdateCanvases();
+        c.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+        equipmentDetailsView.Show();
     }
 
     //Called by the HideItemDetailsView Button's OnClick behavior
@@ -200,6 +330,15 @@ public class InventoryScreenController : MonoBehaviour
             return;
 
         itemTargetView.Hide();
+    }
+
+    //Called by the Close Equipment Detail's OnClick Behavior
+    public void HideEquipmentDetailView()
+    {
+        if (!equipmentDetailsView.isVisible)
+            return;
+
+        equipmentDetailsView.Hide();
     }
 
     #endregion
