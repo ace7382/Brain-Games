@@ -33,4 +33,17 @@ public static class Formulas
                 return -9999;
         }
     }
+
+    public static int MultiplyIntByPercentAndTruncate(int i, float percent)
+    {
+        percent *= 100.0f;
+
+        //Debug.Log(string.Format("int: {0}, float: {1}, int * float: {2}, truncated: {3}",
+        //    i.ToString()
+        //    , percent.ToString()
+        //    , (i * percent).ToString()
+        //    , ((int)(i * percent)).ToString()));
+
+        return (int)((i * percent)/100f);
+    }
 }

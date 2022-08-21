@@ -208,7 +208,7 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
         Signal.Send("Battle", "AbilityChargeGenerated", info);
 
         info            = new object[3];
-        info[0]         = Helpful.StatTypes.Responsiveness;
+        info[0]         = Helpful.StatTypes.Speed;
         info[1]         = 1;
         info[2]         = BattleManager.instance.CurrentPlayerUnit.UnitInfo;
 

@@ -8,6 +8,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Consumable", menuName = "New Item - Consumable", order = 42)]
 public class Item_Consumable : Item
 {
+    #region Public Structs
+
+    [System.Serializable]
+    public struct ConsumableStatChange
+    {
+        public bool                 permanentChange;
+        public Helpful.StatTypes    statToChange; //If COUNT then change current hp. TODO: Don't do this lolllllllll
+        public bool                 percentChange;
+        public float                amount;
+    }
+
+    #endregion
+
     #region Inspector Variables
 
     [SerializeField] private bool                       useFromInventory;
@@ -16,13 +29,15 @@ public class Item_Consumable : Item
     [Space]
 
     [SerializeField] private List<string>               onUseActions;
+    [SerializeField] private List<ConsumableStatChange> onUseStatChanges;
 
     #endregion
 
     #region Public Properties
 
-    public bool CanUseFromInventory                     { get { return useFromInventory; } }
-    public bool CanUseFromBattle                        { get { return useFromBattle; } }
+    public bool                                         CanUseFromInventory         { get { return useFromInventory; } }
+    public bool                                         CanUseFromBattle            { get { return useFromBattle; } }
+    public List<ConsumableStatChange>                   OnUseStatChanges            { get { return onUseStatChanges; } }
 
     #endregion
 
@@ -75,10 +90,24 @@ public class Item_Consumable : Item
                 Debug.Log("Item Use Function not found:" + onUseActions[i]);
         }
 
-        object[] info = new object[1];
+        object[] info = new object[2];
         info[0] = this;
+        info[1] = u;
 
         Signal.Send("Inventory", "ItemUsed", info);
+    }
+
+    public int GetStatChangeAmount(Helpful.StatTypes stat, int statBase)
+    {
+        int ind = OnUseStatChanges.FindIndex(x => x.statToChange == stat);
+
+        if (OnUseStatChanges.Count <= 0 || ind < 0)
+            return 0;
+
+        if (!OnUseStatChanges[ind].percentChange)
+            return (int)OnUseStatChanges[ind].amount;
+        else
+            return Formulas.MultiplyIntByPercentAndTruncate(statBase, OnUseStatChanges[ind].amount);
     }
 
     #endregion
@@ -99,13 +128,45 @@ public class Item_Consumable : Item
 
     #region On Use Action Functions - Unit Target
 
-    private void Heal25Percent(Unit u)
+    private void ApplyStatChanges(Unit u)
     {
-        int amountToHeal = (int)(u.MaxHP * .25f);
+        for (int i = 0; i < onUseStatChanges.Count; i++)
+        {
+            //TODO: Make current hp a stat probably
+            int b = onUseStatChanges[i].statToChange == Helpful.StatTypes.COUNT ? u.MaxHP : u.GetStat(onUseStatChanges[i].statToChange);
 
-        u.CurrentHP += amountToHeal;
+            int amountToChangeBy = GetStatChangeAmount(OnUseStatChanges[i].statToChange, b);
 
-        Debug.Log(string.Format("{0} healed {1} HP", u.Name, amountToHeal.ToString()));
+            if (onUseStatChanges[i].permanentChange)
+            {
+                if (onUseStatChanges[i].statToChange == Helpful.StatTypes.COUNT)
+                {
+                    u.CurrentHP += amountToChangeBy;
+                }
+                else
+                {
+                    //Permanent changes to stats are handled by giving the unit EXP equal
+                    //  to the number of stat points that are being awarded
+
+                    if(amountToChangeBy != 0)
+                        if (amountToChangeBy > 0)
+                            u.PermanentlyRaiseStat(onUseStatChanges[i].statToChange, amountToChangeBy);
+                        else
+                            u.PermanentlyLowerStat(onUseStatChanges[i].statToChange, -1 * amountToChangeBy); //needs a positive number to reduce by
+                }
+            }
+            else
+            {
+                //TODO: Allow for temporary/timed/per battle changes
+            }
+        }
+    }
+
+    private void ReviveUnit(Unit u)
+    {
+        //TODO: Not sure i even need a fully separate function if i target the items appropriately
+        //      might change if KO is a full status though
+        ApplyStatChanges(u);
     }
 
     private void RemoveItemWithUnitTargetOnUse(Unit u)

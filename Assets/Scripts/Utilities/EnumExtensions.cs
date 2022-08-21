@@ -25,4 +25,16 @@ public static class EnumExtensions
         // Return the first if there was a match.
         return attribs.Length > 0 ? attribs[0].StringValue : null;
     }
+
+    public static string GetShorthand(this Enum value)
+    {
+        Type type = value.GetType();
+
+        FieldInfo fieldInfo = type.GetField(value.ToString());
+
+        ShorthandValueAttribute[] attribs = fieldInfo.GetCustomAttributes(
+            typeof(ShorthandValueAttribute), false) as ShorthandValueAttribute[];
+
+        return attribs.Length > 0 ? attribs[0].ShorthandValue : null;
+    }
 }

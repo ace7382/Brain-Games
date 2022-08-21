@@ -16,10 +16,10 @@ public class Unit
     private List<Ability>               abilities;
 
     //TODO: This doesn't need to be set in the inspector, just exposing to see easily
-    [SerializeField] private Stats      stats;     
-    [SerializeField] private Stats      EXPstats;     
-    [SerializeField] private Stats      EXPNextLevelValues;     
-    [SerializeField] private Stats      growthRates;     
+    [SerializeField] private Stats      stats;
+    [SerializeField] private Stats      EXPstats;   
+    [SerializeField] private Stats      EXPNextLevelValues;
+    [SerializeField] private Stats      growthRates;
     [SerializeField] private int        currentHP;
 
     #endregion
@@ -160,6 +160,27 @@ public class Unit
         EXPNextLevelValues[statToLevelUp]   = Formulas.GetNextLevelEXP(
                                               (Helpful.StatGrowthRates)growthRates[statToLevelUp]
                                               , stats[statToLevelUp]);
+    }
+
+    public void PermanentlyRaiseStat(Helpful.StatTypes statToRaise, int amountToRaiseBy)
+    {
+        int expToAward = EXPNextLevelValues[statToRaise] - EXPstats[statToRaise];
+
+        for (int i = 1; i < amountToRaiseBy; i++)
+        {
+            expToAward += Formulas.GetNextLevelEXP((Helpful.StatGrowthRates)growthRates[statToRaise], stats[statToRaise] + i);
+        }
+
+        AddEXP(statToRaise, expToAward);
+    }
+
+    public void PermanentlyLowerStat(Helpful.StatTypes statToLower, int amountToLowerBy)
+    {
+        stats[statToLower] = Mathf.Clamp(stats[statToLower] - amountToLowerBy, 0, int.MaxValue);
+
+        EXPstats[statToLower] = 0;
+
+        EXPNextLevelValues[statToLower] = Formulas.GetNextLevelEXP((Helpful.StatGrowthRates)growthRates[statToLower], stats[statToLower]);
     }
 
     #endregion

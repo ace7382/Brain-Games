@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bed75af522093a469ba8b1aea5466da, type: 3}
+  m_Name: A - Everything++
+  m_EditorClassIdentifier: 
+  itemSprite: {fileID: 21300000, guid: 4f902726be4dc6641ae12937596d834a, type: 3}
+  itemDescription: Raises LVL by 1
+  alwaysInInventory: 1
+  target: 1
+  useFromInventory: 1
+  useFromBattle: 1
+  onUseActions:
+  - ApplyStatChanges
+  - RemoveItemWithUnitTargetOnUse
+  onUseStatChanges:
+  - permanentChange: 1
+    statToChange: 2
+    percentChange: 0
+    amount: 5
+  - permanentChange: 1
+    statToChange: 3
+    percentChange: 0
+    amount: 27
+  - permanentChange: 1
+    statToChange: 4
+    percentChange: 0
+    amount: 15
+  - permanentChange: 1
+    statToChange: 5
+    percentChange: 1
+    amount: 0.91
+  - permanentChange: 1
+    statToChange: 6
+    percentChange: 1
+    amount: -0.19
+  - permanentChange: 1
+    statToChange: 7
+    percentChange: 1
+    amount: 0.12
+  - permanentChange: 1
+    statToChange: 9
+    percentChange: 0
+    amount: 15
+  - permanentChange: 1
+    statToChange: 1
+    percentChange: 0
+    amount: -5

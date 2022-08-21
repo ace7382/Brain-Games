@@ -50,8 +50,6 @@ public class CharacterDetailsScreenController : MonoBehaviour
 
         displayedUnit       = u;
 
-        string[] statNames  = System.Enum.GetNames(typeof(Helpful.StatTypes));
-
         for (int i = 0; i < (int)Helpful.StatTypes.COUNT; i++)
         {
             GameObject go                                       = Instantiate(statDetailPrefab, statDetailsListContainer);
@@ -64,7 +62,6 @@ public class CharacterDetailsScreenController : MonoBehaviour
 
             controller.Setup(
                 curretStat
-                , statNames[i]
                 , displayedUnit.GetStat(curretStat)
                 , displayedUnit.GetExpForStat(curretStat)
                 , displayedUnit.GetEXPNextLevelValue(curretStat)

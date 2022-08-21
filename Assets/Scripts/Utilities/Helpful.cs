@@ -23,15 +23,16 @@ public static class Helpful
 
     public enum StatTypes
     {
-        [StringValue("")]   Level           = 0,
-        [StringValue("")]    MaxHP           = 1,
-        Memory          = 2,
-        Observation     = 3,
-        Calculation     = 4,
-        Emotional       = 5,
-        Linguistic      = 6,
-        Responsiveness  = 7,
-        Logic           = 8,
+        //Access attributes with Helpful.StatType.GetStringValue() or .GetShorthand()
+        [StringValue("Level")]              [ShorthandValue("LVL")]     Level           = 0,
+        [StringValue("Mental Health")]      [ShorthandValue("MH")]      MaxHP           = 1,
+        [StringValue("Memory")]             [ShorthandValue("MEM")]     Memory          = 2,
+        [StringValue("Observation")]        [ShorthandValue("OBS")]     Observation     = 3,
+        [StringValue("Math")]               [ShorthandValue("MAT")]     Math            = 4,
+        [StringValue("Language")]           [ShorthandValue("LAN")]     Language        = 5,
+        [StringValue("Speed")]              [ShorthandValue("SPD")]     Speed           = 6,
+        [StringValue("Problem Solving")]    [ShorthandValue("PRB")]     ProblemSolving  = 7,
+        [StringValue("Emotional")]          [ShorthandValue("EMO")]     Emotional       = 8,
 
         COUNT           = 9
     }

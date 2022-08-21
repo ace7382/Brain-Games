@@ -56,16 +56,6 @@ public class PlayerPartyManager : MonoBehaviour
         partymanagement_awardexperience_receiver    = new SignalReceiver().SetOnSignalCallback(ProcessEXP);
 
         partyItems                                  = new Dictionary<Item, int>();
-
-        //TODO - Remove, make "always in inventory" items put 0 in at the start
-        List<Item> c = new List<Item>(Resources.LoadAll<Item>("Scriptable Objects/Items"));
-
-        for (int i = 0; i < c.Count; i++)
-        {
-            AddItemToInventory(c[i], Random.Range(1, 6));
-        }
-
-        //^^^^^^^^
     }
 
     private void OnEnable()
@@ -83,7 +73,27 @@ public class PlayerPartyManager : MonoBehaviour
         for (int i = 0; i < partyBattleUnits.Count; i++)
         {
             partyBattleUnits[i].Init();
+
+            //TODO: Remove this vvvvvv
+
+            object[] data = new object[3];
+            data[0] = Helpful.StatTypes.Level;
+            data[1] = Random.Range(25, 200);
+            data[2] = partyBattleUnits[i];
+
+            Signal.Send("PartyManagement", "AwardExperience", data);
+
+            //^^^^^^^^^^^^^^^^^^^^^^^^
         }
+
+        //TODO - Remove, make "always in inventory" items put 0 in at the start
+        List<Item> c = new List<Item>(Resources.LoadAll<Item>("Scriptable Objects/Items"));
+
+        for (int i = 0; i < c.Count; i++)
+        {
+            AddItemToInventory(c[i], Random.Range(4, 10));
+        }
+        //^^^^^^^^
     }
 
     #endregion

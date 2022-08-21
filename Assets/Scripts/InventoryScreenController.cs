@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class InventoryScreenController : MonoBehaviour
 {
@@ -45,6 +46,7 @@ public class InventoryScreenController : MonoBehaviour
     [SerializeField] private UIView             itemTargetView;
     [SerializeField] private RectTransform      itemTargetViewListContainer;
     [SerializeField] private TextMeshProUGUI    itemTargetViewHeaderText;
+    [SerializeField] private TextMeshProUGUI    itemTargetViewNoTargetsText;
 
     [Space]
 
@@ -69,6 +71,14 @@ public class InventoryScreenController : MonoBehaviour
     private List<PartyMemberCardController>     partyCards;
     private List<ItemSlotController>            itemSlotControllers;
     private Item                                itemDisplayedOnItemDetails;
+
+    #endregion
+
+    #region Private Consts
+
+    private const string                        no_party_members_available_message          = "No Party Members available!";
+    private const string                        no_injured_party_members_available_message  = "No injured Party Members available!";
+    private const string                        no_KOed_party_members_available_message     = "No KOed Party Members available!";
 
     #endregion
 
@@ -347,12 +357,80 @@ public class InventoryScreenController : MonoBehaviour
 
     private void UpdateInventoryPagesOnItemUse(Signal signal)
     {
-        object[] info                   = signal.GetValueUnsafe<object[]>();
-        Item usedItem                   = (Item)info[0];
+        //Signal Data - object[2]
+        //info[0]   -   Item    -   the item used
+        //info[1]   -   Unit    -   the unit that the item was used on. Might be null.
+        //TODO: Maybe do this better when more items are implemented
 
+        object[] info = signal.GetValueUnsafe<object[]>();
+        Item usedItem = (Item)info[0];
+        Unit u = (Unit)info[1];
+
+        StartCoroutine(UpdateInventoryPagesOnItemUseCoroutine(usedItem, u));
+    }
+
+    private IEnumerator UpdateInventoryPagesOnItemUseCoroutine(Item usedItem, Unit u)
+    {
         ItemSlotController slot         = itemSlotControllers.Find(x => x.Item == usedItem);
 
         slot.UpdateCount();
+
+        if (itemTargetView.isVisible)
+        {
+            //1) TODO: block input (probably put up a blank screen). Might make it skip down to part 3 if you click while it's animating
+
+            //-------------------
+
+            //2) Update the Card
+            ItemTargetCardController_Unit card = 
+                itemTargetViewListContainer.GetComponentsInChildren<ItemTargetCardController_Unit>()
+                .ToList<ItemTargetCardController_Unit>().Find(x => x.Unit == u);
+
+            yield return StartCoroutine(card?.UpdateCardOnItemUse()); //We want the animation to finish. 
+            //--------------------
+
+            //3) Check Item Count
+            if (PlayerPartyManager.instance.GetInventoryCount(usedItem) <= 0)
+                itemTargetView.Hide();
+            //--------------------
+
+            //4) Check if the updated card is still a target. "setup" again if it is, if not remove it
+            else
+            {
+                bool keepCard = true;
+
+                switch (usedItem.Target)
+                {
+                    case Item.ItemTarget.PLAYER_UNITS_ALL:
+                        itemTargetViewNoTargetsText.text = no_party_members_available_message;
+                        keepCard = PlayerPartyManager.instance.partyBattleUnits.Contains(u);
+                        break;
+                    case Item.ItemTarget.PLAYER_UNITS_INJURED:
+                        itemTargetViewNoTargetsText.text = no_injured_party_members_available_message;
+                        keepCard = PlayerPartyManager.instance.InjuredPartyMembers.Contains(u);
+                        break;
+                    case Item.ItemTarget.PLAYER_UNITS_KO:
+                        itemTargetViewNoTargetsText.text = no_KOed_party_members_available_message;
+                        keepCard = PlayerPartyManager.instance.KOedPartyMembers.Contains(u);
+                        break;
+                }
+
+                if (keepCard)
+                    card.Setup(card.Unit, usedItem);
+                else
+                {
+                    Destroy(card.gameObject); //TODO: Animate the removal
+
+                    if (itemTargetViewListContainer.childCount == 1) //This should be the card destroyed above, bc it's not removed until end of frame
+                        itemTargetViewListContainer.DetachChildren();
+                }
+            }
+            //-------------------------------
+
+            //5) Put text up to show no target
+            itemTargetViewNoTargetsText.gameObject.SetActive(itemTargetViewListContainer.childCount == 0);
+            //
+        }
 
         if (itemDetailsView.isVisible)
         {
@@ -362,8 +440,8 @@ public class InventoryScreenController : MonoBehaviour
             {
                 if (PlayerPartyManager.instance.GetInventoryCount(itemDisplayedOnItemDetails) <= 0)
                 {
-                    if (itemTargetView.isVisible)
-                        itemTargetView.Hide();
+                    //if (itemTargetView.isVisible) //Moved above
+                    //    itemTargetView.Hide();
 
                     if (!itemDisplayedOnItemDetails.AlwaysInInventory)
                         itemDetailsView.Hide();
@@ -407,12 +485,16 @@ public class InventoryScreenController : MonoBehaviour
         foreach (Transform child in itemTargetViewListContainer.transform)
             Destroy(child.gameObject);
 
+        itemTargetViewListContainer.DetachChildren();
+
         switch (consumable.Target)
         {
             case Item.ItemTarget.no_target:
                 return;
             case Item.ItemTarget.PLAYER_UNITS_KO:
                 {
+                    itemTargetViewNoTargetsText.text = no_KOed_party_members_available_message;
+
                     for (int i = 0; i < PlayerPartyManager.instance.KOedPartyMembers.Count; i++)
                     {
                         GameObject go = Instantiate(itemTargetCardPrefab_Unit, itemTargetViewListContainer);
@@ -428,6 +510,8 @@ public class InventoryScreenController : MonoBehaviour
                 }
             case Item.ItemTarget.PLAYER_UNITS_INJURED:
                 {
+                    itemTargetViewNoTargetsText.text = no_injured_party_members_available_message;
+
                     for (int i = 0; i < PlayerPartyManager.instance.InjuredPartyMembers.Count; i++)
                     {
                         GameObject go = Instantiate(itemTargetCardPrefab_Unit, itemTargetViewListContainer);
@@ -443,6 +527,8 @@ public class InventoryScreenController : MonoBehaviour
                 }
             default: //All Player units
                 {
+                    itemTargetViewNoTargetsText.text = no_party_members_available_message;
+
                     for (int i = 0; i < PlayerPartyManager.instance.partyBattleUnits.Count; i++)
                     {
                         GameObject go = Instantiate(itemTargetCardPrefab_Unit, itemTargetViewListContainer);
@@ -457,6 +543,8 @@ public class InventoryScreenController : MonoBehaviour
                     break;
                 }
         }
+
+        itemTargetViewNoTargetsText.gameObject.SetActive(itemTargetViewListContainer.childCount == 0);
 
         itemTargetView.Show();
     }

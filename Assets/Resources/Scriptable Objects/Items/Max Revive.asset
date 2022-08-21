@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5bed75af522093a469ba8b1aea5466da, type: 3}
-  m_Name: Quarter Healing Potion
+  m_Name: Max Revive
   m_EditorClassIdentifier: 
-  itemSprite: {fileID: 21300000, guid: 4f902726be4dc6641ae12937596d834a, type: 3}
-  itemDescription: Heals 25% of an injured Party Member's Mental Health!
+  itemSprite: {fileID: -4631680838981895749, guid: 559ed859080c7f14b9f666130d3920a8, type: 3}
+  itemDescription: Revive a Party Member with full M. Health
   alwaysInInventory: 0
-  target: 2
+  target: 3
   useFromInventory: 1
   useFromBattle: 1
   onUseActions:
@@ -24,5 +24,5 @@ MonoBehaviour:
   onUseStatChanges:
   - permanentChange: 1
     statToChange: 9
-    percentChange: 1
-    amount: 0.25
+    percentChange: 0
+    amount: 1

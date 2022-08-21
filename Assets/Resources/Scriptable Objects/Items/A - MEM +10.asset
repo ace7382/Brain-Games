@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5bed75af522093a469ba8b1aea5466da, type: 3}
-  m_Name: Quarter Healing Potion
+  m_Name: A - MEM +10
   m_EditorClassIdentifier: 
   itemSprite: {fileID: 21300000, guid: 4f902726be4dc6641ae12937596d834a, type: 3}
-  itemDescription: Heals 25% of an injured Party Member's Mental Health!
-  alwaysInInventory: 0
-  target: 2
+  itemDescription: Raises LVL by 1
+  alwaysInInventory: 1
+  target: 1
   useFromInventory: 1
   useFromBattle: 1
   onUseActions:
@@ -23,6 +23,6 @@ MonoBehaviour:
   - RemoveItemWithUnitTargetOnUse
   onUseStatChanges:
   - permanentChange: 1
-    statToChange: 9
-    percentChange: 1
-    amount: 0.25
+    statToChange: 2
+    percentChange: 0
+    amount: 10
