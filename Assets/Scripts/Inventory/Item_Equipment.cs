@@ -1,3 +1,4 @@
+using Doozy.Runtime.Signals;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,7 +35,8 @@ public class Item_Equipment : Item
 
     [SerializeField] private List<string>               equippableUnits;
     [SerializeField] private List<StatIntCombo>         statReqs;
-    [SerializeField] private List<EquipmentStatChange>  statChanges;
+    //[SerializeField] private List<EquipmentStatChange>  statChanges;
+    [SerializeField] private List<StatModifier>         statModifiers;
     [SerializeField] private List<string>               additionalEffects;
 
     #endregion
@@ -43,8 +45,52 @@ public class Item_Equipment : Item
 
     public List<string>                 EquippableUnits         { get { return equippableUnits; } }
     public List<StatIntCombo>           StatReqs                { get { return statReqs; } }
-    public List<EquipmentStatChange>    StatChanges             { get { return statChanges; } }
+    public List<StatModifier>           StatModifiers           { get { return statModifiers; } }
     public List<string>                 AdditionalEffects       { get { return additionalEffects; } }
+
+    #endregion
+
+    #region Public Functions
+
+    public int GetStatChangeAmount(Helpful.StatTypes stat, int statBase)
+    {
+        int ind = StatModifiers.FindIndex(x => x.StatBeingModified == stat);
+
+        if (StatModifiers.Count <= 0 || ind < 0)
+            return 0;
+
+        return StatModifiers[ind].GetStatChangeAmount(statBase);
+    }
+
+    public void OnEquip(Unit u)
+    {
+        Debug.Log(u.Name + " Equipping " + name);
+
+        for (int i = 0; i < statModifiers.Count;i++)
+        {
+            u.AddStatModifier(statModifiers[i]);
+        }
+
+        object[] info   = new object[2];
+        info[0]         = this;
+        info[1]         = u;
+
+        PlayerPartyManager.instance.RemoveItemFromInventory(this, 1);
+
+        Signal.Send("Inventory", "ItemEquipped", info);
+    }
+
+    public void OnUnequip(Unit u)
+    {
+        Debug.Log(u.Name + " UNequipping " + name);
+
+        for (int i = 0; i < statModifiers.Count; i++)
+        {
+            u.RemoveStatModifier(statModifiers[i]);
+        }
+
+        PlayerPartyManager.instance.AddItemToInventory(this, 1);
+    }
 
     #endregion
 }

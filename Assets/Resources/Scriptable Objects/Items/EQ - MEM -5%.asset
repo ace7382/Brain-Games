@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3325e0ae0ed2a04d96073d8179c103e, type: 3}
-  m_Name: Equipment
+  m_Name: EQ - MEM -5%
   m_EditorClassIdentifier: 
   itemSprite: {fileID: 21300000, guid: e6f4c4b559581e74689ea272621ed349, type: 3}
   itemDescription: 
@@ -25,15 +25,11 @@ MonoBehaviour:
     stat: 1
   - amount: 27
     stat: 5
-  statChanges:
-  - statAndAmount:
-      amount: -15
-      stat: 8
-    type: 1
-  - statAndAmount:
-      amount: 30
-      stat: 2
-    type: 0
+  statModifiers:
+  - statBeingModified: 2
+    percent: 1
+    amount: -5
+    sourceItem: {fileID: 0}
   additionalEffects:
   - 2x Coins From Battles
   - Second Additional Effect

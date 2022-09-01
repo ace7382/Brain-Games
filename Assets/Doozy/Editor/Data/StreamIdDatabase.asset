@@ -95,6 +95,8 @@ MonoBehaviour:
     - Category: Inventory
       Name: InventoryClosed
     - Category: Inventory
+      Name: ItemEquipped
+    - Category: Inventory
       Name: ItemUsed
     - Category: None
       Name: None

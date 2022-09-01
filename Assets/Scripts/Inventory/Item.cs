@@ -13,6 +13,7 @@ public class Item : ScriptableObject
         PLAYER_UNITS_ALL,
         PLAYER_UNITS_INJURED,
         PLAYER_UNITS_KO,
+        PLAYER_UNITS_ALIVE
     }
 
     #endregion

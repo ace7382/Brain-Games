@@ -39,6 +39,7 @@ public class InventoryScreenController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI    itemDetailsUseItemButtonText;
     [SerializeField] private UIButton           equipmentDetailsButton;
     [SerializeField] private UIButton           equipItemButton;
+
     [Space]
 
     [Header("Item Target View")]
@@ -76,9 +77,11 @@ public class InventoryScreenController : MonoBehaviour
 
     #region Private Consts
 
+    private const string                        no_party_members_can_equip_message          = "No Party Members can equip this item!";
     private const string                        no_party_members_available_message          = "No Party Members available!";
     private const string                        no_injured_party_members_available_message  = "No injured Party Members available!";
     private const string                        no_KOed_party_members_available_message     = "No KOed Party Members available!";
+    private const string                        no_alive_party_members_available_message    = "All Party Members are KOed!";
 
     #endregion
 
@@ -86,6 +89,8 @@ public class InventoryScreenController : MonoBehaviour
 
     private SignalReceiver                      inventory_itemused_receiver;
     private SignalStream                        inventory_itemused_stream;
+    private SignalReceiver                      inventory_itemequipped_receiver;
+    private SignalStream                        inventory_itemequipped_stream;
 
     #endregion
 
@@ -109,7 +114,9 @@ public class InventoryScreenController : MonoBehaviour
         itemSlotControllers                     = new List<ItemSlotController>();
 
         inventory_itemused_stream               = SignalStream.Get("Inventory", "ItemUsed");
+        inventory_itemequipped_stream           = SignalStream.Get("Inventory", "ItemEquipped");
         inventory_itemused_receiver             = new SignalReceiver().SetOnSignalCallback(UpdateInventoryPagesOnItemUse);
+        inventory_itemequipped_receiver         = new SignalReceiver().SetOnSignalCallback(UpdateInventoryPagesOnItemEquip);
 
         Setup();
     }
@@ -117,11 +124,13 @@ public class InventoryScreenController : MonoBehaviour
     private void OnEnable()
     {
         inventory_itemused_stream.ConnectReceiver(inventory_itemused_receiver);
+        inventory_itemequipped_stream.ConnectReceiver(inventory_itemequipped_receiver);
     }
 
     private void OnDisable()
     {
         inventory_itemused_stream.DisconnectReceiver(inventory_itemused_receiver);
+        inventory_itemequipped_stream.DisconnectReceiver(inventory_itemequipped_receiver);
     }
 
     #endregion
@@ -172,8 +181,10 @@ public class InventoryScreenController : MonoBehaviour
         itemDetailsItemCountText.text       = PlayerPartyManager.instance.PartyItems[itemDisplayedOnItemDetails].ToString();
 
         itemDetailsUseItemButton.gameObject.SetActive(true);
+
         itemDetailsUseItemButton.GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick).Event.RemoveAllListeners();
         equipmentDetailsButton.GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick).Event.RemoveAllListeners();
+        equipItemButton.GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick).Event.RemoveAllListeners();
 
         if (itemDisplayedOnItemDetails is Item_Consumable)
         {
@@ -196,7 +207,7 @@ public class InventoryScreenController : MonoBehaviour
                     {
                         //Make button Pull up target choice screen
                         itemDetailsUseItemButton.GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick)
-                            .Event.AddListener(delegate { ShowItemTargetView(); });
+                            .Event.AddListener(delegate { ShowItemTargetView_Consumable(); });
                     }
 
                     EnableUseItemButton();
@@ -228,7 +239,10 @@ public class InventoryScreenController : MonoBehaviour
             itemDetailsUseItemButton.gameObject.SetActive(false);
 
             equipmentDetailsButton.GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick)
-                            .Event.AddListener(delegate { ShowEquipmentDetailView((Item_Equipment)itemDisplayedOnItemDetails); });
+                .Event.AddListener(delegate { ShowEquipmentDetailView((Item_Equipment)itemDisplayedOnItemDetails); });
+
+            equipItemButton.GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick)
+                .Event.AddListener(delegate { ShowItemTargetView_Equipment(); });
         }
 
         itemDetailsView.Show();
@@ -253,7 +267,7 @@ public class InventoryScreenController : MonoBehaviour
             }
             else if (unitIndex >= 0)
             {
-                //TODO: Add mini icon to container
+                //TODO: Add mini icon to unit's definition
                 GameObject go = Instantiate(equippableUnitIconPrefab, equipmentDetailsCanEquipContainer);
 
                 go.GetComponent<Image>().sprite = PlayerPartyManager.instance.partyBattleUnits[unitIndex].MiniSprite;
@@ -284,19 +298,19 @@ public class InventoryScreenController : MonoBehaviour
         foreach (Transform child in equipmentDetailsStatChangeContainer)
             Destroy(child.gameObject);
 
-        equipmentDetailsStatChangeHeader.gameObject.SetActive(eq.StatChanges.Count > 0);
-        equipmentDetailsStatChangeContainer.gameObject.SetActive(eq.StatChanges.Count > 0);
+        equipmentDetailsStatChangeHeader.gameObject.SetActive(eq.StatModifiers.Count > 0);
+        equipmentDetailsStatChangeContainer.gameObject.SetActive(eq.StatModifiers.Count > 0);
 
-        for (int i = 0; i < eq.StatChanges.Count; i++)
+        for (int i = 0; i < eq.StatModifiers.Count; i++)
         {
             GameObject go = Instantiate(statChangePrefab, equipmentDetailsStatChangeContainer);
 
             TextMeshProUGUI t = go.GetComponent<TextMeshProUGUI>();
             t.text = string.Format("{0} {1} {2}{3}"
-                                            , eq.StatChanges[i].statAndAmount.stat.ToString()
-                                            , eq.StatChanges[i].statAndAmount.amount > 0 ? "+" : "-"
-                                            , eq.StatChanges[i].statAndAmount.amount.ToString()
-                                            , eq.StatChanges[i].type == Item_Equipment.EquipmentStatChange.EquipmentStatChangeType.Percent ? "%" : ""
+                                            , eq.StatModifiers[i].StatBeingModified.GetStringValue()
+                                            , eq.StatModifiers[i].GetStatChangeAmount() > 0 ? "+" : "-"
+                                            , eq.StatModifiers[i].GetStatChangeAmount().ToString()
+                                            , eq.StatModifiers[i].Percent ? "%" : ""
                                             );
         }
 
@@ -362,9 +376,23 @@ public class InventoryScreenController : MonoBehaviour
         //info[1]   -   Unit    -   the unit that the item was used on. Might be null.
         //TODO: Maybe do this better when more items are implemented
 
-        object[] info = signal.GetValueUnsafe<object[]>();
-        Item usedItem = (Item)info[0];
-        Unit u = (Unit)info[1];
+        object[] info   = signal.GetValueUnsafe<object[]>();
+        Item usedItem   = (Item)info[0];
+        Unit u          = (Unit)info[1];
+
+        StartCoroutine(UpdateInventoryPagesOnItemUseCoroutine(usedItem, u));
+    }
+
+    private void UpdateInventoryPagesOnItemEquip(Signal signal)
+    {
+        //Signal Data - object[2]
+        //info[0]   -   Item    -   the item Equipped
+        //info[1]   -   Unit    -   the unit that the item was used on. Might be null.
+        //TODO: Maybe do this better when more items are implemented
+
+        object[] info   = signal.GetValueUnsafe<object[]>();
+        Item usedItem   = (Item)info[0];
+        Unit u          = (Unit)info[1];
 
         StartCoroutine(UpdateInventoryPagesOnItemUseCoroutine(usedItem, u));
     }
@@ -375,7 +403,7 @@ public class InventoryScreenController : MonoBehaviour
 
         slot.UpdateCount();
 
-        if (itemTargetView.isVisible)
+        if (itemTargetView.isVisible && u != null)
         {
             //1) TODO: block input (probably put up a blank screen). Might make it skip down to part 3 if you click while it's animating
 
@@ -412,6 +440,10 @@ public class InventoryScreenController : MonoBehaviour
                     case Item.ItemTarget.PLAYER_UNITS_KO:
                         itemTargetViewNoTargetsText.text = no_KOed_party_members_available_message;
                         keepCard = PlayerPartyManager.instance.KOedPartyMembers.Contains(u);
+                        break;
+                    case Item.ItemTarget.PLAYER_UNITS_ALIVE:
+                        itemTargetViewNoTargetsText.text = no_alive_party_members_available_message;
+                        keepCard = PlayerPartyManager.instance.AlivePartyMembers.Contains(u);
                         break;
                 }
 
@@ -476,7 +508,40 @@ public class InventoryScreenController : MonoBehaviour
         itemDetailsUseItemButtonText.text       = "Use Item";
     }
 
-    private void ShowItemTargetView()
+    private void ShowItemTargetView_Equipment()
+    {
+        itemTargetViewHeaderText.text   = "Choose " + itemDisplayedOnItemDetails.name + "'s Target";
+
+        Item_Equipment equipment        = (Item_Equipment)itemDisplayedOnItemDetails;
+
+        foreach (Transform child in itemTargetViewListContainer.transform)
+            Destroy(child.gameObject);
+
+        itemTargetViewListContainer.DetachChildren();
+
+        bool all = equipment.EquippableUnits.Contains("ALL");
+
+        for (int i = 0; i < PlayerPartyManager.instance.partyBattleUnits.Count; i++)
+        {
+            if (all || equipment.EquippableUnits.Contains(PlayerPartyManager.instance.partyBattleUnits[i].Name))
+            {
+                GameObject go                           = Instantiate(itemTargetCardPrefab_Unit, itemTargetViewListContainer);
+
+                go.transform.localScale                 = Vector3.one;
+
+                ItemTargetCardController_Unit control   = go.GetComponent<ItemTargetCardController_Unit>();
+
+                control.Setup(PlayerPartyManager.instance.partyBattleUnits[i], equipment);
+            }
+        }
+
+        itemTargetViewNoTargetsText.text = no_party_members_can_equip_message;
+        itemTargetViewNoTargetsText.gameObject.SetActive(itemTargetViewListContainer.childCount == 0);
+
+        itemTargetView.Show();
+    }
+
+    private void ShowItemTargetView_Consumable()
     {
         itemTargetViewHeaderText.text   = "Choose " + itemDisplayedOnItemDetails.name + "'s Target";
 
@@ -521,6 +586,23 @@ public class InventoryScreenController : MonoBehaviour
                         ItemTargetCardController_Unit control = go.GetComponent<ItemTargetCardController_Unit>();
 
                         control.Setup(PlayerPartyManager.instance.InjuredPartyMembers[i], consumable);
+                    }
+
+                    break;
+                }
+            case Item.ItemTarget.PLAYER_UNITS_ALIVE:
+                {
+                    itemTargetViewNoTargetsText.text = no_alive_party_members_available_message;
+
+                    for (int i = 0; i < PlayerPartyManager.instance.AlivePartyMembers.Count; i++)
+                    {
+                        GameObject go = Instantiate(itemTargetCardPrefab_Unit, itemTargetViewListContainer);
+
+                        go.transform.localScale = Vector3.one;
+
+                        ItemTargetCardController_Unit control = go.GetComponent<ItemTargetCardController_Unit>();
+
+                        control.Setup(PlayerPartyManager.instance.AlivePartyMembers[i], consumable);
                     }
 
                     break;

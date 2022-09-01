@@ -34,10 +34,9 @@ public class PlayerPartyManager : MonoBehaviour
     #region Public Properties
 
     public Dictionary<Item, int>        PartyItems          { get { return partyItems; } }
-
     public List<Unit>                   InjuredPartyMembers { get { return partyBattleUnits.Where(x => x.GetStat(Helpful.StatTypes.MaxHP) != x.CurrentHP).ToList(); } }
     public List<Unit>                   KOedPartyMembers    { get { return partyBattleUnits.Where(x => x.CurrentHP == 0).ToList(); } }
-
+    public List<Unit>                   AlivePartyMembers   { get { return partyBattleUnits.Where(x => x.CurrentHP > 0).ToList(); } }
     #endregion
 
     #region Unity Functions
@@ -91,7 +90,7 @@ public class PlayerPartyManager : MonoBehaviour
 
         for (int i = 0; i < c.Count; i++)
         {
-            AddItemToInventory(c[i], Random.Range(4, 10));
+            AddItemToInventory(c[i], Random.Range(1, 3));
         }
         //^^^^^^^^
     }

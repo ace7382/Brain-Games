@@ -29,28 +29,24 @@ MonoBehaviour:
   - permanentChange: 1
     statToChange: 3
     percentChange: 0
-    amount: 27
+    amount: 5
   - permanentChange: 1
     statToChange: 4
     percentChange: 0
-    amount: 15
+    amount: 5
   - permanentChange: 1
     statToChange: 5
-    percentChange: 1
-    amount: 0.91
+    percentChange: 0
+    amount: 5
   - permanentChange: 1
     statToChange: 6
-    percentChange: 1
-    amount: -0.19
+    percentChange: 0
+    amount: 5
   - permanentChange: 1
     statToChange: 7
-    percentChange: 1
-    amount: 0.12
-  - permanentChange: 1
-    statToChange: 9
     percentChange: 0
-    amount: 15
+    amount: 5
   - permanentChange: 1
     statToChange: 1
     percentChange: 0
-    amount: -5
+    amount: 5

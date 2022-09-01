@@ -59,8 +59,9 @@ public class Item_Consumable : Item
                 Debug.Log("Item Use Function not found:" + onUseActions[i]);
         }
 
-        object[] info   = new object[1];
+        object[] info   = new object[2];
         info[0]         = this;
+        info[1]         = null; //The unit target, which is null here
 
         Signal.Send("Inventory", "ItemUsed", info);
     }
@@ -77,8 +78,8 @@ public class Item_Consumable : Item
             return;
 
         Debug.Log(name + ": unit target item used on " + u.Name);
-        //DO everything with unit as parameter
 
+        //Do everything with unit as parameter
         for (int i = 0; i < onUseActions.Count; i++)
         {
             Type thisType = GetType();
@@ -130,10 +131,20 @@ public class Item_Consumable : Item
 
     private void ApplyStatChanges(Unit u)
     {
+        bool levelChanging = false;
+
         for (int i = 0; i < onUseStatChanges.Count; i++)
         {
+            if (onUseStatChanges[i].statToChange == Helpful.StatTypes.Level)
+            {
+                levelChanging = true;
+                continue;
+            }
+
             //TODO: Make current hp a stat probably
-            int b = onUseStatChanges[i].statToChange == Helpful.StatTypes.COUNT ? u.MaxHP : u.GetStat(onUseStatChanges[i].statToChange);
+            int b = onUseStatChanges[i].statToChange == Helpful.StatTypes.COUNT ? 
+                u.GetStatWithMods(Helpful.StatTypes.MaxHP)
+                : u.GetStat(onUseStatChanges[i].statToChange);
 
             int amountToChangeBy = GetStatChangeAmount(OnUseStatChanges[i].statToChange, b);
 
@@ -158,6 +169,57 @@ public class Item_Consumable : Item
             else
             {
                 //TODO: Allow for temporary/timed/per battle changes
+            }
+        }
+
+        //We want level changes to come last because they give exp to other stats, and it could result in inconsistencies if items
+        //aren't declared with the stats in the correct order.
+
+        //EX:
+        //Gives 2 LVL, and + 1 to a stat.
+        //Stat is level 0, needs 3, 5, 10, 15, 25 for levels 0 - 5.
+        //Lvl up gives 5 exp to the stat per LVL, going from lvl 0 >> 2
+        //Stat boost first:
+        //  stat:   0 >> 1  :   +3 EXP
+        //  LVL:    0 >> 1  :   +5 EXP
+        //  LVL:    1 >> 2  :   +10 EXP
+        //  ----------------------------
+        //                      +18EXP
+        //  Stat:   3,  0 exp
+        //
+        //Leveling first:
+        //  LVL:    0 >> 1  :   +5 EXP
+        //  LVL:    1 >> 2  :   +10 EXP
+        //  ----------------------------
+        //                      +15 EXP
+        //  Stat:   2,  7 exp
+        //  stat:   2 >> 3      +10 EXP
+        //  ----------------------------
+        //  Stat:   3, 7 exp    (+25 total EXP)
+        //
+        //Applying levels last does end up giving a lower amount to the player in these cases, but it will probably be easier
+        //to deal with when building.
+
+        if (levelChanging)
+        {
+            ConsumableStatChange c  = onUseStatChanges.Find(x => x.statToChange == Helpful.StatTypes.Level);
+
+            int b                   = u.GetStat(Helpful.StatTypes.Level);
+            int amountToChangeBy    = GetStatChangeAmount(Helpful.StatTypes.Level, b);
+
+            if (c.permanentChange)
+            {
+                if (amountToChangeBy != 0)
+                    if (amountToChangeBy > 0)
+                        u.PermanentlyRaiseStat(Helpful.StatTypes.Level, amountToChangeBy);
+                    else
+                        u.PermanentlyLowerStat(Helpful.StatTypes.Level, -1 * amountToChangeBy);
+            }
+            else
+            {
+                //TODO: Allow for temporary/timed/per battle changes (might not be relevant
+                //      here; not sure what a temp reduced level would do if leveling just gives exp to
+                //      each stat. Might block abilities/skills etc?
             }
         }
     }

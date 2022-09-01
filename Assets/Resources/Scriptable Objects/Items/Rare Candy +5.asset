@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5bed75af522093a469ba8b1aea5466da, type: 3}
-  m_Name: Anti Healing Potion
+  m_Name: Rare Candy +5
   m_EditorClassIdentifier: 
   itemSprite: {fileID: 21300000, guid: 4f902726be4dc6641ae12937596d834a, type: 3}
-  itemDescription: Does 90% of a unit's Max M. Health as damage to the unit
-  alwaysInInventory: 0
-  target: 4
+  itemDescription: Raises LVL by 1
+  alwaysInInventory: 1
+  target: 1
   useFromInventory: 1
   useFromBattle: 1
   onUseActions:
@@ -23,6 +23,6 @@ MonoBehaviour:
   - RemoveItemWithUnitTargetOnUse
   onUseStatChanges:
   - permanentChange: 1
-    statToChange: 9
-    percentChange: 1
-    amount: -0.9
+    statToChange: 0
+    percentChange: 0
+    amount: 5

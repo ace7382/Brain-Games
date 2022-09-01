@@ -10,24 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3325e0ae0ed2a04d96073d8179c103e, type: 3}
-  m_Name: Equipment 3
+  m_Name: EQ - ALL + 5
   m_EditorClassIdentifier: 
   itemSprite: {fileID: 21300000, guid: a3cd23cc112c38944b7e0f98ddaa4ff5, type: 3}
-  itemDescription: 
+  itemDescription: +5 to all stats
   alwaysInInventory: 0
   target: 0
   equippableUnits:
-  - Unit 5
-  statReqs:
-  - amount: 15
-    stat: 0
-  - amount: 5
-    stat: 1
-  - amount: 27
-    stat: 5
-  statChanges: []
-  additionalEffects:
-  - 2x Coins From Battles
-  - Second Additional Effect
-  - Yeet
-  - More effects
+  - ALL
+  statReqs: []
+  statModifiers:
+  - statBeingModified: 1
+    percent: 0
+    amount: 5
+  - statBeingModified: 2
+    percent: 0
+    amount: 5
+  - statBeingModified: 3
+    percent: 0
+    amount: 5
+  - statBeingModified: 4
+    percent: 0
+    amount: 5
+  - statBeingModified: 5
+    percent: 0
+    amount: 5
+  - statBeingModified: 6
+    percent: 0
+    amount: 5
+  - statBeingModified: 7
+    percent: 0
+    amount: 5
+  additionalEffects: []
