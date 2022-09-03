@@ -1,0 +1,22 @@
+Inventory button can be double clicked and cause problems
+
+Inventory scrollview doesn't load scrolled to the top
+
+Inventory Scrollview needs a small offset at the bottom of the list bc the number on item icons goes past the "end"
+
+in Free aspect mode, the battle background and ability scrolls are not in the correct spots. Probably not anchored correctly.
+
+clicking on the back (like not the panel) of an inventory screen should close it
+
+There's a visual jump/awkward placeing of the scroll list when:
+	going to the item target page > scrolling down > going back > opening a different item with a different target list.
+	Should set the scroll view's position to 0 (in code when opening/setting up the list) and the y pivot to 1 (in inspector)
+
+Currently the consumable target page for stat changing items will show values with mods like equipment.
+	So using an item to raise a stat by 10% for a stat with 10 normal points and 10 points raised by equipement 
+	will look like the following:
+	20 >> 21 bc the 10% is being applied to the pre-stat mods value. This just looks incorrect. Probably need a full
+	overhaul of the view to fix this though 🙃. Base stats + stats w/ mods plus probs exp bars too?
+	
+If an item runs out on use, have it pause after updating the cards before it closes everything
+	

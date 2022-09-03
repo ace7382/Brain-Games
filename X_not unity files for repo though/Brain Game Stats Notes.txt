@@ -1,0 +1,376 @@
+'LeVeL - A general indicator of the character's prowess and power
+
+Mental Health (HP)
+
+MEMory - The ability to recall previous information.
+
+OBServation - The ability to notice details and patterns.
+	>> Color Dissonance
+	>> Path Puzzle
+	>> Sequential Numbers
+	>> Shadow Shapes
+
+MATh - The ability to solve problems with numbers.
+	>> Basic Math
+	>> Sequential Numbers
+
+LANguage - The ability to solve problems with words.
+	>> Word Scramble
+	>> (Make a wordle game for passwords vs treasure keys)
+
+SPeeD - The ability to respond quickly and accurately.
+	>> Arrow Swipe
+	>> Color Dissonance
+PRoBlem solving - The ability to find solutions to complex issues.
+	>> Trivia
+	>> Treasure Chest/Mastermind Game
+EMOtional - The ability to control and interpret personal and interpersonal emotions.
+
+=============================================================================
+Big Brain Academy Switch
+
+Identify - How well can you figure something out just by looking at it?
+	>> [Whack Match] Click the popups that match the specified images
+	>> [Species Spotlight] Figure out which icon appears more in a group of things
+	>> [Frame Filler] Find the missing piece of a (moving) image
+	>> [Fast Focus] How quickly can you identify an appearing image?
+
+Memorize - How well can you recall something shown quickly?
+	>> Retype a quickly shown number/character string
+	>> Old Maid style memory match
+	>> Repeat a series of images in revers
+	>> Ball-in-cup game
+
+Analyze - How well can you determine relationships between elements of the puzzle?
+	>> Quickly count cubes in 3D space, even though some may be hidden
+	>> Shown a series of scales, determine which element is heaviest
+	>> Remove tetromino-esque shapes to create a shown shape
+	>> Given a prompt word, click all of the shown images that match the word
+
+Compute - How well can you solve problems using math and numbers?
+	>> [Add Agency] Given many groups of items, determine which groups can be added together to equal a given number
+	>> [Mallet Math] Remove a number from a list to get a specified sum
+	>> [Tick-Tock Turn] Add or subtract time from an analog clock
+	>> [Balloon Burst] Click numbers in order, with decimals negatives and fractions included
+
+Vizualize - How well can you solve a problem using spatial interpretation and reasoning?
+	>> [Get in Shape] Chose the shapes that create a given silhouette
+	>> [Shadow Shift] Chose the shapes that are shown in a moving/rotating/group of shadows
+	>> [Train Turn] Looking at a blank path, determine which direction the next piece of track needs to go to reach the end
+	>> [True View] Shown an object and a camera orientation, chose the correct view shown of the object from the camer's perspective
+=============================================================================
+BrainWars - iPad
+
+(Related stat is best guess)
+
+Speed
+	>> [Rainfall] Move an umbrella to catch water drops and avoid lightning
+Memory
+	>> [Follow the Leader] Blocks appear and you tap them in the order they appeared
+	>> [Unfollow the Leader] Same as above but the opposite order of their appearance
+	>> [Concentration] Old maid style matching (face down, pick two)
+	>> [High or Low] Swipe up if the previously shown number was higher, swipe down if it was lower
+	>> [Tap the Color] Memorize button colors and tap back in order while the colors are hidden
+	>> [Path to Safety] Memorize the placement of bombs and draw a line to the finish while the bombs are hidden
+Judgement
+	>> [Reverse RPS] Like arrow swipe, but win rock paper scissors against green, lose to red
+	>> [Reflection] Tap the spot where a line will end up based on angles of mirrors that it bounces across
+	>> [Rapid Sorting] Swipe left if the symbol matches the previous, swipe right if it differs
+	>> [Spinning Block] Memorize a grid and then recreate it after the grid is rotated
+	>> [Drive the Gear] Choose the gear with the correct teeth to rotate with the given gear
+	>> [Break the Block] Break blocks until a specified shape remains
+	>> [Hexa-Chain] Drag accross hexagons of the same color to raise your score
+Calculation
+	>> [Operations] Choose the correct math operation symbol to solve an equation
+	>> [Simplicity] Basic Math
+	>> [Addition Addiction] Click tiles on a grid to add up to a specified number
+	>> [Addition Link] Drag to connect grid tiles with numbers to add up to a sepcified number
+	>> [Card Calculations] Memorize cards and then choose the solution of adding blue cards or subtracting red cards
+	>> [Make Ten] Given 3 cards choose the combination that added together equal ten
+Observation
+	>> [Touch The Number] Sequential numbers, but color of blocks determines ascending or descending order
+	>> [Touch the Number+] Sequential numbers, but after tapping in order you have to select their sum from a list while the numbers are hidden
+	>> [Matching] Touch matching pairs in a grid
+	>> [Color of Deception] Choose the tile that has a mismatched word + color
+	>> [Bird Watching] Touch the color that appears most on a grid
+	>> [Quick Eye] Touch a matching number/letter on a grid to the displayed one
+	>> [Weathercast] You're given three cards with symbols/colors. If one completely matches the target card touch it, if none match, select one that is a different color AND symbol
+	>> [Missing Piece] Given an incomplete jigsaw, tap the piece that's missing based on the piece's shape
+Accuracy
+	>> [Flick Master] Arrow Swipe
+	>> [Color Switch] Circles of various colros move toward your target circles. Tap the target circles to change their color to match the incoming circles
+=============================================================================
+Lumosity - iPad
+
+Speed
+	>> [Highway Hazards]
+	>> [Penguin Pursuit]
+	>> [River Ranger]
+	>> [Spatial Speed Match]
+	>> [Speed Match]
+	>> [Speed Match Overdrive]
+	>> [Speed Pack]
+	>> [Splitting Seeds]
+Memory
+	>> [Memory Matrix] Works on Spatial Recall. A series of grid tiles will be lit up and then unlit. You must click the previously lit tiles.
+	>> [Memory Match]
+	>> [Memory Match overdrive]
+	>> [Memory Serves]
+	>> [Pinball Recall]
+	***>> [Tidal Treasures] Click a new icon in an increasingly large pool of icons. Each "board" includes mostly previously chosen icons and 1-3 new icons that are correct choices.
+Attention
+	>> [Feel the Beat]
+	>> [Assist Ants]
+	>> [Lost in Migration]
+	>> [Playing Koi]
+	>> [Skyrise]
+	>> [Star Search] Works on Selective Attention. Tap the unique icon on the screen
+	>> [Train of Thought] Use train track switches to direct multiple trains at once to the correct destinations
+	>> [Trouble Brewing] Use 4 simultaneous buttons to respond to coffee orders accurately
+Flexibility
+	>> [Brain Shift]
+	>> [Brain Shift Overdrive]
+	>> [Color Match] Color dissonance
+	>> [Disillusion]
+	>> [Ebb and Flow] Works on Task Switching. Swipe in the direction leaves are moving if they are one color, and swipe in the direction they are pointing if they are a different color
+	>> [Space Trace]
+Problem Solving
+	>> [Masterpiece] Place Shape tiles onto a silohette. Use as few rotations as possible to get a better score.
+	>> [Fuse Clues]
+	>> [Organic Order]
+	>> [Pet Detective]
+	>> [Pirate Passage]
+Math
+	>> [Chalkboard Challenge]
+	>> [Halve Your Cake]
+	>> [Magic Chance]
+	>> [Raindrops] Simple math problems move across the screen. Solve them before enough reach the end.
+	>> [Top That]
+Language
+	>> [Contextual]
+	>> [Continuum]
+	>> [Editor's Choice]
+	>> [Taking Root]
+	>> [Word Bubbles]
+	>> [Word Snatchers] Given a definition and a set of letter tiles, spell the word
+=============================================================================
+Elevate - iPad
+
+Writing
+	>> [Brevity] Click the redundant word/part of the sentence
+	>> [Commas]
+	>> [Detail]
+	>> [Expression] Given comon phrases in a sentance, determine if they are used correctly
+	>> [Inversion]
+	>> [Punctuation]
+	>> [Refinement]
+	>> [Spelling] Given a letter or 2 or "good as is", determine if the blank spacein a word needs to be filled in or is good as is
+	>> [Syntax]
+Speaking
+	>> [Adjective Recall]
+	>> [Clarity]
+	>> [Diction] Determine if the highlighted word is correctly used in the sentence (Grammar more than definition)
+	>> [Eloquence]
+	>> [Error Avoidance]
+	>> [Precision]
+	>> [Pronounciation]
+	>> [Recall] Given a definition, a few starting letters, and a series of letter tiles, use the tiles to finish the word to match teh definition given
+	>> [Transitions]
+Reading
+	>> [Agility] Given a word and a synonym and antonym, need to pick the synonym
+	>> [Association]
+	>> [Comprehension]
+	>> [Connotation]
+	>> [Context]
+	>> [Extraction]
+	>> [Processing]
+	>> [Visualization] Given a word and a collection of images, click the image that depicts the word
+	>> [Word Parts] Given =sections of words and a definition, click the corect parts of the word that make a word to match the definition
+Math
+	>> [Averages]
+	>> [Conversion]
+	>> [Discounting]
+	>> [Division] Just straight up dividing
+	>> [Equivalence] Given a set of percents, decimals, and pie charts, match values that are the same (Ex. 50% and a 4 piece pie chart with 2 filled in)
+	>> [Estimation]
+	>> [Measuring]
+	>> [Percentages] Solve for percent questions (ie What is 10% of 700)
+	>> [Proportion]
+	>> [Purchasing]
+	>> [Subtraction]
+	>> [Tipping]
+Memory
+	>> [Focus]
+	>> [Name Recall]
+	>> [Retention]
+	>> [Sequencing]
+	>> [Synthesis]
+=============================================================================
+BrainGames - iPad
+
+Memory
+	>> [Activation Code]
+	>> [Maze]
+	>> [Navigator]
+	>> [Lights]
+	>> [Squares]
+	>> [Memo] Old Maid style matching
+	>> [Cityscape] Memorize a series of buildings and select them from a series of collection of buildings
+Attention
+	>> [Anagrams]
+	>> [Double]
+	>> [Rabbit Run]
+	>> [Math Match]
+	>> [Fishing] Arrow Swipe, also has multiple "arrows" so a third color is used to swipe in the differing arrow's direction
+Problem Solving
+	>> [Puzzle of Egypt]
+	>> [Flasks] Move colors back and forth between vials until each vial is it's own color
+	>> [Fix the Road]
+	>> [Packing Up]
+	>> [Snipper]
+	>> [Pizzeria]
+Speed
+	>> [Pave a Path] Path puzzle, but just connecting each piece of a path, not start to finish
+	>> [Rainbow]
+	>> [Water Garden]
+=============================================================================
+MindPal - iPad
+
+Speed
+	>> [Flash Words]
+	>> [Pet Sort]
+	>> [Shape Recall]
+	>> [Quick Steps]
+	>> [Color Discs]
+	>> [Speed Recall]
+Memory
+	>> [Memory Board]
+	>> [Sky Stars]
+	>> [Path Finder]
+	>> [Face Match]
+	>> [Back Trace]
+Attention
+	>> [Match Pairs] Given a grid of letters/numbers, click all pairs
+	>> [Unique Shape]
+	>> [Word Search]
+	>> [Missing Piece]
+Flexibility
+	>> [Emoji Switch]
+	>> [The Cube]
+	>> [Color Mix] Color Dissonance
+	>> [Resolve]
+	>> [Food Tiles]
+	>> [Partial Logic]
+Language
+	>> [Word Connect]
+	>> [Letter Pop] Given a set of letters, make a word
+	>> [Definitions]
+	>> [Synonyms]
+Math
+	>> [Order Digits]
+	>> [Math Slider]
+	>> [Pop Sum]
+	>> [Math Cards]
+	>> [Bubble Math]
+Problem Solving
+	>> [Visual Sudoko]
+	>> [Hexa Puzzle]
+	>> [Slicer] Slice a shape down without letting a bouncing ball hit your slicers as the spread out
+	>> [Fit Blocks]
+	>> [One Line] Draw a shape with only 1 line
+	>> [Dots Connect] Flow Free. Connect same color dots on a grid while filing the grid
+
+=============================================================================
+Impulse - iPad
+
+Problem Solving
+	>> [Spy Anagrams] Given a word, pick an answer that is an anagram (all the same letters) from 4 choices
+	***>> [Odd One Out] Given a selection of icons, select the one without a match
+	>> [Sort the Trash]
+	>> [Tricky Patterns]
+	>> [Arrow Direction]
+Memory
+	>> [Hidden Ghosts]
+	>> [Shopping List] Shown a collection of food icons, recall them when shown a larger group of food icons
+	>> [Match the Pair]
+	>> [Pass the Ball]
+	>> [Phone Number]
+	>> [Secret Code]
+	>> [Fresh Item]
+	***>> [Strange Signals] A grid of lights is shown and a sequence will light up and you need to click the lights in the order they lit during the sequence
+Focus
+	>> [Ancient Numbers]
+	>> [Crime Scene] Given a group of items, tap the ones without pairs
+	>> [Treasure Hunt]
+	>> [Identical Items]
+	>> [Missing Number] Given a grid of mixed up numbers and 4 choices, determine which of the choices is missing from the sequence
+	***>> [Fans Count] Given a grid of icons and a specified icon, count how many of the specified icon are in the grid
+Mental Maths
+	>> [Math Audit]
+	>> [Basic Math]
+	>> [Expression Result] Solve math problems
+	***>> [Missing Operator] Given an equation, fill in the missing operator symbol
+	>> [Tricky Percentages]
+	>> [Tasty Fractions]
+Language
+	>> [Words Ninja]
+	>> [Idioms Builder]
+	
+	
+	
+	___________________________
+	
+	Memory
+	Memorize - BBA
+	Memory - BW
+	Memory - Lum
+	Memory - Ele
+	Memory - BG
+	Memory - MP
+	Memory - Imp
+
+Observation
+	Identify - BBA
+	Vizualize - BBA
+	Observation - BW
+	Attention - Lum
+	Attention - BG
+	Attention - MP
+	Focus - Imp
+
+Calculation
+	Compute - BBA
+	Calculation - BW
+	Math - Lum
+	Math - Ele
+	Math - MP
+	Mental Maths - Imp
+
+Language
+	Language - Lum
+	Writing - Ele
+	Speaking - Ele
+	Reading - Ele
+	Language - MP
+	Language - Imp
+
+Responsiveness
+	Speed - BW
+	Speed - Lum
+	Speed - BG
+	Speed - MP
+
+Logic
+	Analyze - BBA
+	Judgement - BW
+	Problem SOlving - Lum
+	Problem Solving - BG
+	Problem Solving - MP
+	Problem Solving - Imp
+
+Emotional
+
+------------
+	Accuracy - BW
+	Flexibility - Lum
+	Flexibility - MP
