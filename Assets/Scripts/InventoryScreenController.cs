@@ -91,6 +91,8 @@ public class InventoryScreenController : MonoBehaviour
     private SignalStream                        inventory_itemused_stream;
     private SignalReceiver                      inventory_itemequipped_receiver;
     private SignalStream                        inventory_itemequipped_stream;
+    private SignalReceiver                      inventory_itemunequipped_receiver;
+    private SignalStream                        inventory_itemunequipped_stream;
 
     #endregion
 
@@ -115,8 +117,10 @@ public class InventoryScreenController : MonoBehaviour
 
         inventory_itemused_stream               = SignalStream.Get("Inventory", "ItemUsed");
         inventory_itemequipped_stream           = SignalStream.Get("Inventory", "ItemEquipped");
+        inventory_itemunequipped_stream         = SignalStream.Get("Inventory", "ItemUnequipped");
         inventory_itemused_receiver             = new SignalReceiver().SetOnSignalCallback(UpdateInventoryPagesOnItemUse);
         inventory_itemequipped_receiver         = new SignalReceiver().SetOnSignalCallback(UpdateInventoryPagesOnItemEquip);
+        inventory_itemunequipped_receiver       = new SignalReceiver().SetOnSignalCallback(UpdateInventorySlotForUnequippedItem);
 
         Setup();
     }
@@ -125,12 +129,14 @@ public class InventoryScreenController : MonoBehaviour
     {
         inventory_itemused_stream.ConnectReceiver(inventory_itemused_receiver);
         inventory_itemequipped_stream.ConnectReceiver(inventory_itemequipped_receiver);
+        inventory_itemunequipped_stream.ConnectReceiver(inventory_itemunequipped_receiver);
     }
 
     private void OnDisable()
     {
         inventory_itemused_stream.DisconnectReceiver(inventory_itemused_receiver);
         inventory_itemequipped_stream.DisconnectReceiver(inventory_itemequipped_receiver);
+        inventory_itemunequipped_stream.DisconnectReceiver(inventory_itemunequipped_receiver);
     }
 
     #endregion
@@ -267,7 +273,7 @@ public class InventoryScreenController : MonoBehaviour
             }
             else if (unitIndex >= 0)
             {
-                //TODO: Add mini icon to unit's definition
+                //TODO: Add mini icon to unit's definition?
                 GameObject go = Instantiate(equippableUnitIconPrefab, equipmentDetailsCanEquipContainer);
 
                 go.GetComponent<Image>().sprite = PlayerPartyManager.instance.partyBattleUnits[unitIndex].MiniSprite;
@@ -291,7 +297,7 @@ public class InventoryScreenController : MonoBehaviour
         {
             GameObject go = Instantiate(statReqPrefab, equipmentDetailsStatRequirementsContainer);
 
-            go.GetComponent<TextMeshProUGUI>().text = string.Format("{0}: {1}", eq.StatReqs[i].stat.ToString(), eq.StatReqs[i].amount.ToString());
+            go.GetComponent<TextMeshProUGUI>().text = string.Format("{0}: {1}", eq.StatReqs[i].stat.GetShorthand(), eq.StatReqs[i].amount.ToString());
         }
 
         //Stat Changes
@@ -387,14 +393,42 @@ public class InventoryScreenController : MonoBehaviour
     {
         //Signal Data - object[2]
         //info[0]   -   Item    -   the item Equipped
-        //info[1]   -   Unit    -   the unit that the item was used on. Might be null.
-        //TODO: Maybe do this better when more items are implemented
+        //info[1]   -   Unit    -   the unit that the item was used on. Might be null
 
         object[] info   = signal.GetValueUnsafe<object[]>();
         Item usedItem   = (Item)info[0];
         Unit u          = (Unit)info[1];
 
         StartCoroutine(UpdateInventoryPagesOnItemUseCoroutine(usedItem, u));
+    }
+
+    private void UpdateInventorySlotForUnequippedItem(Signal signal)
+    {
+        //Signal Data - object[2]
+        //info[0]   -   Item    -   the item Unequipped
+        //info[1]   -   Unit    -   the unit that the item was used on. Might be null.
+
+        object[] info   = signal.GetValueUnsafe<object[]>();
+        Item usedItem   = (Item)info[0];
+        Unit u          = (Unit)info[1];
+
+        ItemSlotController slot = itemSlotControllers.Find(x => x.Item == usedItem);
+
+        if (slot != null)
+        {
+            slot.UpdateCount();
+        }
+        else
+        {
+            //TODO: put this in the correct order after adding it back.
+            GameObject go               = Instantiate(itemSlotPrefab, itemDisplayContainer);
+
+            ItemSlotController control  = go.GetComponent<ItemSlotController>();
+
+            control.Setup(usedItem, PlayerPartyManager.instance.PartyItems[usedItem]);
+
+            itemSlotControllers.Add(control);
+        }
     }
 
     private IEnumerator UpdateInventoryPagesOnItemUseCoroutine(Item usedItem, Unit u)
@@ -427,24 +461,28 @@ public class InventoryScreenController : MonoBehaviour
             {
                 bool keepCard = true;
 
-                switch (usedItem.Target)
+                //Equipment doesn't need to do this check because the only checks for eq don't change on items being equipped/unequipped
+                if (usedItem is Item_Consumable)
                 {
-                    case Item.ItemTarget.PLAYER_UNITS_ALL:
-                        itemTargetViewNoTargetsText.text = no_party_members_available_message;
-                        keepCard = PlayerPartyManager.instance.partyBattleUnits.Contains(u);
-                        break;
-                    case Item.ItemTarget.PLAYER_UNITS_INJURED:
-                        itemTargetViewNoTargetsText.text = no_injured_party_members_available_message;
-                        keepCard = PlayerPartyManager.instance.InjuredPartyMembers.Contains(u);
-                        break;
-                    case Item.ItemTarget.PLAYER_UNITS_KO:
-                        itemTargetViewNoTargetsText.text = no_KOed_party_members_available_message;
-                        keepCard = PlayerPartyManager.instance.KOedPartyMembers.Contains(u);
-                        break;
-                    case Item.ItemTarget.PLAYER_UNITS_ALIVE:
-                        itemTargetViewNoTargetsText.text = no_alive_party_members_available_message;
-                        keepCard = PlayerPartyManager.instance.AlivePartyMembers.Contains(u);
-                        break;
+                    switch (usedItem.Target)
+                    {
+                        case Item.ItemTarget.PLAYER_UNITS_ALL:
+                            itemTargetViewNoTargetsText.text = no_party_members_available_message;
+                            keepCard = PlayerPartyManager.instance.partyBattleUnits.Contains(u);
+                            break;
+                        case Item.ItemTarget.PLAYER_UNITS_INJURED:
+                            itemTargetViewNoTargetsText.text = no_injured_party_members_available_message;
+                            keepCard = PlayerPartyManager.instance.InjuredPartyMembers.Contains(u);
+                            break;
+                        case Item.ItemTarget.PLAYER_UNITS_KO:
+                            itemTargetViewNoTargetsText.text = no_KOed_party_members_available_message;
+                            keepCard = PlayerPartyManager.instance.KOedPartyMembers.Contains(u);
+                            break;
+                        case Item.ItemTarget.PLAYER_UNITS_ALIVE:
+                            itemTargetViewNoTargetsText.text = no_alive_party_members_available_message;
+                            keepCard = PlayerPartyManager.instance.AlivePartyMembers.Contains(u);
+                            break;
+                    }
                 }
 
                 if (keepCard)
@@ -525,13 +563,27 @@ public class InventoryScreenController : MonoBehaviour
         {
             if (all || equipment.EquippableUnits.Contains(PlayerPartyManager.instance.partyBattleUnits[i].Name))
             {
-                GameObject go                           = Instantiate(itemTargetCardPrefab_Unit, itemTargetViewListContainer);
+                bool passesStatReqCheck = true;
 
-                go.transform.localScale                 = Vector3.one;
+                foreach (Item_Equipment.StatIntCombo req in equipment.StatReqs)
+                {
+                    if (PlayerPartyManager.instance.partyBattleUnits[i].GetStat(req.stat) < req.amount)
+                    {
+                        passesStatReqCheck = false;
+                        break;
+                    }
+                }
 
-                ItemTargetCardController_Unit control   = go.GetComponent<ItemTargetCardController_Unit>();
+                if (passesStatReqCheck)
+                {
+                    GameObject go                           = Instantiate(itemTargetCardPrefab_Unit, itemTargetViewListContainer);
 
-                control.Setup(PlayerPartyManager.instance.partyBattleUnits[i], equipment);
+                    go.transform.localScale                 = Vector3.one;
+
+                    ItemTargetCardController_Unit control   = go.GetComponent<ItemTargetCardController_Unit>();
+
+                    control.Setup(PlayerPartyManager.instance.partyBattleUnits[i], equipment);
+                }
             }
         }
 

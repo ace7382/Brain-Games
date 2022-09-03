@@ -71,11 +71,11 @@ public class Item_Equipment : Item
             u.AddStatModifier(statModifiers[i]);
         }
 
-        object[] info   = new object[2];
-        info[0]         = this;
-        info[1]         = u;
-
         PlayerPartyManager.instance.RemoveItemFromInventory(this, 1);
+
+        object[] info = new object[2];
+        info[0] = this;
+        info[1] = u;
 
         Signal.Send("Inventory", "ItemEquipped", info);
     }
@@ -90,6 +90,12 @@ public class Item_Equipment : Item
         }
 
         PlayerPartyManager.instance.AddItemToInventory(this, 1);
+
+        object[] info   = new object[2];
+        info[0]         = this;
+        info[1]         = u;
+
+        Signal.Send("Inventory", "ItemUnequipped", info);
     }
 
     #endregion

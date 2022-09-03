@@ -44,7 +44,7 @@ public class ItemSlotController : MonoBehaviour
         itemCountText.text = PlayerPartyManager.instance.GetInventoryCount(item).ToString();
     }
 
-    //Called by the ItemSlotConroller's OnClick Behavior
+    //Called by the ItemSlotController's OnClick Behavior
     public void OnClick()
     {
         FindObjectOfType<InventoryScreenController>().ShowItemDetailsView(item);

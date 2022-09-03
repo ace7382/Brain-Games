@@ -18,7 +18,11 @@ MonoBehaviour:
   target: 0
   equippableUnits:
   - ALL
-  statReqs: []
+  statReqs:
+  - amount: 2
+    stat: 0
+  - amount: 99
+    stat: 1
   statModifiers:
   - statBeingModified: 1
     percent: 0
