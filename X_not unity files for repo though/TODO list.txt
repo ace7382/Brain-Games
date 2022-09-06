@@ -1,3 +1,10 @@
+======================================COMPLETED======================================
+Something is wonky with the HP bar in battle if you enter battle with an injured unit. I think. Might be something wrong with
+	damage calculations instead? Had a unit that should've take 9 dmg go from full MH of 110 to 23 on the first attack of the battle
+
+=====================================================================================
+
+=========================================OPEN========================================
 Inventory button can be double clicked and cause problems
 
 Inventory scrollview doesn't load scrolled to the top
@@ -15,8 +22,12 @@ There's a visual jump/awkward placeing of the scroll list when:
 Currently the consumable target page for stat changing items will show values with mods like equipment.
 	So using an item to raise a stat by 10% for a stat with 10 normal points and 10 points raised by equipement 
 	will look like the following:
-	20 >> 21 bc the 10% is being applied to the pre-stat mods value. This just looks incorrect. Probably need a full
+	20 >> 21 (instad of >> 22) bc the 10% is being applied to the pre-stat mods value. This just looks incorrect. Probably need a full
 	overhaul of the view to fix this though 🙃. Base stats + stats w/ mods plus probs exp bars too?
 	
 If an item runs out on use, have it pause after updating the cards before it closes everything
-	
+
+Probably will redo the UI anyway, but the party cards don't update the exp/hp bars on item use/equip
+
+=====================================================================================
+

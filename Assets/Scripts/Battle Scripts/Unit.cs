@@ -41,11 +41,6 @@ public class Unit
         get { return battleUnitBase.miniSprite; }
     }
 
-    public int MaxHP
-    {
-        get { return stats[Helpful.StatTypes.MaxHP]; }
-    }
-
     public int CurrentHP
     {
         get { return currentHP; }

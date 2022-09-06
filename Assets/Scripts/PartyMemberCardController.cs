@@ -42,8 +42,8 @@ public class PartyMemberCardController : MonoBehaviour
         characterImage.sprite   = unitToDisplay.InBattleSprite;
         characterName.text      = unitToDisplay.Name;
 
-        hpText.text             = string.Format("{0} / {1}", unitToDisplay.CurrentHP, unitToDisplay.MaxHP);
-        hpBarFill.fillAmount    = unitToDisplay.CurrentHP / unitToDisplay.MaxHP;
+        hpText.text             = string.Format("{0} / {1}", unitToDisplay.CurrentHP, unitToDisplay.GetStatWithMods(Helpful.StatTypes.MaxHP).ToString());
+        hpBarFill.fillAmount    = (float)(unitToDisplay.CurrentHP / unitToDisplay.GetStatWithMods(Helpful.StatTypes.MaxHP));
     }
 
     //Called by OnClick Behavior

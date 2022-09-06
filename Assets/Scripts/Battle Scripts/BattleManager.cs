@@ -204,8 +204,8 @@ public class BattleManager : MonoBehaviour
         enemyNameText.text          = enemyParty[prePanelEnemyDisplayedIndex].Name;
         enemyBattleGameName.text    = enemyParty[prePanelEnemyDisplayedIndex].BattleGameName;
 
-        Signal.Send("Battle", "DisplayMaxHPUpdate", enemyParty[prePanelEnemyDisplayedIndex].MaxHP);
-        Signal.Send("Battle", "DisplayCurrentHPUpdate", enemyParty[prePanelEnemyDisplayedIndex].MaxHP);
+        Signal.Send("Battle", "DisplayMaxHPUpdate", enemyParty[prePanelEnemyDisplayedIndex].GetStatWithMods(Helpful.StatTypes.MaxHP));
+        Signal.Send("Battle", "DisplayCurrentHPUpdate", enemyParty[prePanelEnemyDisplayedIndex].GetStatWithMods(Helpful.StatTypes.MaxHP)); //The HP is always full on the pre-battle screen
 
         nextArrow.SetActive(prePanelEnemyDisplayedIndex != enemyParty.Count - 1);
         previousArrow.SetActive(prePanelEnemyDisplayedIndex > 0);
@@ -237,7 +237,7 @@ public class BattleManager : MonoBehaviour
         playerSprite.sprite = currentPlayerUnitController.UnitInfo.InBattleSprite;
         playerSprite.color  = Color.white;
 
-        Signal.Send("Battle", "PlayerMaxHPUpdate", currentPlayerUnitController.UnitInfo.MaxHP);
+        Signal.Send("Battle", "PlayerMaxHPUpdate", currentPlayerUnitController.UnitInfo.GetStatWithMods(Helpful.StatTypes.MaxHP));
         Signal.Send("Battle", "PlayerCurrentHPUpdate", currentPlayerUnitController.UnitInfo.CurrentHP);
     }
 
@@ -269,7 +269,7 @@ public class BattleManager : MonoBehaviour
         enemySprite.sprite  = currentEnemyUnitController.UnitInfo.InBattleSprite;
         enemySprite.color   = Color.white;
 
-        Signal.Send("Battle", "EnemyMaxHPUpdate", currentEnemyUnitController.UnitInfo.MaxHP);
+        Signal.Send("Battle", "EnemyMaxHPUpdate", currentEnemyUnitController.UnitInfo.GetStatWithMods(Helpful.StatTypes.MaxHP));
         Signal.Send("Battle", "EnemyCurrentHPUpdate", currentEnemyUnitController.UnitInfo.CurrentHP);
     }
 
