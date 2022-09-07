@@ -46,4 +46,13 @@ public static class Formulas
 
         return (int)((i * percent)/100f);
     }
+
+    public static int GetDifficulty(Unit player, Unit enemy)
+    {
+        int ret = 810;
+
+
+
+        return Mathf.Clamp(ret, 0, 1000);
+    }
 }

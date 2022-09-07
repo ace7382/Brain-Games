@@ -12,6 +12,7 @@ public class UnitBase : ScriptableObject
     public List<TriviaQuestion>         triviaQuestions;
     public List<PathPuzzleBoard>        pathPuzzleBoards;
     public List<ShadowShapePuzzle>      shadowShapePuzzles;
+    public int                          difficultyBase;
 
     public int[]                        baseStats       = new int[(int)Helpful.StatTypes.COUNT];
     public Helpful.StatGrowthRates[]    statGrowthRates = new Helpful.StatGrowthRates[(int)Helpful.StatTypes.COUNT];
