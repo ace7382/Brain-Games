@@ -97,6 +97,11 @@ public class Unit
         get { return statModifiers; }
     }
 
+    public int BaseDifficulty
+    { 
+        get { return battleUnitBase.difficultyBase; } 
+    }
+
     #endregion
 
     #region Public Functions

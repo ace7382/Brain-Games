@@ -54,6 +54,7 @@ public static class Helpful
 
     #region Public Functions
 
+    //TODO: Make this an enum extension like GetStringValue and GetShorthand
     public static string GetBattleGameboardLoadingPath(BattleGameTypes gameType)
     {
         switch (gameType)
@@ -78,6 +79,60 @@ public static class Helpful
         }
     }
 
+    public static List<StatTypes> GetStatTypesThatAffectBattleGame(BattleGameTypes gameType)
+    {
+        switch (gameType)
+        {
+            case BattleGameTypes.ArrowSwipe:
+                return new List<StatTypes> 
+                { 
+                    StatTypes.Speed
+                    , StatTypes.Observation 
+                };
+            case BattleGameTypes.ColorDissonance:
+                return new List<StatTypes>
+                {
+                    StatTypes.Speed
+                    , StatTypes.Observation
+                };
+            case BattleGameTypes.SequentialNumbers:
+                return new List<StatTypes>
+                {
+                    StatTypes.Speed
+                    , StatTypes.Observation
+                };
+            case BattleGameTypes.Trivia:
+                return new List<StatTypes>
+                {
+                    StatTypes.Speed
+                    , StatTypes.Observation
+                };
+            case BattleGameTypes.PathPuzzle:
+                return new List<StatTypes>
+                {
+                    StatTypes.Speed
+                    , StatTypes.Observation
+                };
+            case BattleGameTypes.BasicMath:
+                return new List<StatTypes>
+                {
+                    StatTypes.Speed
+                    , StatTypes.Observation
+                };
+            case BattleGameTypes.ShadowShapes:
+                return new List<StatTypes>
+                {
+                    StatTypes.Speed
+                    , StatTypes.Observation
+                };
+            default:
+                Debug.Log("Game Type invalid");
+                return null;
+        }
+    }
+
+    //TODO: Remove this function and add attribute tags to the game types, similar to the stats
+    //      and then use.GetStringValue
     public static string GetStringFromBattleGameType(BattleGameTypes gameType)
     {
         switch (gameType)
@@ -132,6 +187,7 @@ public static class Helpful
         anim.Play();
     }
 
+    //TODO: Remove this
     public static string GetLevelObjectiveTitles(LevelBase level, int objectiveNumber)
     {
         if (level.GetType() == typeof(TimedTriviaLevel))
@@ -223,6 +279,7 @@ public static class Helpful
         return "";
     }
 
+    //TODO: Remove this
     public static int GetGameID(System.Type t)
     {
         if (t == typeof(WordScrambleLevel))

@@ -29,5 +29,11 @@ If an item runs out on use, have it pause after updating the cards before it clo
 
 Probably will redo the UI anyway, but the party cards don't update the exp/hp bars on item use/equip
 
+If an ability charge is flying toward an ability and the owner of that ability dies, the charge's target is destroyed resulting
+	in an error. Doesn't break anything as far as I could tell though.
+		MissingReferenceException: The object of type 'RectTransform' has been destroyed but you are still trying to access it.
+		Your script should either check if it is null or you should not destroy the object.
+		UnityEngine.Transform.get_position () (at <823fb226a3f9439cb41fdcb61f9c86a1>:0)
+		MoveToTarget.Update () (at Assets/Scripts/Utilities/MoveToTarget.cs:23)
 =====================================================================================
 

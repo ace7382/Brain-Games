@@ -57,6 +57,11 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
     private float                               boardXMin;
     private float                               boardXMax;
 
+    private float                               performanceIndex;
+    private float                               performanceTimer;
+
+    private float                               keyArrowSize;
+
     #endregion
 
     #region Unity Functions
@@ -75,21 +80,30 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
         InputManager.instance.OnEndTouch    -= SwipeEnd;
     }
 
+    private void Update()
+    {
+        performanceTimer += Time.deltaTime;
+    }
+
     #endregion
 
     #region Public Functions
 
     public override void StartGame()
     {
-        swiping = false;
+        keyArrowSize                        = arrowImage.GetComponent<RectTransform>().sizeDelta.x;
+        performanceTimer                    = 0f;
+        performanceIndex                    = 0f;
 
-        RectTransform rt = GetComponent<RectTransform>();
+        swiping                             = false;
 
-        boardXMin = rt.TransformPoint(rt.rect.min).x;
-        boardXMax = rt.TransformPoint(rt.rect.max).x;
+        RectTransform rt                    = GetComponent<RectTransform>();
 
-        InputManager.instance.OnStartTouch += SwipeStart;
-        InputManager.instance.OnEndTouch += SwipeEnd;
+        boardXMin                           = rt.TransformPoint(rt.rect.min).x;
+        boardXMax                           = rt.TransformPoint(rt.rect.max).x;
+
+        InputManager.instance.OnStartTouch  += SwipeStart;
+        InputManager.instance.OnEndTouch    += SwipeEnd;
 
         NextArrow();
     }
@@ -158,7 +172,6 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
         trailRenderer.transform.position = position;
         trailCoroutine = trailRenderer.GetComponent<SwipeTrailController>().Trail();
         StartCoroutine(trailCoroutine);
-
     }
 
     private void SwipeEnd(Vector2 position, float time)
@@ -229,7 +242,11 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
         //SetRandomArrowRotation(Random.Range(0, 4));
 
         int difficultyLevel = Formulas.GetDifficulty(BattleManager.instance.CurrentPlayerUnit.UnitInfo
-                                                    , BattleManager.instance.CurrentEnemy.UnitInfo);
+                                                    , BattleManager.instance.CurrentEnemy.UnitInfo
+                                                    , Helpful.BattleGameTypes.ArrowSwipe
+                                                    , performanceIndex);
+        
+        Debug.Log("Difficulty Index: " + difficultyLevel.ToString());
 
         Color[] arrowColors = new Color[3] { Color.green, Color.red, Color.blue };
 
@@ -287,8 +304,6 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
         SetRandomArrowRotation(arrowImage.transform, direct, true); //Set the key arrows rotation
         SetSolution(color);
 
-        Debug.Log(multiArrowBoard);
-
         //Create Multi Arrow board
         if (multiArrowBoard == 0) //Not multi arrow
         {
@@ -324,7 +339,7 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
                 SetRandomArrowRotation(a.transform, eRot);
 
                 a.transform.SetParent(extraArrowContainer);
-                ((RectTransform)a.transform).sizeDelta  = new Vector2(250, 250);
+                ((RectTransform)a.transform).sizeDelta  = new Vector2(keyArrowSize, keyArrowSize);
                 a.transform.localPosition               = arrowPattern.points[i];
                 a.transform.localScale                  = Vector3.one;
             }
@@ -351,7 +366,7 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
                 SetRandomArrowRotation(a.transform, r);
 
                 a.transform.SetParent(extraArrowContainer);
-                ((RectTransform)a.transform).sizeDelta = new Vector2(250, 250);
+                ((RectTransform)a.transform).sizeDelta = new Vector2(keyArrowSize, keyArrowSize);
                 a.transform.localPosition = arrowPattern.points[i];
                 a.transform.localScale = Vector3.one;
             }
@@ -361,6 +376,10 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     private void CorrectSwipe(Vector2 responseChargeOrigin)
     {
+        //Faster responses will make it more difficult more quickly. Might have to tweak these values
+        performanceIndex += 1f - performanceTimer > 1f ? 0f: (performanceTimer * .5f);
+        performanceTimer = 0f;
+
         AudioManager.instance.Play("Go");
 
         object[] info = new object[2];
@@ -381,6 +400,9 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     private void IncorrectSwipe(Vector2 responseChargeOrigin)
     {
+        performanceIndex -= .25f;
+        performanceTimer = 0f;
+
         AudioManager.instance.Play("No");
 
         object[] info = new object[2];
@@ -394,24 +416,24 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     private void SetRandomArrowRotation(Transform tran, int direction, bool keyArrow = false)
     {
-        if (direction == 0) //Default, up
+        if (direction == 0) //Up
         {
-            tran.eulerAngles = new Vector3(0, 0, 0);
+            tran.eulerAngles = new Vector3(0, 0, 90);
             if (keyArrow) arrowDirection = Direction.Up;
         }
-        else if (direction == 1) //Right
+        else if (direction == 1) //Default - Right
         {
-            tran.eulerAngles = new Vector3(0, 0, -90);
+            tran.eulerAngles = new Vector3(0, 0, 0);
             if (keyArrow) arrowDirection = Direction.Right;
         }
         else if (direction == 2) //Down
         {
-            tran.eulerAngles = new Vector3(0, 0, 180);
+            tran.eulerAngles = new Vector3(0, 0, -90);
             if (keyArrow) arrowDirection = Direction.Down;
         }
         else if (direction == 3) //Left
         {
-            tran.eulerAngles = new Vector3(0, 0, 90);
+            tran.eulerAngles = new Vector3(0, 0, 180);
             if (keyArrow) arrowDirection = Direction.Left;
         }
     }
