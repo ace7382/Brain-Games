@@ -104,6 +104,10 @@ MonoBehaviour:
       Name: None
     - Category: PartyManagement
       Name: AwardExperience
+    - Category: PartyManagement
+      Name: EXPAdded
+    - Category: PartyManagement
+      Name: StatLeveledUp
     - Category: PathPuzzle
       Name: PathPuzzleSetup
     - Category: PathPuzzle

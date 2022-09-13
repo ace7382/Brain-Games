@@ -204,21 +204,6 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
     private void ProcessSwipe(Vector2 swipeDirection, Vector2 position)
     {
         float directionThreshold = .9f; //Can be between 0 and 1. Controls how close to the desired value you need to be swiping
-        //Vector2 correctDirection;
-
-        //if (arrowDirection == Direction.Up)
-        //    correctDirection = reverse ? Vector2.down : Vector2.up;
-        //else if (arrowDirection == Direction.Down)
-        //    correctDirection = reverse ? Vector2.up : Vector2.down;
-        //else if (arrowDirection == Direction.Left)
-        //    correctDirection = reverse ? Vector2.right : Vector2.left;
-        //else
-        //    correctDirection = reverse ? Vector2.left : Vector2.right;
-
-        //if (Vector2.Dot(correctDirection, swipeDirection) > directionThreshold)
-        //    CorrectSwipe(position);
-        //else
-        //    IncorrectSwipe(position);
 
         if (upCorrect && Vector2.Dot(Vector2.up, swipeDirection) > directionThreshold)
             CorrectSwipe(position);
@@ -234,12 +219,11 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     private void NextArrow()
     {
+        //TODO: Move single arrows around
+        //TODO: Add moving arrows
+
         foreach (Transform child in extraArrowContainer)
             Destroy(child.gameObject);
-
-        //SetReverse();
-
-        //SetRandomArrowRotation(Random.Range(0, 4));
 
         int difficultyLevel = Formulas.GetDifficulty(BattleManager.instance.CurrentPlayerUnit.UnitInfo
                                                     , BattleManager.instance.CurrentEnemy.UnitInfo
@@ -371,7 +355,6 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
                 a.transform.localScale = Vector3.one;
             }
         }
-
     }
 
     private void CorrectSwipe(Vector2 responseChargeOrigin)
@@ -390,6 +373,13 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
         info = new object[3];
         info[0] = Helpful.StatTypes.Speed;
+        info[1] = 1;
+        info[2] = BattleManager.instance.CurrentPlayerUnit.UnitInfo;
+
+        Signal.Send("PartyManagement", "AwardExperience", info);
+
+        info = new object[3];
+        info[0] = Helpful.StatTypes.Observation;
         info[1] = 1;
         info[2] = BattleManager.instance.CurrentPlayerUnit.UnitInfo;
 
@@ -534,22 +524,6 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
             }
         }
     }
-
-    //private void SetReverse()
-    //{
-    //    int r = Random.Range(0, 2);
-
-    //    reverse = (r == 0);
-
-    //    if (reverse)
-    //    {
-    //        arrowImage.color = Color.red;
-    //    }
-    //    else
-    //    {
-    //        arrowImage.color = Color.green;
-    //    }
-    //}
 
     #endregion
 }

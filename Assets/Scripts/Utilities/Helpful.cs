@@ -32,7 +32,7 @@ public static class Helpful
         [StringValue("Language")]           [ShorthandValue("LAN")]     Language        = 5,
         [StringValue("Speed")]              [ShorthandValue("SPD")]     Speed           = 6,
         [StringValue("Problem Solving")]    [ShorthandValue("PRB")]     ProblemSolving  = 7,
-        [StringValue("Emotional")]          [ShorthandValue("EMO")]     Emotional       = 8,
+        [StringValue("Luck")]               [ShorthandValue("LCK")]     Luck            = 8,
 
         COUNT           = 9
     }

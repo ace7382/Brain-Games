@@ -2260,8 +2260,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f88f41a0a1ed8b341937b7d0a9025733, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  KGHappySolid: {fileID: 12800000, guid: aab8dd3d6bfa8f949903b40f5fc643f2, type: 3}
-  KGHappy: {fileID: 12800000, guid: 532e5093b61d3c245b16b8849e0d0523, type: 3}
+  KGHappySolid: {fileID: 11400000, guid: 78ee1c4ccccf27448b2db34e71ca92a1, type: 2}
+  KGHappy: {fileID: 11400000, guid: f2f87237b5926134286f4cbc6d1707c5, type: 2}
   gameScreenOrderInLayer: 0
   popupScreenOrderInLayer: 10
   statColors:
@@ -2272,8 +2272,9 @@ MonoBehaviour:
   - {r: 0.98160696, g: 1, b: 0, a: 1}
   - {r: 0.46328998, g: 1, b: 0, a: 1}
   - {r: 0, g: 1, b: 0.5827389, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.12531853, b: 1, a: 1}
+  - {r: 0.8860488, g: 0, b: 1, a: 1}
+  - {r: 1, g: 0.57679915, b: 0, a: 1}
 --- !u!1 &965713460
 GameObject:
   m_ObjectHideFlags: 0
@@ -4835,6 +4836,7 @@ MonoBehaviour:
     growthRates:
       _data: 000000000000000000000000000000000000000000000000000000000000000000000000
     currentHP: 0
+    statModifiers: []
   - battleUnitBase: {fileID: 11400000, guid: 9c02074e1e60ad848ae957251f627aa6, type: 2}
     stats:
       _data: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -4845,6 +4847,7 @@ MonoBehaviour:
     growthRates:
       _data: 000000000000000000000000000000000000000000000000000000000000000000000000
     currentHP: 0
+    statModifiers: []
   - battleUnitBase: {fileID: 11400000, guid: b89eff285a88ca046af90dfb5fee1787, type: 2}
     stats:
       _data: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -4855,6 +4858,7 @@ MonoBehaviour:
     growthRates:
       _data: 000000000000000000000000000000000000000000000000000000000000000000000000
     currentHP: 0
+    statModifiers: []
   - battleUnitBase: {fileID: 11400000, guid: 88ba8e6bd94669045ad3be0b4898e8cb, type: 2}
     stats:
       _data: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -4865,6 +4869,7 @@ MonoBehaviour:
     growthRates:
       _data: 000000000000000000000000000000000000000000000000000000000000000000000000
     currentHP: 0
+    statModifiers: []
 --- !u!4 &1880752768
 Transform:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using Doozy.Runtime.Signals;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -200,7 +201,14 @@ public class Unit
 
     public void AddEXP(Helpful.StatTypes s, int amount)
     {
-        EXPstats[s] += amount;
+        object[] info   = new object[3];
+        info[0]         = s;
+        info[1]         = amount;
+        info[2]         = this;
+
+        Signal.Send("PartyManagement", "EXPAdded", info);
+
+        EXPstats[s]     += amount;
 
         while (EXPstats[s] >= EXPNextLevelValues[s])
         {
@@ -210,6 +218,12 @@ public class Unit
 
     public void LevelUpStat(Helpful.StatTypes statToLevelUp)
     {
+        object[] info   = new object[2];
+        info[0]         = statToLevelUp;
+        info[1]         = this;
+
+        Signal.Send("PartyManagement", "StatLeveledUp", info);
+
         stats[statToLevelUp]                += 1;
 
         EXPstats[statToLevelUp]             -= EXPNextLevelValues[statToLevelUp];

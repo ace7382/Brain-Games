@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+//TODO: the BizzyBeeGames.UIAnimations can do all of this and maybe better? idk maybe get rid of this and use those
 public class MoveToTarget : MonoBehaviour
 {
     public RectTransform    target;
@@ -13,10 +14,10 @@ public class MoveToTarget : MonoBehaviour
 
     private Vector3         veloc = Vector3.zero;
 
-    void Update()
+    private void Update()
     {
         if (target == null)
-            Destroy(gameObject);
+            Destroy(gameObject); //TODO: Probably handle this better lol
 
         //transform.position = Vector3.Lerp(transform.position, target.position, 3.5f * Time.deltaTime);
 

@@ -214,9 +214,10 @@ public class MinigameResultsScreenController : MonoBehaviour
 
     private void DiffPopup()
     {
-        Helpful.TextPopup(diff >= 0 ? string.Format("+{0}", diff.ToString()) : string.Format("{0}", diff.ToString())
-            , difficultyBarText.transform, Vector2.zero, diff >= 0 ? Color.green : Color.red
-            , UniversalInspectorVariables.instance.KGHappySolid, (int)(difficultyBarText.fontSize - 5));
+        //REMOVING THIS TO CHANGE THE FONT ASSET. This was still in use in the old code
+        //Helpful.TextPopup(diff >= 0 ? string.Format("+{0}", diff.ToString()) : string.Format("{0}", diff.ToString())
+        //    , difficultyBarText.transform, Vector2.zero, diff >= 0 ? Color.green : Color.red
+        //    , UniversalInspectorVariables.instance.KGHappySolid, (int)(difficultyBarText.fontSize - 5));
     }
 
     private IEnumerator FirstBarFill()

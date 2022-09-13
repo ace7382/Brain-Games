@@ -134,9 +134,11 @@ public class TimedTriviaController : MonoBehaviour
             if (currentQuestionIndex < currentTimedTriviaLevel.questions.Count - 1)
             {
                 countdownClock.AddTime(currentTimedTriviaLevel.secondsGainedForCorrectAnswer);
-                Helpful.TextPopup(string.Format("+{0}s", currentTimedTriviaLevel.secondsGainedForCorrectAnswer.ToString())
-                    , countdownClock.timeDisplay.transform, Vector2.zero, Color.green
-                    , UniversalInspectorVariables.instance.KGHappy, 80);
+
+                ////REMOVING THIS TO CHANGE THE FONT ASSET. This was still in use in the old code
+                //Helpful.TextPopup(string.Format("+{0}s", currentTimedTriviaLevel.secondsGainedForCorrectAnswer.ToString())
+                //    , countdownClock.timeDisplay.transform, Vector2.zero, Color.green
+                //    , UniversalInspectorVariables.instance.KGHappy, 80);
             }
         }
         else
@@ -145,9 +147,11 @@ public class TimedTriviaController : MonoBehaviour
             
             //Getting the last question incorrect will make you lose time though, so you can lose on the last question
             countdownClock.SubtractTime(currentTimedTriviaLevel.secondsLostForWrongAnswer);
-            Helpful.TextPopup(string.Format("-{0}s", currentTimedTriviaLevel.secondsLostForWrongAnswer.ToString())
-                , countdownClock.timeDisplay.transform, Vector2.zero, Color.red
-                , UniversalInspectorVariables.instance.KGHappy, 80);
+
+            //REMOVING THIS TO CHANGE THE FONT ASSET. This was still in use in the old code
+            //Helpful.TextPopup(string.Format("-{0}s", currentTimedTriviaLevel.secondsLostForWrongAnswer.ToString())
+            //    , countdownClock.timeDisplay.transform, Vector2.zero, Color.red
+            //    , UniversalInspectorVariables.instance.KGHappy, 80);
         }
 
         if (countdownClock.SecondsRemaining > 0)
@@ -207,42 +211,44 @@ public class TimedTriviaController : MonoBehaviour
 
     private void ResponsePopup(bool correct, int selection)
     {
-        string t;
-        Vector2 center;
-        Transform tran;
-        Color c;
+        //REMOVING THIS TO CHANGE THE FONT ASSET. This was still in use in the old code
+        //string t;
+        //Vector2 center;
+        //Transform tran;
+        //Color c;
 
-        if (correct)
-        {
-            t = "Correct!";
-            c= Color.green;
-        }
-        else
-        {
-            t = "Wrong";
-            c = Color.red;
-        }
+        //if (correct)
+        //{
+        //    t = "Correct!";
+        //    c= Color.green;
+        //}
+        //else
+        //{
+        //    t = "Wrong";
+        //    c = Color.red;
+        //}
 
-        if (selection == 0)
-        {
-            tran = answer0.transform.parent;
-        }
-        else if (selection == 1)
-        {
-            tran = answer1.transform.parent;
-        }
-        else if (selection == 2)
-        {
-            tran = answer2.transform.parent;
-        }
-        else
-        {
-            tran = answer3.transform.parent;
-        }
+        //if (selection == 0)
+        //{
+        //    tran = answer0.transform.parent;
+        //}
+        //else if (selection == 1)
+        //{
+        //    tran = answer1.transform.parent;
+        //}
+        //else if (selection == 2)
+        //{
+        //    tran = answer2.transform.parent;
+        //}
+        //else
+        //{
+        //    tran = answer3.transform.parent;
+        //}
 
-        center = new Vector2(0f, 40f);
+        //center = new Vector2(0f, 40f);
 
-        Helpful.TextPopup(t, tran, center, c, UniversalInspectorVariables.instance.KGHappy, 80);
+
+        //Helpful.TextPopup(t, tran, center, c, UniversalInspectorVariables.instance.KGHappy, 80);
     }
 
     private void Pause(Signal signal)

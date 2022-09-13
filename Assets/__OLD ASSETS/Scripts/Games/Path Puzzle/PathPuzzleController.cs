@@ -217,11 +217,12 @@ public class PathPuzzleController : MonoBehaviour
                 pathPiecesConnected += checkedSet.Count;
                 SetConnectionCounter();
 
-                Helpful.TextPopup(string.Format("+{0}", checkedSet.Count.ToString())
-                    , connectionCounter.transform
-                    , Vector2.zero
-                    , Color.green, UniversalInspectorVariables.instance.KGHappySolid
-                    , 80);
+                ////REMOVING THIS TO CHANGE THE FONT ASSET. This was still in use in the old code
+                //Helpful.TextPopup(string.Format("+{0}", checkedSet.Count.ToString())
+                //    , connectionCounter.transform
+                //    , Vector2.zero
+                //    , Color.green, UniversalInspectorVariables.instance.KGHappySolid
+                //    , 80);
 
                 StartCoroutine(AnimateBoardEnding());
             }

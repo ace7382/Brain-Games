@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UniversalInspectorVariables : MonoBehaviour
 {
     public static UniversalInspectorVariables instance = null;
 
-    public Font             KGHappySolid;
-    public Font             KGHappy;
+    public TMP_FontAsset    KGHappySolid;
+    public TMP_FontAsset    KGHappy;
     public int              gameScreenOrderInLayer;
     public int              popupScreenOrderInLayer;
     public List<Color>      statColors;
