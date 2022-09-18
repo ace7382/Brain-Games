@@ -94,10 +94,10 @@ public class ItemTargetCardController_Unit : MonoBehaviour
         levelLabel.text                         = "LVL " + unit.GetStat(Helpful.StatTypes.Level).ToString();
 
         levelExpBarProgressor.toValue           = unit.GetEXPNextLevelValue(Helpful.StatTypes.Level);
-        levelExpBarProgressor.fromValue         = 0;
+        levelExpBarProgressor.fromValue         = 0f;
         levelExpBarTextProgressorTarget.suffix  = " / " + unit.GetEXPNextLevelValue(Helpful.StatTypes.Level).ToString();
 
-        levelExpBarProgressor.SetValueAt(0); //This is needed for it to set the fill correctly on the next line
+        levelExpBarProgressor.SetValueAt(0f); //This is needed for it to set the fill correctly on the next line
         levelExpBarProgressor.SetValueAt(unit.GetExpForStat(Helpful.StatTypes.Level));
 
         levelExpSecondaryFillBar.fillAmount     = 0f;
@@ -112,6 +112,7 @@ public class ItemTargetCardController_Unit : MonoBehaviour
         mHealthSecondaryFillBar.fillAmount      = 0f;
 
         //TODO: Maybe alphabatize these? currently just in the arbitrary order set up in the enum
+        //TODO: Add Luck lolllllllll
         stat1Label.text                         = Helpful.StatTypes.Memory.GetShorthand();
         stat1Current.text                       = unit.GetStatWithMods(Helpful.StatTypes.Memory).ToString();
 

@@ -2,6 +2,7 @@ using BizzyBeeGames;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -359,6 +360,43 @@ public static class Helpful
         Type t = Type.GetType(strFullyQualifiedName);
         
         return Activator.CreateInstance(t);
+    }
+
+    //TODO: This is basically the same function but less useful. Combine with ItemTargetCardController_Unit.UpdateStatValue
+    public static IEnumerator IncreaseDisplayNumberOverTime(TextMeshProUGUI displayText, int startValue, int endValue, string prefix, string suffix, float time)
+    {
+        if (startValue >= endValue)
+        {
+            Debug.LogWarning("Start Value is larger than or equal to End Value");
+            yield break;
+        }
+
+        int currentValue        = startValue;
+        WaitForSeconds ticktime = new WaitForSeconds(time / (endValue - startValue));
+
+        while (currentValue < endValue)
+        {
+            currentValue++;
+            displayText.text = String.Format("{0}{1}{2}", prefix, currentValue.ToString(), suffix);
+            yield return ticktime;
+        }
+    }
+
+    public static IEnumerator FadeGraphicIn(Graphic g, float time)
+    {
+        Color startColor    = g.color;
+        Color goalColor     = new Color(g.color.r, g.color.g, g.color.b, 1f);
+        float elapsedTime   = 0f;
+
+        while (elapsedTime < time)
+        {
+            g.color = Color.Lerp(startColor, goalColor, elapsedTime / time);
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+
+        g.color = goalColor;
     }
 
     #endregion

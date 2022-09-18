@@ -1,3 +1,5 @@
+using BizzyBeeGames;
+using Doozy.Runtime.Reactor;
 using Doozy.Runtime.Signals;
 using Doozy.Runtime.UIManager.Components;
 using System.Collections;
@@ -14,83 +16,132 @@ public class BattleManager : MonoBehaviour
 
     #endregion
 
+    #region Private Structs
+
+    private struct UnitStat
+    {
+        public Helpful.StatTypes    statType;
+        public Unit                 unit;
+    }
+
+    private struct PreBattleStats
+    {
+        public Unit                 unit;
+        public Helpful.StatTypes    statType;
+        public int                  statLevelWithMods;
+        public int                  statLevelWithoutMods;
+        public int                  exp;
+        public int                  nextExp;
+
+        public PreBattleStats(Unit u, Helpful.StatTypes s, int levWithMods, int levNoMods, int e, int nex)
+        {
+            unit                    = u;
+            statType                = s;
+            statLevelWithMods       = levWithMods;
+            statLevelWithoutMods    = levNoMods;
+            exp                     = e;
+            nextExp                 = nex;
+        }
+    }
+
+    #endregion
+
     #region Inspector Variables
 
     [Space]
 
     [Header("Prefabs")]
-    [SerializeField] private GameObject             abilityButtonPrefab;
-    [SerializeField] private GameObject             abilityButtonChargeMarkerPrefab;
-    [SerializeField] private GameObject             abilityButtonTimerBarPrefab;
+    [SerializeField] private GameObject                 abilityButtonPrefab;
+    [SerializeField] private GameObject                 abilityButtonChargeMarkerPrefab;
+    [SerializeField] private GameObject                 abilityButtonTimerBarPrefab;
+    [SerializeField] private GameObject                 itemSlot;   
 
     [Space]
 
     [Header("Variables")]
-    [SerializeField] private RectTransform          gameBoardRectTrans;
-    [SerializeField] private BattleUnitController   currentPlayerUnitController;
-    [SerializeField] private BattleUnitController   currentEnemyUnitController;
-    [SerializeField] private RectTransform          playerAbilityButtonPanel;
-    [SerializeField] private RectTransform          enemyAbilityButtonPanel;
-    [SerializeField] private Image                  playerSprite;
-    [SerializeField] private Image                  enemySprite;
+    [SerializeField] private RectTransform              gameBoardRectTrans;
+    [SerializeField] private RectTransform              gameBoardBGRectTrans;
+    [SerializeField] private BattleUnitController       currentPlayerUnitController;
+    [SerializeField] private BattleUnitController       currentEnemyUnitController;
+    [SerializeField] private RectTransform              playerAbilityButtonPanel;
+    [SerializeField] private RectTransform              enemyAbilityButtonPanel;
+    [SerializeField] private Image                      playerSprite;
+    [SerializeField] private Image                      enemySprite;
 
     [Space]
 
     [Header("Pre Battle Screen")]
-    [SerializeField] private GameObject             preBattleScreen;
-    [SerializeField] private Image                  enemyPreBattleImage;
-    [SerializeField] private TextMeshProUGUI        enemyCountText;
-    [SerializeField] private TextMeshProUGUI        enemyNameText;
-    [SerializeField] private TextMeshProUGUI        enemyBattleGameName;
-    [SerializeField] private GameObject             previousArrow;
-    [SerializeField] private GameObject             nextArrow;
+    [SerializeField] private GameObject                 preBattleScreen;
+    [SerializeField] private Image                      enemyPreBattleImage;
+    [SerializeField] private TextMeshProUGUI            enemyCountText;
+    [SerializeField] private TextMeshProUGUI            enemyNameText;
+    [SerializeField] private TextMeshProUGUI            enemyBattleGameName;
+    [SerializeField] private GameObject                 previousArrow;
+    [SerializeField] private GameObject                 nextArrow;
+
+    [Space]
+
+    [Header("Post Battle Screen")]
+    [SerializeField] private GameObject                 postBattleScreen;
+    [SerializeField] private TextMeshProUGUI            postBattleScreenVictoryDefeatText;
+    [SerializeField] private TextMeshProUGUI[]          postBattleScreenSectionLabels;
+    [SerializeField] private TextMeshProUGUI[]          postBattleScreenExpBarLevels;
+    [SerializeField] private TextMeshProUGUI[]          postBattleScreenExpBarAdds;
+    [SerializeField] private Progressor[]               postBattleScreenExpBarProgressors;
+    [SerializeField] private RectTransform              postBattleScreenEnemiesDefeatedContainer;
+    [SerializeField] private RectTransform              postBattleScreenItemRewardContainer;
 
     [Space]
     [Header("Pause Screen")]
-    [SerializeField] private GameObject             pauseButton;
-    [SerializeField] private GameObject             pauseScreen;
+    [SerializeField] private GameObject                 pauseButton;
+    [SerializeField] private GameObject                 pauseScreen;
 
     #endregion
 
     #region Private Variables
 
-    private GameObject                              battleBoard;
-    private BattleGameControllerBase                currentGameController;
-    private List<AbilityButtonController>           playerAbilityButtons;
-    private List<AbilityButtonController>           enemyAbilityButtons;
-    private List<Unit>                              enemyParty;
-    private int                                     prePanelEnemyDisplayedIndex;
+    private GameObject                                  battleBoard;
+    private BattleGameControllerBase                    currentGameController;
+    private List<AbilityButtonController>               playerAbilityButtons;
+    private List<AbilityButtonController>               enemyAbilityButtons;
+    private List<Unit>                                  enemyParty;
+    private int                                         prePanelEnemyDisplayedIndex;
+    private Dictionary<UnitStat, int>                   expEarnedDuringBattle;
+    private List<PreBattleStats>                        preBattleStats;
 
     #endregion
 
     #region Signal Variables
 
-    private SignalReceiver                          battle_playerkoed_receiver;
-    private SignalStream                            battle_playerkoed_stream;
-    private SignalReceiver                          battle_enemykoed_receiver;
-    private SignalStream                            battle_enemykoed_stream;
-    private SignalReceiver                          battle_pause_receiver;
-    private SignalStream                            battle_pause_stream;
-    private SignalReceiver                          battle_unpause_receiver;
-    private SignalStream                            battle_unpause_stream;
-    private SignalReceiver                          battle_countdownended_receiver;
-    private SignalStream                            battle_countdownended_stream;
-    private SignalReceiver                          battle_boardreset_receiver;
-    private SignalStream                            battle_boardreset_stream;
+    private SignalReceiver                              battle_playerkoed_receiver;
+    private SignalStream                                battle_playerkoed_stream;
+    private SignalReceiver                              battle_enemykoed_receiver;
+    private SignalStream                                battle_enemykoed_stream;
+    private SignalReceiver                              battle_pause_receiver;
+    private SignalStream                                battle_pause_stream;
+    private SignalReceiver                              battle_unpause_receiver;
+    private SignalStream                                battle_unpause_stream;
+    private SignalReceiver                              battle_countdownended_receiver;
+    private SignalStream                                battle_countdownended_stream;
+    private SignalReceiver                              battle_boardreset_receiver;
+    private SignalStream                                battle_boardreset_stream;
+    private SignalReceiver                              partymanagement_expadded_receiver;
+    private SignalStream                                partymanagement_expadded_stream;
 
     #endregion
 
     #region Public Properties
 
-    public GameObject                               AbilityButtonPrefab     { get { return abilityButtonPrefab; } }
-    public GameObject                               ChargeMarkerPrefab      { get { return abilityButtonChargeMarkerPrefab; } }
-    public GameObject                               TimerBarPrefab          { get { return abilityButtonTimerBarPrefab; } }
-    public bool                                     IsPaused                { get { return pauseScreen.activeInHierarchy; } }
-    public string                                   CurrentGameName         { get { return currentGameController.GetBattleGameName(); } }
-    public BattleUnitController                     CurrentEnemy            { get { return currentEnemyUnitController; } }
-    public BattleUnitController                     CurrentPlayerUnit       { get { return currentPlayerUnitController; } }
-    public List<AbilityButtonController>            PlayerAbilityButtons    { get { return playerAbilityButtons; } }
-    public List<AbilityButtonController>            EnemyAbilityButtons     { get { return enemyAbilityButtons; } }
+    public GameObject                                   AbilityButtonPrefab     { get { return abilityButtonPrefab; } }
+    public GameObject                                   ChargeMarkerPrefab      { get { return abilityButtonChargeMarkerPrefab; } }
+    public GameObject                                   TimerBarPrefab          { get { return abilityButtonTimerBarPrefab; } }
+    public bool                                         IsPaused                { get { return pauseScreen.activeInHierarchy; } }
+    public string                                       CurrentGameName         { get { return currentGameController.GetBattleGameName(); } }
+    public BattleUnitController                         CurrentEnemy            { get { return currentEnemyUnitController; } }
+    public BattleUnitController                         CurrentPlayerUnit       { get { return currentPlayerUnitController; } }
+    public List<AbilityButtonController>                PlayerAbilityButtons    { get { return playerAbilityButtons; } }
+    public List<AbilityButtonController>                EnemyAbilityButtons     { get { return enemyAbilityButtons; } }
+
     #endregion
 
     #region Unity Functions
@@ -102,29 +153,56 @@ public class BattleManager : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
 
-        Canvas c                        = GameObject.Find("Battle Canvas").GetComponent<Canvas>();
-        c.worldCamera                   = Camera.main;
-        c.sortingOrder                  = UniversalInspectorVariables.instance.gameScreenOrderInLayer;
+        Canvas c                                    = GameObject.Find("Battle Canvas").GetComponent<Canvas>();
+        c.worldCamera                               = Camera.main;
+        c.sortingOrder                              = UniversalInspectorVariables.instance.gameScreenOrderInLayer;
 
-        battle_playerkoed_stream        = SignalStream.Get("Battle", "PlayerKOed");
-        battle_enemykoed_stream         = SignalStream.Get("Battle", "EnemyKOed");
-        battle_pause_stream             = SignalStream.Get("Battle", "Pause");
-        battle_unpause_stream           = SignalStream.Get("Battle", "Unpause");
-        battle_countdownended_stream    = SignalStream.Get("Battle", "CountdownEnded");
-        battle_boardreset_stream        = SignalStream.Get("Battle", "BoardReset");
+        battle_playerkoed_stream                    = SignalStream.Get("Battle", "PlayerKOed");
+        battle_enemykoed_stream                     = SignalStream.Get("Battle", "EnemyKOed");
+        battle_pause_stream                         = SignalStream.Get("Battle", "Pause");
+        battle_unpause_stream                       = SignalStream.Get("Battle", "Unpause");
+        battle_countdownended_stream                = SignalStream.Get("Battle", "CountdownEnded");
+        battle_boardreset_stream                    = SignalStream.Get("Battle", "BoardReset");
+        partymanagement_expadded_stream             = SignalStream.Get("PartyManagement", "AwardExperience");  
 
-        battle_playerkoed_receiver      = new SignalReceiver().SetOnSignalCallback(PlayerKO);
-        battle_enemykoed_receiver       = new SignalReceiver().SetOnSignalCallback(EnemyKO);
-        battle_pause_receiver           = new SignalReceiver().SetOnSignalCallback(Pause);
-        battle_unpause_receiver         = new SignalReceiver().SetOnSignalCallback(Unpause);
-        battle_countdownended_receiver  = new SignalReceiver().SetOnSignalCallback(CountdownEndedBattleBegin);
-        battle_boardreset_receiver      = new SignalReceiver().SetOnSignalCallback(BoardReset);
+        battle_playerkoed_receiver                  = new SignalReceiver().SetOnSignalCallback(PlayerKO);
+        battle_enemykoed_receiver                   = new SignalReceiver().SetOnSignalCallback(EnemyKO);
+        battle_pause_receiver                       = new SignalReceiver().SetOnSignalCallback(Pause);
+        battle_unpause_receiver                     = new SignalReceiver().SetOnSignalCallback(Unpause);
+        battle_countdownended_receiver              = new SignalReceiver().SetOnSignalCallback(CountdownEndedBattleBegin);
+        battle_boardreset_receiver                  = new SignalReceiver().SetOnSignalCallback(BoardReset);
+        partymanagement_expadded_receiver           = new SignalReceiver().SetOnSignalCallback(AddEXPEarnedInBattle);
 
-        enemyParty                      = new List<Unit>(GameManager.instance.CurrentLevel.enemyUnits);
-        prePanelEnemyDisplayedIndex     = 0;
+        enemyParty                                  = new List<Unit>(GameManager.instance.CurrentLevel.enemyUnits);
+        prePanelEnemyDisplayedIndex                 = 0;
 
-        playerSprite.color              = Color.clear;
-        enemySprite.color               = Color.clear;
+        playerSprite.color                          = Color.clear;
+        enemySprite.color                           = Color.clear;
+
+        expEarnedDuringBattle                       = new Dictionary<UnitStat, int>();
+        preBattleStats                              = new List<PreBattleStats>();
+
+        //TODO: Set the snapshot when party for the level is selected vs every single party member
+        //      Might be easier to just apply points earned in battle at end though
+        for (int i = 0; i < PlayerPartyManager.instance.partyBattleUnits.Count; i++)
+        {
+            for (int stat = 0; stat < (int)Helpful.StatTypes.COUNT; stat++)
+            {
+                Unit u              = PlayerPartyManager.instance.partyBattleUnits[i];
+                Helpful.StatTypes s = (Helpful.StatTypes)stat;
+
+                preBattleStats.Add(
+                    new PreBattleStats(
+                        u
+                        , s
+                        , u.GetStatWithMods(s)
+                        , u.GetStat(s)
+                        , u.GetExpForStat(s)
+                        , u.GetEXPNextLevelValue(s)
+                    )
+                );
+            }
+        }
 
         SetupPreBattleScreen();
     }
@@ -137,6 +215,7 @@ public class BattleManager : MonoBehaviour
         battle_unpause_stream.ConnectReceiver(battle_unpause_receiver);
         battle_countdownended_stream.ConnectReceiver(battle_countdownended_receiver);
         battle_boardreset_stream.ConnectReceiver(battle_boardreset_receiver);
+        partymanagement_expadded_stream.ConnectReceiver(partymanagement_expadded_receiver);
     }
 
     private void OnDisable()
@@ -147,6 +226,7 @@ public class BattleManager : MonoBehaviour
         battle_unpause_stream.DisconnectReceiver(battle_unpause_receiver);
         battle_countdownended_stream.DisconnectReceiver(battle_countdownended_receiver);
         battle_boardreset_stream.DisconnectReceiver(battle_boardreset_receiver);
+        partymanagement_expadded_stream.DisconnectReceiver(partymanagement_expadded_receiver);
     }
 
     private void OnDestroy()
@@ -362,8 +442,6 @@ public class BattleManager : MonoBehaviour
 
     private void EnemyKO(Signal signal)
     {
-        Debug.Log("Enemy KOed");
-
         int nextEnemyIndex = enemyParty.FindIndex(x => x.CurrentHP > 0);
 
         if (nextEnemyIndex >= 0)
@@ -384,7 +462,8 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            BattleComplete(true);
+            //BattleComplete(true);
+            ShowEndOfBattleScreen(true);
         }
     }
 
@@ -400,7 +479,8 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            BattleComplete(false);
+            //BattleComplete(false);
+            ShowEndOfBattleScreen(false);
         }
     }
 
@@ -473,6 +553,285 @@ public class BattleManager : MonoBehaviour
         Signal.Send("Battle", "ReturnToWorldMap");
     }
 
+    private void ShowEndOfBattleScreen(bool won)
+    {
+        float screenOpeningTime             = .6f;
+
+        //Stop the battle game
+        currentGameController.Pause();
+
+        //Disable and hide the pause button
+        pauseButton.SetActive(false);
+
+        //Stop abilities
+        DisableEnemyAbilityButtons();
+        DisablePlayerAbilityButtons();
+        PauseEnemyTimerAbilities();
+        PausePlayerTimerAbilities();
+
+        //Hide Abilities & HP bars -
+        //TODO: might want to store references to these from the inspector vs the find and get component calls here
+        UIAnimation u           = UIAnimation.Alpha(playerAbilityButtonPanel.GetComponentInParent<CanvasGroup>(), 0f, screenOpeningTime / 2f);
+        u.Play();
+        u                       = UIAnimation.Alpha(enemyAbilityButtonPanel.GetComponentInParent<CanvasGroup>(), 0f, screenOpeningTime / 2f);
+        u.Play();
+        u                       = UIAnimation.Alpha(GameObject.Find("Player HP Bar").GetComponent<CanvasGroup>(), 0f, screenOpeningTime / 2f);
+        u.Play();
+        u                       = UIAnimation.Alpha(GameObject.Find("Enemy HP Bar").GetComponent<CanvasGroup>(), 0f, screenOpeningTime / 2f);
+        u.Play();
+
+        //fadeout the game
+        u                       = UIAnimation.Alpha(currentGameController.GameElementsCanvasGroup, 0f, screenOpeningTime);
+        u.Play();
+
+        //Stretch the battle board and bg out to 1800 and start loading the screen's content
+        u                       = UIAnimation.Width(gameBoardRectTrans, 1800, screenOpeningTime);
+        u.Play();
+        u                       = UIAnimation.Width(gameBoardBGRectTrans, 1800, screenOpeningTime);
+        u.OnAnimationFinished   = delegate { PostBattleScreenAnimation(won); };
+        u.Play();
+    }
+
+    private void PostBattleScreenAnimation(bool won)
+    {
+        //Defeat/Victory Text
+        //enemies label, EXP earned, battle party, items labels, exp bars
+        //      exp bars are for party member that defeats the last enemy
+        //      add party members and have the correct one selected
+        //loop through enemies defeated
+        //  Show enemy
+        //  > increase exp bars
+        //  > add/increase items
+        //repeat until all enemies are added
+        //Allow continue button to be clicked
+
+        float animationTime                     = .5f;
+
+        postBattleScreenVictoryDefeatText.text  = won ? "Victory" : "Defeat";
+        postBattleScreenVictoryDefeatText.color = won ? Color.green : Color.red;
+
+        postBattleScreen.SetActive(true);
+
+        SetPostScreenEXPBars(currentPlayerUnitController.UnitInfo);
+
+        //TODO: I should do this correctly with coroutines and fade in functions instead of these nested UIAnimation.OnEnds
+        UIAnimation u;
+
+        u = UIAnimation.Alpha(postBattleScreenVictoryDefeatText.GetComponent<CanvasGroup>(), 1f, animationTime);
+
+        u.OnAnimationFinished = delegate
+        {
+            for (int i = 0; i < postBattleScreenSectionLabels.Length; i++)
+            {
+                u = UIAnimation.Color(postBattleScreenSectionLabels[i], Color.black, animationTime);
+                if (i == postBattleScreenSectionLabels.Length - 1)
+                {
+                    u.OnAnimationFinished = delegate
+                    {
+                        for (int i = 0; i < postBattleScreenExpBarProgressors.Length; i++)
+                        {
+                            u = UIAnimation.Alpha(postBattleScreenExpBarProgressors[i].GetComponentInParent<CanvasGroup>(), 1f, animationTime);
+
+                            if (i == postBattleScreenSectionLabels.Length - 1)
+                                u.OnAnimationFinished = delegate
+                                {
+                                    StartCoroutine(ProcessPostBattleRewards());
+                                };
+
+                            u.Play();
+                        }
+                    };
+                }
+                u.Play();
+            }
+        };
+        u.Play();
+    }
+
+    private void SetPostScreenEXPBars(Unit u)
+    {
+        //TODO: If i want the exp numbers on the bars i'll need to set them up here.
+        //      Turning them off for now bc i'm sure the screen will change eventually
+
+        for (int i = 0; i < postBattleScreenExpBarProgressors.Length; i++)
+        {
+            Helpful.StatTypes cs                            = (Helpful.StatTypes)i;
+            PreBattleStats prestat                          = preBattleStats.Find(x => x.unit == u && x.statType == cs);
+
+            postBattleScreenExpBarProgressors[i].toValue    = prestat.nextExp;
+            postBattleScreenExpBarProgressors[i].fromValue  = 0f;
+
+            postBattleScreenExpBarProgressors[i].SetValueAt(0f);
+            postBattleScreenExpBarProgressors[i].SetValueAt(prestat.exp);
+
+            postBattleScreenExpBarLevels[i].text            = prestat.statLevelWithMods.ToString();
+
+            postBattleScreenExpBarAdds[i].gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator ProcessPostBattleRewards()
+    {
+        float enemyFadeInTime                   = 2.3f;
+        float tickUpTime                        = 2.3f;
+        float pauseBetweenEnemiesTime           = 2.3f;
+        WaitForSeconds tickTimeWait             = new WaitForSeconds(tickUpTime);
+        WaitForSeconds pauseBetweenEnemies      = new WaitForSeconds(pauseBetweenEnemiesTime);
+        List<Unit> enemiesDefeated              = enemyParty.FindAll(x => x.CurrentHP <= 0);
+
+        Debug.Log(string.Format("Battle Rewards Function started: {0}", Time.time));
+
+        yield return pauseBetweenEnemies;
+
+        Debug.Log(string.Format("Starting Performance Rewards: {0}", Time.time));
+
+        UnitStat k                              = new UnitStat();
+        k.unit                                  = currentPlayerUnitController.UnitInfo;
+        bool needsToYield                       = false;
+        for (int i = 0; i < postBattleScreenExpBarAdds.Length; i++)
+        {
+            k.statType                          = (Helpful.StatTypes)i;
+            int expEarned                       = expEarnedDuringBattle.ContainsKey(k) ? expEarnedDuringBattle[k] : 0;
+            postBattleScreenExpBarAdds[i].text  = "+0";
+
+            if (expEarned > 0)
+            {
+                needsToYield                    = true;
+
+                postBattleScreenExpBarAdds[i].gameObject.SetActive(true);
+
+                StartCoroutine(Helpful.IncreaseDisplayNumberOverTime(postBattleScreenExpBarAdds[i], 0, expEarned, "+", "", tickUpTime));
+                StartCoroutine(FillBar(postBattleScreenExpBarProgressors[i], postBattleScreenExpBarLevels[i],
+                                        k.unit, k.statType, expEarned, tickUpTime));
+            }
+        }
+
+        if (needsToYield)
+            yield return tickTimeWait;
+
+        Debug.Log(string.Format("Performance Rewards Complete: {0}", Time.time));
+
+        yield return pauseBetweenEnemies;
+
+        Debug.Log(string.Format("Starting Enemy Rewards: {0}", Time.time));
+
+        for (int e = 0; e < enemiesDefeated.Count; e++)
+        {
+            GameObject go   = new GameObject();
+            Image goI       = go.AddComponent<Image>();
+            goI.sprite      = enemiesDefeated[e].InBattleSprite;
+            goI.color       = new Color32(255, 255, 255, 255);
+            Transform t     = go.transform;
+            t.SetParent(postBattleScreenEnemiesDefeatedContainer);
+            t.localScale    = Vector3.one;
+            t.localPosition = Vector3.zero;
+
+            yield return StartCoroutine(Helpful.FadeGraphicIn(goI, enemyFadeInTime));
+
+            if (enemiesDefeated[e].EXPAward.Count > 0)
+            { 
+                for (int i = 0; i < enemiesDefeated[e].EXPAward.Count; i++)
+                {
+                    int statIndex = enemiesDefeated[e].EXPAward[i].x;
+
+                    if (!postBattleScreenExpBarAdds[statIndex].gameObject.activeInHierarchy)
+                    {
+                        postBattleScreenExpBarAdds[statIndex].text = "+0";
+                        postBattleScreenExpBarAdds[statIndex].gameObject.SetActive(true);
+                    }
+
+                    int cv = int.Parse(postBattleScreenExpBarAdds[statIndex].text.Substring(1));
+                    int ev = cv + enemiesDefeated[e].EXPAward[i].y;
+
+                    StartCoroutine(Helpful.IncreaseDisplayNumberOverTime(postBattleScreenExpBarAdds[statIndex], cv, ev, "+", "", tickUpTime));
+                }
+
+                yield return tickTimeWait; //To allow for EXP bars to fill
+            }
+
+            if (enemiesDefeated[e].ItemRewards.Count > 0)
+            {
+                for (int i = 0; i < enemiesDefeated[e].ItemRewards.Count; i++)
+                {
+                    ItemReward reward   = enemiesDefeated[e].ItemRewards[i];
+                    float rand          = Random.Range(0f, 100f);
+
+                    if (rand <= reward.Chance) //Item Received
+                    {
+                        GameObject itemGO               = Instantiate(itemSlot, postBattleScreenItemRewardContainer);
+                        itemGO.transform.localPosition  = Vector3.zero;
+                        itemGO.transform.localScale     = Vector3.one;
+                        ItemSlotController slot         = itemGO.GetComponent<ItemSlotController>();
+                        slot.Setup(reward.Item, 1); //TODO: Make it possible to get more than 1 of an item probably
+                    }
+                }
+            }
+
+            yield return pauseBetweenEnemies;
+        }
+    }
+
+    //TODO: Functionality is pretty similar to ItemTargetCardController_Unit.UpdateLevelBar().
+    //      might want to consider making the bars a prefab or something and consolidating funcitonality to a "bar controller"
+    private IEnumerator FillBar(Progressor progressor, TextMeshProUGUI label, Unit u, Helpful.StatTypes s, int expAdded, float animationTime)
+    {
+        if (progressor.currentValue + expAdded > progressor.toValue)
+        {
+            int fillAnimationsNeeded    = 1;
+            int expRemaining            = expAdded - ((int)progressor.currentValue - (int)progressor.toValue);
+            int currentLevel            = int.Parse(label.text);
+
+            while (expRemaining > 0)
+            {
+                currentLevel++;
+                fillAnimationsNeeded++;
+
+                expRemaining -= Formulas.GetNextLevelEXP((Helpful.StatGrowthRates)u.GetGrowthRate(s), currentLevel);
+            }
+
+            progressor.reaction.settings.duration = animationTime / (float)fillAnimationsNeeded;
+        }
+        else
+            progressor.reaction.settings.duration = animationTime;
+
+        WaitForSeconds wait             = new WaitForSeconds(progressor.GetDuration());
+        int numOfBarFills               = 0;
+
+        while (expAdded > 0)
+        {
+            Debug.Log(string.Format("{0} at top of while loop", progressor.transform.parent.name));
+
+            float startValue        = progressor.currentValue;
+            float playToValue       = progressor.currentValue + expAdded > progressor.toValue ?
+                                        progressor.toValue : progressor.currentValue + expAdded;
+
+            progressor.PlayToValue(playToValue);
+
+            yield return wait;
+
+            if (playToValue == progressor.toValue)
+            {
+                progressor.SetProgressAtOne();
+            }
+
+            expAdded -= (int)progressor.currentValue - (int)startValue;
+
+            if (progressor.currentValue >= progressor.toValue)
+            {
+                numOfBarFills++;
+
+                int newStatValue = int.Parse(label.text) + numOfBarFills;
+
+                label.text = newStatValue.ToString();
+
+                progressor.toValue = Formulas.GetNextLevelEXP((Helpful.StatGrowthRates)u.GetGrowthRate(s), newStatValue);
+                progressor.fromValue = 0f;
+
+                progressor.SetValueAt(0f);
+            }
+        }
+    }
+
     private void StartPlayerTimerAbilities()
     {
         for (int i = 0; i < playerAbilityButtons.Count; i++)
@@ -511,4 +870,29 @@ public class BattleManager : MonoBehaviour
     }
 
     #endregion
+
+    private void AddEXPEarnedInBattle(Signal signal)
+    {
+        //TODO: Not sure if I want to track it this way, or if I should take a snapshot of the unit's exp at the beginning.
+
+        //Signal is object[]
+        //info[0]   - Helpful.StatType  - The stat that earned EXP
+        //info[1]   - int               - The amount of EXP earned for the action
+        //info[2]   - Unit              - The unit that earns the EXP
+
+        object[] info       = signal.GetValueUnsafe<object[]>();
+
+        UnitStat k          = new UnitStat();
+        k.unit              = (Unit)info[2];
+        k.statType          = (Helpful.StatTypes)info[0];
+
+        if (expEarnedDuringBattle.ContainsKey(k))
+        {
+            expEarnedDuringBattle[k] += (int)info[1];
+        }
+        else
+        {
+            expEarnedDuringBattle.Add(k, (int)info[1]);
+        }
+    }
 }

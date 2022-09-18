@@ -10,6 +10,12 @@ public abstract class BattleGameControllerBase : MonoBehaviour
 
     #endregion
 
+    #region Public Properties
+
+    public CanvasGroup GameElementsCanvasGroup { get { return gameElementsCanvasGroup; } }
+
+    #endregion
+
     #region Unity Functions
 
     protected virtual void Awake()

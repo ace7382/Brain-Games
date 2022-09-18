@@ -380,7 +380,7 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
         info = new object[3];
         info[0] = Helpful.StatTypes.Observation;
-        info[1] = 1;
+        info[1] = 12;
         info[2] = BattleManager.instance.CurrentPlayerUnit.UnitInfo;
 
         Signal.Send("PartyManagement", "AwardExperience", info);

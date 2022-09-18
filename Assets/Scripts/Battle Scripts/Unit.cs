@@ -103,6 +103,16 @@ public class Unit
         get { return battleUnitBase.difficultyBase; } 
     }
 
+    public List<Vector2Int> EXPAward
+    {
+        get { return battleUnitBase.expAwardedOnDefeat; }
+    }
+
+    public List<ItemReward> ItemRewards
+    {
+        get { return battleUnitBase.itemRewards; }
+    }
+
     #endregion
 
     #region Public Functions
