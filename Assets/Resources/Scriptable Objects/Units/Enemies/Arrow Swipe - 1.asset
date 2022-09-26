@@ -30,9 +30,12 @@ MonoBehaviour:
   itemRewards:
   - item: {fileID: 11400000, guid: 37d6486ee4fcaa04b8183e115dd40a23, type: 2}
     chance: 75
+    numberDropped: {x: 1, y: 2}
   - item: {fileID: 11400000, guid: 8584a02a235cf4c40aa414b6b91cab51, type: 2}
     chance: 50
+    numberDropped: {x: 1, y: 3}
   - item: {fileID: 11400000, guid: 6ac24df8f2fcbe641bbc073096aa0019, type: 2}
     chance: 100
+    numberDropped: {x: 25, y: 35}
   baseStats: 010000000a000000000000000a00000000000000000000000a0000000000000000000000
   statGrowthRates: 000000000000000000000000000000000000000000000000000000000000000000000000

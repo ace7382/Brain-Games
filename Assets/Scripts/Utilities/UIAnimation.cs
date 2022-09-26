@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -561,6 +562,38 @@ namespace BizzyBeeGames
 
 				fromColor.a	= 0f;
 				toColor.a	= 1f;
+
+				// Fade it back in
+				UIAnimation fadeInAnim = UIAnimation.Color(uiText, fromColor, toColor, duration / 2f);
+
+				fadeInAnim.style = UIAnimation.Style.EaseOut;
+
+				fadeInAnim.Play();
+			};
+
+			fadeOutAnim.Play();
+		}
+
+		public static void SwapText(TextMeshProUGUI uiText, string text, float duration)
+		{
+			Color fromColor			= uiText.color;
+			Color toColor			= uiText.color;
+
+			fromColor.a				= 1f;
+			toColor.a				= 0f;
+
+			// Fade out the bundle text
+			UIAnimation fadeOutAnim		= UIAnimation.Color(uiText, fromColor, toColor, duration / 2f);
+
+			fadeOutAnim.style			= UIAnimation.Style.EaseOut;
+
+			fadeOutAnim.OnAnimationFinished += (GameObject obj) =>
+			{
+				// Now that the text has faded out change the text
+				uiText.text = text;
+
+				fromColor.a = 0f;
+				toColor.a = 1f;
 
 				// Fade it back in
 				UIAnimation fadeInAnim = UIAnimation.Color(uiText, fromColor, toColor, duration / 2f);

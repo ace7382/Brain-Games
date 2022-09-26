@@ -390,13 +390,13 @@ public static class Helpful
 
         while (elapsedTime < time)
         {
-            g.color = Color.Lerp(startColor, goalColor, elapsedTime / time);
-            elapsedTime += Time.deltaTime;
+            g.color         = Color.Lerp(startColor, goalColor, elapsedTime / time);
+            elapsedTime     += Time.deltaTime;
 
             yield return null;
         }
 
-        g.color = goalColor;
+        g.color             = goalColor;
     }
 
     #endregion

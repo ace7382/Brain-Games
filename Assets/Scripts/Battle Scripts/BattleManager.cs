@@ -90,6 +90,10 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private Progressor[]               postBattleScreenExpBarProgressors;
     [SerializeField] private RectTransform              postBattleScreenEnemiesDefeatedContainer;
     [SerializeField] private RectTransform              postBattleScreenItemRewardContainer;
+    [SerializeField] private TextMeshProUGUI            postBattleScreenExpTitle;
+    //[SerializeField] private UIButton                   postBattleScreenContinueButton;
+    //[SerializeField] private UIButton                   postBattleScreenRetryButton;
+    [SerializeField] private CanvasGroup                postBattleScreenButtonPanel;
 
     [Space]
     [Header("Pause Screen")]
@@ -264,6 +268,14 @@ public class BattleManager : MonoBehaviour
         {
             enemyParty[i].Init();
         }
+    }
+
+    public void ReturnToWorldMap()
+    {
+        currentPlayerUnitController.ResetBattleUnitController();
+        currentEnemyUnitController.ResetBattleUnitController();
+
+        Signal.Send("Battle", "ReturnToWorldMap");
     }
 
     #endregion
@@ -524,11 +536,10 @@ public class BattleManager : MonoBehaviour
         currentGameController.Unpause();
     }
 
-    private void BattleComplete(bool playerWon)
+    private void ShowEndOfBattleScreen(bool won)
     {
-        Debug.Log("Battle Complete - " + (playerWon ? "WIN" : "LOST"));
-
-        if (playerWon)
+        //TODO: Maybe move this elsewhere?
+        if (won)
         {
             if (GameManager.instance.CurrentLevel.levelsUnlockedByThisLevel.Count > 0)
             {
@@ -542,19 +553,9 @@ public class BattleManager : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            Debug.Log("battle lost");
-        }
 
-        currentPlayerUnitController.ResetBattleUnitController();
-        currentEnemyUnitController.ResetBattleUnitController();
+        GameObject.FindObjectOfType<BattlePopupController>().enabled = false;
 
-        Signal.Send("Battle", "ReturnToWorldMap");
-    }
-
-    private void ShowEndOfBattleScreen(bool won)
-    {
         float screenOpeningTime             = .6f;
 
         //Stop the battle game
@@ -594,17 +595,6 @@ public class BattleManager : MonoBehaviour
 
     private void PostBattleScreenAnimation(bool won)
     {
-        //Defeat/Victory Text
-        //enemies label, EXP earned, battle party, items labels, exp bars
-        //      exp bars are for party member that defeats the last enemy
-        //      add party members and have the correct one selected
-        //loop through enemies defeated
-        //  Show enemy
-        //  > increase exp bars
-        //  > add/increase items
-        //repeat until all enemies are added
-        //Allow continue button to be clicked
-
         float animationTime                     = .5f;
 
         postBattleScreenVictoryDefeatText.text  = won ? "Victory" : "Defeat";
@@ -672,18 +662,17 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator ProcessPostBattleRewards()
     {
-        float enemyFadeInTime                   = 2.3f;
+        //TODO: Sync the EXP column's title change with the other fades/fills.
+        //      Not important now bc the screen will almost definitely be redone
+
         float tickUpTime                        = 2.3f;
-        float pauseBetweenEnemiesTime           = 2.3f;
+        float pauseBetweenEnemiesTime           = .7f;
         WaitForSeconds tickTimeWait             = new WaitForSeconds(tickUpTime);
         WaitForSeconds pauseBetweenEnemies      = new WaitForSeconds(pauseBetweenEnemiesTime);
         List<Unit> enemiesDefeated              = enemyParty.FindAll(x => x.CurrentHP <= 0);
+        List<ItemSlotController> items          = new List<ItemSlotController>();
 
-        Debug.Log(string.Format("Battle Rewards Function started: {0}", Time.time));
-
-        yield return pauseBetweenEnemies;
-
-        Debug.Log(string.Format("Starting Performance Rewards: {0}", Time.time));
+        UIAnimation.SwapText(postBattleScreenExpTitle, "Battle Performance", pauseBetweenEnemiesTime);
 
         UnitStat k                              = new UnitStat();
         k.unit                                  = currentPlayerUnitController.UnitInfo;
@@ -709,11 +698,8 @@ public class BattleManager : MonoBehaviour
         if (needsToYield)
             yield return tickTimeWait;
 
-        Debug.Log(string.Format("Performance Rewards Complete: {0}", Time.time));
-
+        UIAnimation.SwapText(postBattleScreenExpTitle, "Enemy Rewards", pauseBetweenEnemiesTime);
         yield return pauseBetweenEnemies;
-
-        Debug.Log(string.Format("Starting Enemy Rewards: {0}", Time.time));
 
         for (int e = 0; e < enemiesDefeated.Count; e++)
         {
@@ -726,7 +712,7 @@ public class BattleManager : MonoBehaviour
             t.localScale    = Vector3.one;
             t.localPosition = Vector3.zero;
 
-            yield return StartCoroutine(Helpful.FadeGraphicIn(goI, enemyFadeInTime));
+            StartCoroutine(Helpful.FadeGraphicIn(goI, tickUpTime));
 
             if (enemiesDefeated[e].EXPAward.Count > 0)
             { 
@@ -744,31 +730,66 @@ public class BattleManager : MonoBehaviour
                     int ev = cv + enemiesDefeated[e].EXPAward[i].y;
 
                     StartCoroutine(Helpful.IncreaseDisplayNumberOverTime(postBattleScreenExpBarAdds[statIndex], cv, ev, "+", "", tickUpTime));
-                }
+                    StartCoroutine(FillBar(postBattleScreenExpBarProgressors[statIndex], postBattleScreenExpBarLevels[statIndex]
+                                            , k.unit, (Helpful.StatTypes)statIndex, enemiesDefeated[e].EXPAward[i].y, tickUpTime));
 
-                yield return tickTimeWait; //To allow for EXP bars to fill
+                    //TODO: This better. Will need to be reworked when allowing multiple units per battle to earn exp
+                    object[] info   = new object[3];
+                    info[0]         = enemiesDefeated[e].EXPAward[i].x; //Stat
+                    info[1]         = enemiesDefeated[e].EXPAward[i].y; //Amount
+                    info[2]         = k.unit;                           //Unit
+
+                    Signal.Send("PartyManagement", "AwardExperience", info);
+                }
             }
 
             if (enemiesDefeated[e].ItemRewards.Count > 0)
             {
                 for (int i = 0; i < enemiesDefeated[e].ItemRewards.Count; i++)
                 {
-                    ItemReward reward   = enemiesDefeated[e].ItemRewards[i];
-                    float rand          = Random.Range(0f, 100f);
+                    ItemReward reward                       = enemiesDefeated[e].ItemRewards[i];
+                    float rand                              = Random.Range(0f, 100f);
 
                     if (rand <= reward.Chance) //Item Received
                     {
-                        GameObject itemGO               = Instantiate(itemSlot, postBattleScreenItemRewardContainer);
-                        itemGO.transform.localPosition  = Vector3.zero;
-                        itemGO.transform.localScale     = Vector3.one;
-                        ItemSlotController slot         = itemGO.GetComponent<ItemSlotController>();
-                        slot.Setup(reward.Item, 1); //TODO: Make it possible to get more than 1 of an item probably
+                        int index                           = items.FindIndex(x => x.Item == reward.Item);
+                        
+                        //TODO; maybe weight this toward fewer drops?
+                        int count                           = Random.Range(reward.MinDropped, reward.MaxDropped + 1);
+
+                        if (index > -1) //Add to existing 
+                        {
+                            items[index].AddToCount(count);
+                        }
+                        else
+                        {
+                            //TODO: Remove the button slot's OnClick behavior.
+                            //      Probably want it to give a tooltip with the name or something instead
+                            //      itemGO.GetComponent<UIButton>().GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick).Event.RemoveAllListeners();
+                            //         ^^ this won't work to remove it, will need to remove the inspector given click function and set with this in code
+                            //          here and in the inventory where these are also used
+                            GameObject itemGO               = Instantiate(itemSlot, postBattleScreenItemRewardContainer);
+                            itemGO.transform.localPosition  = Vector3.zero;
+                            itemGO.transform.localScale     = Vector3.one;
+                            ItemSlotController slot         = itemGO.GetComponent<ItemSlotController>();
+                            slot.Setup(reward.Item, count);
+                            items.Add(slot);
+                        }
+
+                        //TODO: Probably have this function return true/false. THere should probably be a limit on item count
+                        //  in inventory, and this would allow this screen to show if you're at max/able to receive the item
+                        PlayerPartyManager.instance.AddItemToInventory(reward.Item, count); 
                     }
                 }
             }
 
+            yield return tickTimeWait; //To allow for EXP bars to fill and enemies/items to fade in
+
             yield return pauseBetweenEnemies;
         }
+
+        UIAnimation.SwapText(postBattleScreenExpTitle, "Total", pauseBetweenEnemiesTime);
+        UIAnimation.Alpha(postBattleScreenButtonPanel, 1, pauseBetweenEnemiesTime).Play();
     }
 
     //TODO: Functionality is pretty similar to ItemTargetCardController_Unit.UpdateLevelBar().
@@ -795,37 +816,45 @@ public class BattleManager : MonoBehaviour
             progressor.reaction.settings.duration = animationTime;
 
         WaitForSeconds wait             = new WaitForSeconds(progressor.GetDuration());
-        int numOfBarFills               = 0;
 
         while (expAdded > 0)
         {
-            Debug.Log(string.Format("{0} at top of while loop", progressor.transform.parent.name));
-
             float startValue        = progressor.currentValue;
             float playToValue       = progressor.currentValue + expAdded > progressor.toValue ?
                                         progressor.toValue : progressor.currentValue + expAdded;
+
+            Debug.Log(string.Format("Filling {0}. Current Value {1}, Bar.toValue {2}, Setting bar to {3} over the next {4} seconds"
+                    , s.GetShorthand(), progressor.currentValue.ToString(), progressor.toValue.ToString()
+                    , playToValue.ToString(), progressor.GetDuration().ToString()));
 
             progressor.PlayToValue(playToValue);
 
             yield return wait;
 
+            //Depending on the fraction of the bar and the duration, the current fill value might not be exactly where
+            //it needs to be, so this should set the fill to the exact spot it needs to be at so that it's ready
+            //for the next loop.
+            //TODO: Using progressor.SetProgressAt(fraction) bc progressor.SetValueAt(playToValue) has a bug in this version
+            //      of Doozy. If I update then I should probably switch to SetValueAt bc it's probably more accurate if I add
+            //      animation curves to the fill
             if (playToValue == progressor.toValue)
-            {
                 progressor.SetProgressAtOne();
-            }
+            else
+                progressor.SetProgressAt(playToValue / progressor.toValue);
 
-            expAdded -= (int)progressor.currentValue - (int)startValue;
+            expAdded -= (int)playToValue - (int)startValue;
+
+            Debug.Log(string.Format("Mid Fill: {0}. Current Value {1}, Bar.toValue {2}"
+                , s.GetShorthand(), progressor.currentValue.ToString(), progressor.toValue.ToString()));
 
             if (progressor.currentValue >= progressor.toValue)
             {
-                numOfBarFills++;
+                int newStatValue        = int.Parse(label.text) + 1;
 
-                int newStatValue = int.Parse(label.text) + numOfBarFills;
+                label.text              = newStatValue.ToString();
 
-                label.text = newStatValue.ToString();
-
-                progressor.toValue = Formulas.GetNextLevelEXP((Helpful.StatGrowthRates)u.GetGrowthRate(s), newStatValue);
-                progressor.fromValue = 0f;
+                progressor.toValue      = Formulas.GetNextLevelEXP((Helpful.StatGrowthRates)u.GetGrowthRate(s), newStatValue);
+                progressor.fromValue    = 0f;
 
                 progressor.SetValueAt(0f);
             }
@@ -873,8 +902,6 @@ public class BattleManager : MonoBehaviour
 
     private void AddEXPEarnedInBattle(Signal signal)
     {
-        //TODO: Not sure if I want to track it this way, or if I should take a snapshot of the unit's exp at the beginning.
-
         //Signal is object[]
         //info[0]   - Helpful.StatType  - The stat that earned EXP
         //info[1]   - int               - The amount of EXP earned for the action

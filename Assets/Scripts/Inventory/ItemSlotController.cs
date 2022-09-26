@@ -17,6 +17,7 @@ public class ItemSlotController : MonoBehaviour
     #region Private Variables
 
     private Item                                item;
+    private int                                 count;
 
     #endregion
 
@@ -28,20 +29,28 @@ public class ItemSlotController : MonoBehaviour
 
     #region Public Functions
 
-    public void Setup(Item i, int count)
+    public void Setup(Item i, int cou)
     {
         item                = i;
         itemImage.sprite    = item.ItemSprite;
 
+        count               = cou;  
         itemCountText.text  = count.ToString();
     }
 
-    public void UpdateCount()
+    public void UpdateCountFromInventory()
     {
         if (item == null)
             return;
 
-        itemCountText.text = PlayerPartyManager.instance.GetInventoryCount(item).ToString();
+        count              = PlayerPartyManager.instance.GetInventoryCount(item);
+        itemCountText.text = count.ToString();
+    }
+
+    public void AddToCount(int addition)
+    {
+        count               += addition;
+        itemCountText.text  = count.ToString();
     }
 
     //Called by the ItemSlotController's OnClick Behavior

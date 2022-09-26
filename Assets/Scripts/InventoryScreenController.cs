@@ -416,7 +416,7 @@ public class InventoryScreenController : MonoBehaviour
 
         if (slot != null)
         {
-            slot.UpdateCount();
+            slot.UpdateCountFromInventory();
         }
         else
         {
@@ -435,7 +435,7 @@ public class InventoryScreenController : MonoBehaviour
     {
         ItemSlotController slot         = itemSlotControllers.Find(x => x.Item == usedItem);
 
-        slot.UpdateCount();
+        slot.UpdateCountFromInventory();
 
         if (itemTargetView.isVisible && u != null)
         {
