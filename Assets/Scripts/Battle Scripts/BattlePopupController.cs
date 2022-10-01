@@ -109,23 +109,36 @@ public class BattlePopupController : MonoBehaviour
             t = CreateNewPoolItem().GetComponent<TextMeshProUGUI>();
         }
 
-        Vector2 spawnPoint                  = new Vector2(
-                                                uTran.anchoredPosition.x + ((uTran.rect.size.x / 2f) * Random.Range(-.75f, .75f))
-                                                , uTran.anchoredPosition.y + (uTran.rect.size.y * .8f)
-                                            );
+        //Debug.Log(string.Format("Position: {0} S2W: {3}\nAnchored Position: {1} S2W: {4}\nLocal Position: {2} S2W: {5}"
+        //    , uTran.position, uTran.anchoredPosition, uTran.localPosition, 
+        //    Camera.main.ScreenToWorldPoint(uTran.position), Camera.main.ScreenToWorldPoint(uTran.anchoredPosition)
+        //    ,Camera.main.ScreenToWorldPoint(uTran.localPosition)));
+
+        //TODO: Probably better to get the position right than to reparent this but?? how do i get the right position???
+        //      this works for now and doesn't seem to have any performance issues if I cache the transform though
+        //      probably just need to set the tTrans's anchored position
+
+        Vector2 spawnPoint = new Vector2(
+                                        uTran.anchoredPosition.x + ((uTran.rect.size.x / 2f) * Random.Range(-.75f, .75f))
+                                        , uTran.anchoredPosition.y + (uTran.rect.size.y * 1.1f)
+                                    );
+
+        RectTransform tTran                 = t.rectTransform;
 
         t.gameObject.SetActive(true);
         t.font                              = UniversalInspectorVariables.instance.KGHappySolid;
         t.fontSize                          = 25f;
         t.color                             = Color.black;
         t.text                              = "+" + ((int)info[1]).ToString() + " " + ((Helpful.StatTypes)info[0]).GetShorthand() + " EXP";
-        t.transform.localPosition           = spawnPoint;
+        tTran.SetParent(uTran.parent);
+        tTran.localScale                    = Vector3.one;
+        tTran.localPosition                 = spawnPoint;
 
         UIAnimation moveUpAndFade;
-        moveUpAndFade                       = UIAnimation.PositionY(t.rectTransform, 150, 1.2f);
+        moveUpAndFade                       = UIAnimation.PositionY(tTran, tTran.anchoredPosition.y + 150, 1.2f);
         moveUpAndFade.Play();
         moveUpAndFade                       = UIAnimation.Color(t, Color.clear, 1.2f);
-        moveUpAndFade.OnAnimationFinished   = (GameObject obj) => { obj.SetActive(false); };
+        moveUpAndFade.OnAnimationFinished   = (GameObject obj) => { tTran.SetParent(transform); obj.SetActive(false); };
         moveUpAndFade.Play();
 
         Invoke("AllowNextEXPPopup", .3f);
@@ -160,17 +173,21 @@ public class BattlePopupController : MonoBehaviour
 
         Vector2 spawnPoint = new Vector2(
                                 uTran.anchoredPosition.x
-                                , uTran.anchoredPosition.y + uTran.rect.size.y + 30f
+                                , uTran.anchoredPosition.y + uTran.rect.size.y + 35f
                             );
+
+        RectTransform tTran                 = t.rectTransform;
 
         t.gameObject.SetActive(true);
         t.font                              = UniversalInspectorVariables.instance.KGHappy;
         t.fontSize                          = 40f;
         t.color                             = Color.black;
         t.text                              = ((Helpful.StatTypes)info[0]).GetStringValue().ToUpper() + " up!!";
-        t.transform.localPosition           = spawnPoint;
+        tTran.SetParent(uTran.parent);
+        tTran.localScale                    = Vector3.one;
+        tTran.localPosition                 = spawnPoint;
 
-        RainbowColorCycle(t, .3f, delegate { showingStatUp = false; t.gameObject.SetActive(false); });
+        RainbowColorCycle(t, .3f, delegate { showingStatUp = false; tTran.SetParent(transform); t.gameObject.SetActive(false); });
     }
 
     private void EnqueueLevelUpPopup(Signal signal)
