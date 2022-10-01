@@ -54,7 +54,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject                 abilityButtonPrefab;
     [SerializeField] private GameObject                 abilityButtonChargeMarkerPrefab;
     [SerializeField] private GameObject                 abilityButtonTimerBarPrefab;
-    [SerializeField] private GameObject                 itemSlot;   
+    [SerializeField] private GameObject                 itemSlot;
+    [SerializeField] private GameObject                 unitSelectCardPrefab;
 
     [Space]
 
@@ -63,8 +64,12 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private RectTransform              gameBoardBGRectTrans;
     [SerializeField] private BattleUnitController       currentPlayerUnitController;
     [SerializeField] private BattleUnitController       currentEnemyUnitController;
+    [SerializeField] private RectTransform              playerAbilitiesParentContainer;
+    [SerializeField] private RectTransform              enemyAbilitiesParentContainer;
     [SerializeField] private RectTransform              playerAbilityButtonPanel;
     [SerializeField] private RectTransform              enemyAbilityButtonPanel;
+    [SerializeField] private RectTransform              playerContainer;
+    [SerializeField] private RectTransform              enemyContainer;
     [SerializeField] private Image                      playerSprite;
     [SerializeField] private Image                      enemySprite;
 
@@ -72,7 +77,11 @@ public class BattleManager : MonoBehaviour
 
     [Header("Pre Battle Screen")]
     [SerializeField] private GameObject                 preBattleScreen;
+    [SerializeField] private RectTransform              preBattleScreenAllUnitsContainer;
+    [SerializeField] private RectTransform              preBattleScreenBattleUnitsContainer;
+    [SerializeField] private TextMeshProUGUI            preBattleScreenBattlePartyCount;
     [SerializeField] private Image                      enemyPreBattleImage;
+    [SerializeField] private UIButton                   preBattleScreenStartBattleButton;
     [SerializeField] private TextMeshProUGUI            enemyCountText;
     [SerializeField] private TextMeshProUGUI            enemyNameText;
     [SerializeField] private TextMeshProUGUI            enemyBattleGameName;
@@ -108,6 +117,7 @@ public class BattleManager : MonoBehaviour
     private BattleGameControllerBase                    currentGameController;
     private List<AbilityButtonController>               playerAbilityButtons;
     private List<AbilityButtonController>               enemyAbilityButtons;
+    private List<Unit>                                  playerBattleParty;
     private List<Unit>                                  enemyParty;
     private int                                         prePanelEnemyDisplayedIndex;
     private Dictionary<UnitStat, int>                   expEarnedDuringBattle;
@@ -131,6 +141,8 @@ public class BattleManager : MonoBehaviour
     private SignalStream                                battle_boardreset_stream;
     private SignalReceiver                              partymanagement_expadded_receiver;
     private SignalStream                                partymanagement_expadded_stream;
+    private SignalReceiver                              battle_unitselectcardclicked_receiver;
+    private SignalStream                                battle_unitselectcardclicked_stream;
 
     #endregion
 
@@ -167,7 +179,8 @@ public class BattleManager : MonoBehaviour
         battle_unpause_stream                       = SignalStream.Get("Battle", "Unpause");
         battle_countdownended_stream                = SignalStream.Get("Battle", "CountdownEnded");
         battle_boardreset_stream                    = SignalStream.Get("Battle", "BoardReset");
-        partymanagement_expadded_stream             = SignalStream.Get("PartyManagement", "AwardExperience");  
+        partymanagement_expadded_stream             = SignalStream.Get("PartyManagement", "AwardExperience");
+        battle_unitselectcardclicked_stream         = SignalStream.Get("Battle", "UnitSelectCardClicked");
 
         battle_playerkoed_receiver                  = new SignalReceiver().SetOnSignalCallback(PlayerKO);
         battle_enemykoed_receiver                   = new SignalReceiver().SetOnSignalCallback(EnemyKO);
@@ -176,6 +189,7 @@ public class BattleManager : MonoBehaviour
         battle_countdownended_receiver              = new SignalReceiver().SetOnSignalCallback(CountdownEndedBattleBegin);
         battle_boardreset_receiver                  = new SignalReceiver().SetOnSignalCallback(BoardReset);
         partymanagement_expadded_receiver           = new SignalReceiver().SetOnSignalCallback(AddEXPEarnedInBattle);
+        battle_unitselectcardclicked_receiver       = new SignalReceiver().SetOnSignalCallback(UnitSelectCardClicked);
 
         enemyParty                                  = new List<Unit>(GameManager.instance.CurrentLevel.enemyUnits);
         prePanelEnemyDisplayedIndex                 = 0;
@@ -220,6 +234,7 @@ public class BattleManager : MonoBehaviour
         battle_countdownended_stream.ConnectReceiver(battle_countdownended_receiver);
         battle_boardreset_stream.ConnectReceiver(battle_boardreset_receiver);
         partymanagement_expadded_stream.ConnectReceiver(partymanagement_expadded_receiver);
+        battle_unitselectcardclicked_stream.ConnectReceiver(battle_unitselectcardclicked_receiver);
     }
 
     private void OnDisable()
@@ -231,6 +246,7 @@ public class BattleManager : MonoBehaviour
         battle_countdownended_stream.DisconnectReceiver(battle_countdownended_receiver);
         battle_boardreset_stream.DisconnectReceiver(battle_boardreset_receiver);
         partymanagement_expadded_stream.DisconnectReceiver(partymanagement_expadded_receiver);
+        battle_unitselectcardclicked_stream.DisconnectReceiver(battle_unitselectcardclicked_receiver);
     }
 
     private void OnDestroy()
@@ -242,12 +258,21 @@ public class BattleManager : MonoBehaviour
 
     #region Public Functions
 
-    //Called by the Begin Battle Button's OnClick Behavior
+    //Called by the Start Battle Button's OnClick Behavior
     public void BeginBattle()
     {
         preBattleScreen.SetActive(false);
 
-        SetupPlayerBattleUnit(PlayerPartyManager.instance.GetFirstLivingUnit());
+        playerBattleParty = new List<Unit>();
+
+        for (int i = 0; i < preBattleScreenBattleUnitsContainer.childCount; i++)
+        {
+            playerBattleParty.Add(preBattleScreenBattleUnitsContainer.GetChild(i).GetComponent<UnitSelectCardController>().Unit);
+        }
+
+        SetupPlayerBattleUnit(playerBattleParty.GetFirstLivingUnit());
+
+        //SetupPlayerBattleUnit(PlayerPartyManager.instance.GetFirstLivingUnit());
 
         SetupEnemyBattleUnit(enemyParty[0]);
 
@@ -259,7 +284,7 @@ public class BattleManager : MonoBehaviour
     {
         prePanelEnemyDisplayedIndex = Mathf.Clamp(prePanelEnemyDisplayedIndex + upDown, 0, enemyParty.Count - 1);
 
-        SetupPreBattleScreen();
+        UpdatePreBattleEnemyDisplay();
     }
 
     public void InitializeEnemyUnits()
@@ -270,6 +295,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    //Called by the OnClick behaviors of the PreBattle and PostBattle screens' exit buttons
     public void ReturnToWorldMap()
     {
         currentPlayerUnitController.ResetBattleUnitController();
@@ -291,6 +317,12 @@ public class BattleManager : MonoBehaviour
         pauseButton.SetActive(false);
         pauseScreen.SetActive(false);
 
+        UpdatePreBattleEnemyDisplay();
+        SetupBattlePartyChoices();
+    }
+
+    private void UpdatePreBattleEnemyDisplay()
+    {
         enemyPreBattleImage.sprite  = enemyParty[prePanelEnemyDisplayedIndex].InBattleSprite;
         enemyCountText.text         = string.Format("# {0} / {1}", (prePanelEnemyDisplayedIndex + 1).ToString(), enemyParty.Count.ToString());
         enemyNameText.text          = enemyParty[prePanelEnemyDisplayedIndex].Name;
@@ -301,6 +333,83 @@ public class BattleManager : MonoBehaviour
 
         nextArrow.SetActive(prePanelEnemyDisplayedIndex != enemyParty.Count - 1);
         previousArrow.SetActive(prePanelEnemyDisplayedIndex > 0);
+    }
+
+    private void SetupBattlePartyChoices()
+    {
+        //TODO: Set "unlimited" unit levels better
+        int maxUnits    = GameManager.instance.CurrentLevel.numOfUnitsAllowed < 1 ? 100 : GameManager.instance.CurrentLevel.numOfUnitsAllowed;
+        bool canStart   = true;
+
+        for (int i = 0; i < PlayerPartyManager.instance.partyBattleUnits.Count; i++)
+        {
+            bool r = GameManager.instance.CurrentLevel.requiredUnits.Contains(PlayerPartyManager.instance.partyBattleUnits[i].Name);
+
+            GameObject go                       = Instantiate(unitSelectCardPrefab
+                                                    , r ? preBattleScreenBattleUnitsContainer : preBattleScreenAllUnitsContainer);
+
+            go.transform.localPosition          = Vector2.zero;
+            go.transform.localScale             = Vector3.one;
+
+            UnitSelectCardController control    = go.GetComponent<UnitSelectCardController>();
+
+            control.Setup(PlayerPartyManager.instance.partyBattleUnits[i]
+                , GameManager.instance.CurrentLevel.forbiddenUnits.Contains(PlayerPartyManager.instance.partyBattleUnits[i].Name)
+                , r
+                , PlayerPartyManager.instance.partyBattleUnits[i].KOed);
+
+            if (r && PlayerPartyManager.instance.partyBattleUnits[i].KOed)
+                canStart = false;
+        }
+
+        preBattleScreenBattlePartyCount.text = string.Format("{0} / {1}"
+            , preBattleScreenBattleUnitsContainer.childCount.ToString()
+            , maxUnits.ToString());
+
+        //If a required unit is KOed or if there are no required units, you need to select some to start the battle
+        if (!canStart || preBattleScreenBattleUnitsContainer.childCount == 0)
+            preBattleScreenStartBattleButton.interactable = false;
+    }
+
+    private void UnitSelectCardClicked(Signal signal)
+    {
+        //Signal is object[2]
+        //info[1]   - UnitSelectCardController  - The card that was clicked's controller //TODO: Not sure i need this sent by the signal
+        //info[2]   - RectTransform             - The cards transform
+
+        object[] info   = signal.GetValueUnsafe<object[]>();
+
+        RectTransform r = (RectTransform)info[1];
+        int maxUnits    = GameManager.instance.CurrentLevel.numOfUnitsAllowed < 1 ? 100 : GameManager.instance.CurrentLevel.numOfUnitsAllowed;
+
+        if (r.parent == preBattleScreenAllUnitsContainer)
+        {
+            if (preBattleScreenBattleUnitsContainer.childCount < maxUnits)
+            {
+                r.SetParent(preBattleScreenBattleUnitsContainer);
+            }
+        }
+        else
+        {
+            r.SetParent(preBattleScreenAllUnitsContainer);
+        }
+
+        preBattleScreenBattlePartyCount.text = string.Format("{0} / {1}"
+                                                , preBattleScreenBattleUnitsContainer.childCount.ToString()
+                                                , maxUnits.ToString());
+
+        bool canStart = preBattleScreenBattleUnitsContainer.childCount > 0;
+
+        foreach (UnitSelectCardController control in preBattleScreenBattleUnitsContainer.GetComponentsInChildren<UnitSelectCardController>())
+        {
+            if (control.Required && control.KOed)
+            {
+                canStart = false;
+                break;
+            }
+        }
+
+        preBattleScreenStartBattleButton.interactable = canStart;
     }
 
     private void SetupPlayerBattleUnit(Unit playerUnit)
@@ -401,7 +510,20 @@ public class BattleManager : MonoBehaviour
         DisableEnemyAbilityButtons();
 
         PausePlayerTimerAbilities();
-        PauseEnemyTimerAbilities(); 
+        PauseEnemyTimerAbilities();
+
+        UIAnimation u   = UIAnimation.Width(gameBoardRectTrans, 950, 1.5f);
+        u.Play();
+        u               = UIAnimation.Width(gameBoardBGRectTrans, 950, 1.5f);
+        u.Play();
+        u               = UIAnimation.PositionX(playerContainer, -680, 1.5f);
+        u.Play();
+        u               = UIAnimation.PositionX(enemyContainer, 680, 1.5f);
+        u.Play();
+        u               = UIAnimation.PositionX(playerAbilitiesParentContainer, -730, 1.5f);
+        u.Play();
+        u               = UIAnimation.PositionX(enemyAbilitiesParentContainer, 730, 1.5f);
+        u.Play();
 
         Signal.Send("Battle", "StartCountdown");
     }
@@ -481,11 +603,13 @@ public class BattleManager : MonoBehaviour
 
     private void PlayerKO(Signal signal)
     {
-        if (PlayerPartyManager.instance.GetFirstLivingUnit() != null)
+        //if (PlayerPartyManager.instance.GetFirstLivingUnit() != null)
+        if (playerBattleParty.GetFirstLivingUnit() != null)
         {
             currentPlayerUnitController.ResetBattleUnitController();
 
-            SetupPlayerBattleUnit(PlayerPartyManager.instance.GetFirstLivingUnit());
+            //SetupPlayerBattleUnit(PlayerPartyManager.instance.GetFirstLivingUnit());
+            SetupPlayerBattleUnit(playerBattleParty.GetFirstLivingUnit());
 
             StartPlayerTimerAbilities();
         }

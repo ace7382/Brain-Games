@@ -9,4 +9,7 @@ public class NewLevelBase : ScriptableObject
     public bool                 unlocked;
     public List<NewLevelBase>   levelsUnlockedByThisLevel;
     public List<Unit>           enemyUnits;
+    public List<string>         requiredUnits;
+    public List<string>         forbiddenUnits;
+    public int                  numOfUnitsAllowed;
 }

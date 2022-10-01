@@ -7,9 +7,9 @@ public class StatModifier
 {
     #region Private Variables
 
-    [SerializeField] private Helpful.StatTypes   statBeingModified;
-    [SerializeField] private bool                percent;
-    [SerializeField] private int                 amount;
+    [SerializeField] protected Helpful.StatTypes   statBeingModified;
+    [SerializeField] protected bool                percent;
+    [SerializeField] protected int                 amount;
 
     //TODO: Add Source?
 

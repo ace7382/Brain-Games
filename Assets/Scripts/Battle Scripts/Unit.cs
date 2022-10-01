@@ -113,6 +113,17 @@ public class Unit
         get { return battleUnitBase.itemRewards; }
     }
 
+    public bool KOed
+    {
+        get {
+            Debug.Log(string.Format("CHecking KO status of {0}. Current MH: {1}, KO Status: {2}"
+                , Name
+                , CurrentHP.ToString()
+                , currentHP == 0));
+            return currentHP == 0; 
+        }
+    }
+
     #endregion
 
     #region Public Functions

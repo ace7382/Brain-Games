@@ -66,7 +66,7 @@ public class BattleUnitController : MonoBehaviour
 
     public void ResetBattleUnitController()
     {
-        if (unit == null)
+        if (unit == null || unit.Abilities == null)
             return;
 
         for (int i = 0; i < this.unit.Abilities.Count; i++)

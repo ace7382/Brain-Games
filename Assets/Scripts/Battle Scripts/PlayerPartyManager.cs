@@ -35,8 +35,9 @@ public class PlayerPartyManager : MonoBehaviour
 
     public Dictionary<Item, int>        PartyItems          { get { return partyItems; } }
     public List<Unit>                   InjuredPartyMembers { get { return partyBattleUnits.Where(x => x.GetStatWithMods(Helpful.StatTypes.MaxHP) != x.CurrentHP).ToList(); } }
-    public List<Unit>                   KOedPartyMembers    { get { return partyBattleUnits.Where(x => x.CurrentHP == 0).ToList(); } }
+    public List<Unit>                   KOedPartyMembers    { get { return partyBattleUnits.Where(x => x.KOed).ToList(); } }
     public List<Unit>                   AlivePartyMembers   { get { return partyBattleUnits.Where(x => x.CurrentHP > 0).ToList(); } }
+    
     #endregion
 
     #region Unity Functions
@@ -99,6 +100,7 @@ public class PlayerPartyManager : MonoBehaviour
 
     #region Public Functions
 
+    //TODO: Change this to use the List_Unit_Extension
     public Unit GetFirstLivingUnit()
     {
         return partyBattleUnits.Find(x => x.CurrentHP > 0);

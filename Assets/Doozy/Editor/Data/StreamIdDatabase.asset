@@ -35,6 +35,8 @@ MonoBehaviour:
     - Category: Battle
       Name: IncorrectResponse
     - Category: Battle
+      Name: Lost
+    - Category: Battle
       Name: Pause
     - Category: Battle
       Name: PlayerCurrentHPUpdate
@@ -51,9 +53,13 @@ MonoBehaviour:
     - Category: Battle
       Name: StartCountdown
     - Category: Battle
+      Name: UnitSelectCardClicked
+    - Category: Battle
       Name: UnitTakeDamage
     - Category: Battle
       Name: Unpause
+    - Category: Battle
+      Name: Won
     - Category: CodeBreaker
       Name: AssignChoice
     - Category: CodeBreaker
