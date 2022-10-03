@@ -25,6 +25,14 @@ public class BattleManager : MonoBehaviour
         public Unit                 unit;
     }
 
+    private struct PlayerUnitEnemyEXPAward
+    {
+        public Unit                playerUnit;
+        public Unit                enemyUnit;
+        public Helpful.StatTypes   statType;
+        public int                 expAmount;
+    }
+
     private struct PreBattleStats
     {
         public Unit                 unit;
@@ -124,10 +132,11 @@ public class BattleManager : MonoBehaviour
     private int                                         prePanelEnemyDisplayedIndex;
     private Dictionary<UnitStat, int>                   expEarnedDuringBattle;
     private List<PreBattleStats>                        preBattleStats;
-    private IEnumerator                                 postBattleScreenAnimationCoroutine;
     private bool                                        battleWon = false;
-    [SerializeField]private List<UIAnimation>           currentAnimations;
-    [SerializeField]private List<Task>                  currentTasks;
+    private List<UIAnimation>                           currentAnimations;
+    private List<Task>                                  currentTasks;
+    private Dictionary<Item, int>                       battleItemRewards;
+    private List<PlayerUnitEnemyEXPAward>               unitEXPRewardsFromDefeatedEnemies;
 
     #endregion
 
@@ -207,6 +216,8 @@ public class BattleManager : MonoBehaviour
         preBattleStats                              = new List<PreBattleStats>();
         currentAnimations                           = new List<UIAnimation>();
         currentTasks                                = new List<Task>();
+        battleItemRewards                           = new Dictionary<Item, int>();
+        unitEXPRewardsFromDefeatedEnemies           = new List<PlayerUnitEnemyEXPAward>();
 
         //TODO: Set the snapshot when party for the level is selected vs every single party member
         //      Might be easier to just apply points earned in battle at end though
@@ -307,6 +318,104 @@ public class BattleManager : MonoBehaviour
         currentEnemyUnitController.ResetBattleUnitController();
 
         Signal.Send("Battle", "ReturnToWorldMap");
+    }
+
+    //Called by the Post Battle Screen's Invisible Button's OnClick Behavior
+    public void SkipEndBattleScreenAnimation()
+    {
+        //Hide invisible button
+        postBattleScreenInvisibleButton.gameObject.SetActive(false);
+
+        //Stop all currently running animations
+        //Iterate backwards bc we want to remove items from the list each loop
+        for (int i = currentAnimations.Count - 1; i >= 0; i--)
+        {
+            currentAnimations[i].Stop();
+            AnimationEnded(currentAnimations[i]);
+        }
+        for (int i = currentTasks.Count - 1; i >= 0; i--)
+        {
+            currentTasks[i].Stop();
+        }
+
+        //Set all of the screen titles to full alpha
+        postBattleScreenVictoryDefeatText.GetComponent<CanvasGroup>().alpha = 1f;
+
+        for (int i = 0; i < postBattleScreenSectionLabels.Length; i++)
+        {
+            postBattleScreenSectionLabels[i].color = Color.black;
+        }
+
+        for (int i = 0; i < postBattleScreenExpBarProgressors.Length; i++)
+        {
+            postBattleScreenExpBarProgressors[i].GetComponentInParent<CanvasGroup>().alpha = 1f;
+        }
+
+        //Create Battle Party Icons
+        AddBattlePartyIcons();
+
+        //Set the EXP bar label to Total
+        postBattleScreenExpTitle.text   = "Total";
+        postBattleScreenExpTitle.color  = new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g
+                                                    , postBattleScreenExpTitle.color.b, 1f);
+
+        //Set all of the EXP levels, bars, and +xxx values
+        int[] expEarned                 = new int[postBattleScreenExpBarProgressors.Length];
+        UnitStat k                      = new UnitStat();
+        k.unit                          = currentPlayerUnitController.UnitInfo;
+        List<Unit> enemiesDefeated      = enemyParty.FindAll(x => x.CurrentHP <= 0);
+
+        //Get the performance exp
+        for (int i = 0; i < postBattleScreenExpBarProgressors.Length; i++)
+        {
+            k.statType                  = (Helpful.StatTypes)i;
+            expEarned[i]                = expEarnedDuringBattle.ContainsKey(k) ? expEarnedDuringBattle[k] : 0;
+        }
+
+        //Reset the bars back to their base so we aren't adding to anything that's already filled
+        SetPostScreenEXPBars(currentPlayerUnitController.UnitInfo);
+
+        //Add enemy icons, and add the enemy defeat reward xp to existing totals
+        foreach (Transform child in postBattleScreenEnemiesDefeatedContainer)
+            Destroy(child.gameObject);
+
+        for (int i = 0; i < enemiesDefeated.Count; i++)
+        {
+            AddEnemyIconToPostBattleScreen(enemiesDefeated[i]).color = Color.white;
+        }
+
+        for (int i = 0; i < unitEXPRewardsFromDefeatedEnemies.Count; i++)
+        {
+            if (unitEXPRewardsFromDefeatedEnemies[i].playerUnit == CurrentPlayerUnit.UnitInfo)
+            {
+                expEarned[(int)unitEXPRewardsFromDefeatedEnemies[i].statType] += unitEXPRewardsFromDefeatedEnemies[i].expAmount;
+            }
+        }
+
+        //Set all of the displays
+        for (int i = 0; i < expEarned.Length; i++)
+        {
+            if (expEarned[i] > 0)
+            {
+                //zero time, so this is completed instantly (really large amounts of exp will make this stutter/jump fyi
+                Task fillBarsTask = new Task(FillBar(postBattleScreenExpBarProgressors[i], postBattleScreenExpBarLevels[i],
+                                  k.unit, (Helpful.StatTypes)i, expEarned[i], 0f));
+
+                postBattleScreenExpBarAdds[i].text = "+" + expEarned[i].ToString();
+                postBattleScreenExpBarAdds[i].gameObject.SetActive(true);
+            }
+        }
+
+        //Show all items gained
+        foreach (Transform child in postBattleScreenItemRewardContainer)
+            Destroy(child.gameObject);
+
+        AddItemIcons();
+
+        //Show buttons at bottom
+        postBattleScreenButtonPanel.alpha = 1f;
+
+        ApplyEndOfBattleRewards();
     }
 
     #endregion
@@ -608,12 +717,10 @@ public class BattleManager : MonoBehaviour
 
     private void PlayerKO(Signal signal)
     {
-        //if (PlayerPartyManager.instance.GetFirstLivingUnit() != null)
         if (playerBattleParty.GetFirstLivingUnit() != null)
         {
             currentPlayerUnitController.ResetBattleUnitController();
 
-            //SetupPlayerBattleUnit(PlayerPartyManager.instance.GetFirstLivingUnit());
             SetupPlayerBattleUnit(playerBattleParty.GetFirstLivingUnit());
 
             StartPlayerTimerAbilities();
@@ -665,54 +772,6 @@ public class BattleManager : MonoBehaviour
         currentGameController.Unpause();
     }
 
-    //Called by the Post Battle Screen's Invisible Button's OnClick Behavior
-    public void SkipEndBattleScreenAnimation()
-    {
-        //PostBattleScreenAnimation -> SetPostScreenEXPBars >>
-        //ProcessPostBattleRewards -> FillBars
-
-        //Hide button
-        postBattleScreenInvisibleButton.gameObject.SetActive(false);
-
-        //Stop all currently running animations
-        //Iterate backwards bc we want to remove items from the list each loop
-        for (int i = currentAnimations.Count - 1; i >= 0; i--)
-        {
-            currentAnimations[i].Stop();
-            AnimationEnded(currentAnimations[i]);
-        }
-        for (int i = currentTasks.Count - 1; i >= 0; i--)
-        {
-            currentTasks[i].Stop();
-        }
-
-        //1) Set all of the screen titles to full alpha
-        postBattleScreenVictoryDefeatText.GetComponent<CanvasGroup>().alpha = 1f;
-
-        for (int i = 0; i < postBattleScreenSectionLabels.Length; i++)
-        {
-            postBattleScreenSectionLabels[i].color = Color.black;
-        }
-
-        for (int i = 0; i < postBattleScreenExpBarProgressors.Length; i++)
-        {
-            postBattleScreenExpBarProgressors[i].GetComponentInParent<CanvasGroup>().alpha = 1f;
-        }
-
-        AddBattlePartyIcons();
-
-        //2) Set the EXP bar label to Total
-        postBattleScreenExpTitle.text   = "Total";
-        postBattleScreenExpTitle.color = new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g
-                                                    , postBattleScreenExpTitle.color.b, 1f);
-
-        //3) Set all of the EXP levels, bars, and +xxx values
-        //4) Show all enemies defeated
-        //5) Show all party member icons
-        //6) Show all items gained
-        //7) Show buttons at bottom
-    }
-
     private void ShowEndOfBattleScreen()
     {
         //TODO: Maybe move this elsewhere?
@@ -728,6 +787,46 @@ public class BattleManager : MonoBehaviour
                         //GameManager.instance.SetWorldMapUnlockLevels(GameManager.instance.CurrentLevel.levelsUnlockedByThisLevel[i]);
                     }
                 }
+            }
+        }
+
+        //Calculate items and EXP won from defeated enemies
+        List<Unit> enemiesDefeated = enemyParty.FindAll(x => x.CurrentHP <= 0);
+
+        for (int e = 0; e < enemiesDefeated.Count; e++)
+        {
+            //Items Earned
+            for (int i = 0; i < enemiesDefeated[e].ItemRewards.Count; i++)
+            {
+                ItemReward reward   = enemiesDefeated[e].ItemRewards[i];
+                float rand          = Random.Range(0f, 100f);
+
+                if (rand <= reward.Chance) //Item Received
+                {
+                    //TODO; maybe weight this toward fewer drops?
+                    int count = Random.Range(reward.MinDropped, reward.MaxDropped + 1);
+
+                    if (battleItemRewards.ContainsKey(reward.Item)) //Add to existing 
+                    {
+                        battleItemRewards[reward.Item] += count;
+                    }
+                    else
+                    {
+                        battleItemRewards.Add(reward.Item, count);
+                    }
+                }
+            }
+
+            //EXP earned
+            for (int i = 0; i < enemiesDefeated[e].EXPAward.Count; i++)
+            {
+                PlayerUnitEnemyEXPAward award   = new PlayerUnitEnemyEXPAward();
+                award.playerUnit                = CurrentPlayerUnit.UnitInfo;
+                award.enemyUnit                 = enemiesDefeated[e];
+                award.statType                  = (Helpful.StatTypes)enemiesDefeated[e].EXPAward[i].x;
+                award.expAmount                 = enemiesDefeated[e].EXPAward[i].y;
+
+                unitEXPRewardsFromDefeatedEnemies.Add(award);
             }
         }
 
@@ -747,8 +846,7 @@ public class BattleManager : MonoBehaviour
         PauseEnemyTimerAbilities();
         PausePlayerTimerAbilities();
 
-        //Hide Abilities & HP bars -
-        //TODO: might want to store references to these from the inspector vs the find and get component calls here
+        //Hide Abilities & HP bars
         UIAnimation u           = UIAnimation.Alpha(playerAbilityButtonPanel.GetComponentInParent<CanvasGroup>(), 0f, screenOpeningTime / 2f);
         u.Play();
         u                       = UIAnimation.Alpha(enemyAbilityButtonPanel.GetComponentInParent<CanvasGroup>(), 0f, screenOpeningTime / 2f);
@@ -767,15 +865,12 @@ public class BattleManager : MonoBehaviour
         u.Play();
         u                       = UIAnimation.Width(gameBoardBGRectTrans, 1800, screenOpeningTime);
 
-        u.OnAnimationFinished   = delegate 
-            {
-                PostBattleScreenAnimation(); 
-            };
+        u.OnAnimationFinished   = delegate { PostBattleScreenInitialAnimation(); };
 
         u.Play();
     }
 
-    private void PostBattleScreenAnimation()
+    private void PostBattleScreenInitialAnimation()
     {
         float animationTime                     = .5f;
 
@@ -786,9 +881,6 @@ public class BattleManager : MonoBehaviour
 
         SetPostScreenEXPBars(currentPlayerUnitController.UnitInfo);
 
-        //***********
-        //**********Invisible button setup here bitch
-        //***********
         postBattleScreenInvisibleButton.gameObject.SetActive(true);
 
         //TODO: I should do this correctly with coroutines and fade in functions instead of these nested UIAnimation.OnEnds
@@ -823,7 +915,9 @@ public class BattleManager : MonoBehaviour
                                 {
                                     AnimationEnded(EXPBarFadeIn);
 
-                                    StartCoroutine(ProcessPostBattleRewards());
+                                    Task rewards = new Task(PostBattleScreenSecondaryAnimation());
+                                    rewards.Finished += delegate { currentTasks.Remove(rewards); };
+                                    currentTasks.Add(rewards);
                                 };
                             }
                             else
@@ -871,37 +965,45 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private IEnumerator ProcessPostBattleRewards()
+    private IEnumerator PostBattleScreenSecondaryAnimation()
     {
-        //TODO: Sync the EXP column's title change with the other fades/fills.
-        //      Not important now bc the screen will almost definitely be redone
-
         float tickUpTime                        = 2.3f;
         float pauseBetweenEnemiesTime           = .7f;
         WaitForSeconds tickTimeWait             = new WaitForSeconds(tickUpTime);
         WaitForSeconds pauseBetweenEnemies      = new WaitForSeconds(pauseBetweenEnemiesTime);
         List<Unit> enemiesDefeated              = enemyParty.FindAll(x => x.CurrentHP <= 0);
-        List<ItemSlotController> items          = new List<ItemSlotController>();
 
-        UIAnimation text1out = UIAnimation.Color(postBattleScreenExpTitle,
-            new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g, postBattleScreenExpTitle.color.b, 0f)
-            , pauseBetweenEnemiesTime / 2f);
+        //***Switch EXP Header***
+        UIAnimation text1out                    = UIAnimation.Color(postBattleScreenExpTitle,
+                                                new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g
+                                                    , postBattleScreenExpTitle.color.b, 0f)
+                                                , pauseBetweenEnemiesTime / 2f);
         currentAnimations.Add(text1out);
-        text1out.OnAnimationFinished = delegate { 
-            AnimationEnded(text1out); 
-            postBattleScreenExpTitle.text = "Battle Performance";
-            UIAnimation text1in = UIAnimation.Color(postBattleScreenExpTitle,
-            new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g, postBattleScreenExpTitle.color.b, 1f)
-            , pauseBetweenEnemiesTime / 2f);
-            currentAnimations.Add(text1in);
-            text1in.OnAnimationFinished = delegate { AnimationEnded(text1in); };
-            text1in.Play();
-        };
-        text1out.Play();
 
+        text1out.OnAnimationFinished            = delegate { 
+                                                    AnimationEnded(text1out); 
+
+                                                    postBattleScreenExpTitle.text   = "Battle Performance";
+                                                    UIAnimation text1in             = UIAnimation.Color(postBattleScreenExpTitle,
+                                                                                        new Color(postBattleScreenExpTitle.color.r
+                                                                                            , postBattleScreenExpTitle.color.g
+                                                                                            , postBattleScreenExpTitle.color.b, 1f)
+                                                                                        , pauseBetweenEnemiesTime / 2f);
+                                                    
+                                                    currentAnimations.Add(text1in);
+                                                    
+                                                    text1in.OnAnimationFinished = delegate { AnimationEnded(text1in); };
+            
+                                                    text1in.Play();
+                                                };
+        text1out.Play();
+        //**********
+
+        //***Update EXP Bars for Battle Performance EXP***
         UnitStat k                              = new UnitStat();
         k.unit                                  = currentPlayerUnitController.UnitInfo;
         bool needsToYield                       = false;
+
         for (int i = 0; i < postBattleScreenExpBarAdds.Length; i++)
         {
             k.statType                          = (Helpful.StatTypes)i;
@@ -914,170 +1016,150 @@ public class BattleManager : MonoBehaviour
 
                 postBattleScreenExpBarAdds[i].gameObject.SetActive(true);
 
-                //StartCoroutine(Helpful.IncreaseDisplayNumberOverTime(postBattleScreenExpBarAdds[i], 0, expEarned, "+", "", tickUpTime));
-                //StartCoroutine(FillBar(postBattleScreenExpBarProgressors[i], postBattleScreenExpBarLevels[i],
-                //                        k.unit, k.statType, expEarned, tickUpTime));
+                Task increaseNumTask            = new Task(Helpful.IncreaseDisplayNumberOverTime(postBattleScreenExpBarAdds[i]
+                                                    , 0, expEarned, "+", "", tickUpTime));
+                increaseNumTask.Finished        += delegate { currentTasks.Remove(increaseNumTask); };
 
-                Task increaseNumTask = new Task(Helpful.IncreaseDisplayNumberOverTime(postBattleScreenExpBarAdds[i], 0, expEarned, "+", "", tickUpTime));
-                increaseNumTask.Finished += delegate { currentTasks.Remove(increaseNumTask); };
                 currentTasks.Add(increaseNumTask);
 
-                Task fillBarsTask = new Task(FillBar(postBattleScreenExpBarProgressors[i], postBattleScreenExpBarLevels[i],
-                                              k.unit, k.statType, expEarned, tickUpTime));
-                fillBarsTask.Finished += delegate { currentTasks.Remove(fillBarsTask); };
+                Task fillBarsTask               = new Task(FillBar(postBattleScreenExpBarProgressors[i]
+                                                    , postBattleScreenExpBarLevels[i],
+                                                     k.unit, k.statType, expEarned, tickUpTime));
+                fillBarsTask.Finished           += delegate { currentTasks.Remove(fillBarsTask); };
+
                 currentTasks.Add(fillBarsTask);
             }
         }
 
         if (needsToYield)
             yield return tickTimeWait;
+        //*********
 
-        UIAnimation text2out = UIAnimation.Color(postBattleScreenExpTitle,
-            new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g, postBattleScreenExpTitle.color.b, 0f)
-            , pauseBetweenEnemiesTime / 2f);
+        //***Switch EXP Header***
+        UIAnimation text2out                    = UIAnimation.Color(postBattleScreenExpTitle,
+                                                new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g
+                                                , postBattleScreenExpTitle.color.b, 0f)
+                                                , pauseBetweenEnemiesTime / 2f);
         currentAnimations.Add(text2out);
-        text2out.OnAnimationFinished = delegate {
-            AnimationEnded(text2out);
-            postBattleScreenExpTitle.text = "Enemy Rewards";
-            UIAnimation text2in = UIAnimation.Color(postBattleScreenExpTitle,
-            new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g, postBattleScreenExpTitle.color.b, 1f)
-            , pauseBetweenEnemiesTime / 2f);
-            currentAnimations.Add(text2in);
-            text2in.OnAnimationFinished = delegate { AnimationEnded(text2in); };
-            text2in.Play();
-        };
+
+        text2out.OnAnimationFinished            = delegate {
+                                                    AnimationEnded(text2out);
+
+                                                    postBattleScreenExpTitle.text   = "Enemy Rewards";
+                                                    UIAnimation text2in             = UIAnimation.Color(postBattleScreenExpTitle,
+                                                                                    new Color(postBattleScreenExpTitle.color.r
+                                                                                        , postBattleScreenExpTitle.color.g
+                                                                                        , postBattleScreenExpTitle.color.b, 1f)
+                                                                                    , pauseBetweenEnemiesTime / 2f);
+            
+                                                    currentAnimations.Add(text2in);
+
+                                                    text2in.OnAnimationFinished     = delegate { AnimationEnded(text2in); };
+            
+                                                    text2in.Play();
+                                                };
+        
         text2out.Play();
 
         yield return pauseBetweenEnemies;
+        //**********
 
+        //***Fade in enemies and fill EXP bars for enemy rewards***
         for (int e = 0; e < enemiesDefeated.Count; e++)
         {
-            GameObject go   = new GameObject();
-            Image goI       = go.AddComponent<Image>();
-            goI.sprite      = enemiesDefeated[e].InBattleSprite;
-            goI.color       = new Color32(255, 255, 255, 255);
-            Transform t     = go.transform;
-            t.SetParent(postBattleScreenEnemiesDefeatedContainer);
-            t.localScale    = Vector3.one;
-            t.localPosition = Vector3.zero;
+            Task enemyIn        = new Task(Helpful.FadeGraphicIn(AddEnemyIconToPostBattleScreen(enemiesDefeated[e]), tickUpTime));
+            enemyIn.Finished    += delegate { currentTasks.Remove(enemyIn); };
+            currentTasks.Add(enemyIn);
 
-            StartCoroutine(Helpful.FadeGraphicIn(goI, tickUpTime));
-
-            //TODO: Don't think this really fades in. They kind of just appear; probably need to update my fade in function
-            Task fadeEnemyIn        = new Task(Helpful.FadeGraphicIn(goI, tickUpTime));
-            fadeEnemyIn.Finished    += delegate { currentTasks.Remove(fadeEnemyIn); };
-            currentTasks.Add(fadeEnemyIn);
-
-            if (enemiesDefeated[e].EXPAward.Count > 0)
-            { 
-                for (int i = 0; i < enemiesDefeated[e].EXPAward.Count; i++)
-                {
-                    int statIndex = enemiesDefeated[e].EXPAward[i].x;
-
-                    if (!postBattleScreenExpBarAdds[statIndex].gameObject.activeInHierarchy)
-                    {
-                        postBattleScreenExpBarAdds[statIndex].text = "+0";
-                        postBattleScreenExpBarAdds[statIndex].gameObject.SetActive(true);
-                    }
-
-                    int cv = int.Parse(postBattleScreenExpBarAdds[statIndex].text.Substring(1));
-                    int ev = cv + enemiesDefeated[e].EXPAward[i].y;
-
-                    Task increaseDisplayNumber = new Task(Helpful.IncreaseDisplayNumberOverTime(postBattleScreenExpBarAdds[statIndex], cv, ev, "+", "", tickUpTime));
-                    increaseDisplayNumber.Finished += delegate { currentTasks.Remove(increaseDisplayNumber); };
-                    currentTasks.Add(increaseDisplayNumber);
-
-                    Task fillBars = new Task(FillBar(postBattleScreenExpBarProgressors[statIndex], postBattleScreenExpBarLevels[statIndex]
-                                            , k.unit, (Helpful.StatTypes)statIndex, enemiesDefeated[e].EXPAward[i].y, tickUpTime));
-                    fillBars.Finished += delegate { currentTasks.Remove(fillBars); };
-                    currentTasks.Add(fillBars);
-
-                    //StartCoroutine(Helpful.IncreaseDisplayNumberOverTime(postBattleScreenExpBarAdds[statIndex], cv, ev, "+", "", tickUpTime));
-                    //StartCoroutine(FillBar(postBattleScreenExpBarProgressors[statIndex], postBattleScreenExpBarLevels[statIndex]
-                    //                        , k.unit, (Helpful.StatTypes)statIndex, enemiesDefeated[e].EXPAward[i].y, tickUpTime));
-
-                    //TODO: This better. Will need to be reworked when allowing multiple units per battle to earn exp
-                    object[] info   = new object[3];
-                    info[0]         = enemiesDefeated[e].EXPAward[i].x; //Stat
-                    info[1]         = enemiesDefeated[e].EXPAward[i].y; //Amount
-                    info[2]         = k.unit;                           //Unit
-
-                    Signal.Send("PartyManagement", "AwardExperience", info);
-                }
-            }
-
-            if (enemiesDefeated[e].ItemRewards.Count > 0)
+            List<PlayerUnitEnemyEXPAward> expFromThisEnemy  = unitEXPRewardsFromDefeatedEnemies.FindAll(x => x.enemyUnit == enemiesDefeated[e]);
+            
+            for (int i = 0; i < expFromThisEnemy.Count; i++)
             {
-                for (int i = 0; i < enemiesDefeated[e].ItemRewards.Count; i++)
+                int statIndex = (int)expFromThisEnemy[i].statType;
+
+                if (!postBattleScreenExpBarAdds[statIndex].gameObject.activeInHierarchy)
                 {
-                    ItemReward reward                       = enemiesDefeated[e].ItemRewards[i];
-                    float rand                              = Random.Range(0f, 100f);
-
-                    if (rand <= reward.Chance) //Item Received
-                    {
-                        int index                           = items.FindIndex(x => x.Item == reward.Item);
-                        
-                        //TODO; maybe weight this toward fewer drops?
-                        int count                           = Random.Range(reward.MinDropped, reward.MaxDropped + 1);
-
-                        if (index > -1) //Add to existing 
-                        {
-                            items[index].AddToCount(count);
-                        }
-                        else
-                        {
-                            //TODO: Remove the button slot's OnClick behavior.
-                            //      Probably want it to give a tooltip with the name or something instead
-                            //      itemGO.GetComponent<UIButton>().GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick).Event.RemoveAllListeners();
-                            //         ^^ this won't work to remove it, will need to remove the inspector given click function and set with this in code
-                            //          here and in the inventory where these are also used
-                            GameObject itemGO               = Instantiate(itemSlot, postBattleScreenItemRewardContainer);
-                            itemGO.transform.localPosition  = Vector3.zero;
-                            itemGO.transform.localScale     = Vector3.one;
-                            ItemSlotController slot         = itemGO.GetComponent<ItemSlotController>();
-                            slot.Setup(reward.Item, count);
-                            items.Add(slot);
-                        }
-
-                        //TODO: Probably have this function return true/false. THere should probably be a limit on item count
-                        //  in inventory, and this would allow this screen to show if you're at max/able to receive the item
-                        PlayerPartyManager.instance.AddItemToInventory(reward.Item, count); 
-                    }
+                    postBattleScreenExpBarAdds[statIndex].text = "+0";
+                    postBattleScreenExpBarAdds[statIndex].gameObject.SetActive(true);
                 }
+
+                int currentValue                = int.Parse(postBattleScreenExpBarAdds[statIndex].text.Substring(1));
+                int endValue                    = currentValue + expFromThisEnemy[i].expAmount;
+
+                Task increaseDisplayNumber      = new Task(Helpful.IncreaseDisplayNumberOverTime(
+                                                    postBattleScreenExpBarAdds[statIndex], currentValue, endValue
+                                                    , "+", "", tickUpTime));
+                increaseDisplayNumber.Finished  += delegate { currentTasks.Remove(increaseDisplayNumber); };
+
+                currentTasks.Add(increaseDisplayNumber);
+
+                Task fillBars                   = new Task(FillBar(postBattleScreenExpBarProgressors[statIndex]
+                                                    , postBattleScreenExpBarLevels[statIndex], k.unit
+                                                    , (Helpful.StatTypes)statIndex, expFromThisEnemy[i].expAmount, tickUpTime));
+                fillBars.Finished               += delegate { currentTasks.Remove(fillBars); };
+
+                currentTasks.Add(fillBars);
             }
 
             yield return tickTimeWait; //To allow for EXP bars to fill and enemies/items to fade in
 
             yield return pauseBetweenEnemies;
         }
+        //**********
 
-        UIAnimation text3out = UIAnimation.Color(postBattleScreenExpTitle,
-            new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g, postBattleScreenExpTitle.color.b, 0f)
-            , pauseBetweenEnemiesTime / 2f);
+        //***Switch EXP Header***
+        UIAnimation text3out                    = UIAnimation.Color(postBattleScreenExpTitle,
+                                                new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g
+                                                , postBattleScreenExpTitle.color.b, 0f)
+                                                , pauseBetweenEnemiesTime / 2f);
         currentAnimations.Add(text3out);
-        text3out.OnAnimationFinished = delegate {
-            AnimationEnded(text3out);
-            postBattleScreenExpTitle.text = "Total";
-            UIAnimation text3in = UIAnimation.Color(postBattleScreenExpTitle,
-            new Color(postBattleScreenExpTitle.color.r, postBattleScreenExpTitle.color.g, postBattleScreenExpTitle.color.b, 1f)
-            , pauseBetweenEnemiesTime / 2f);
-            currentAnimations.Add(text3in);
-            text3in.OnAnimationFinished = delegate { AnimationEnded(text3in); };
-            text3in.Play();
-        };
+
+        text3out.OnAnimationFinished            = delegate {
+                                                    AnimationEnded(text3out);
+
+                                                    postBattleScreenExpTitle.text   = "Total";
+                                                    UIAnimation text3in             = UIAnimation.Color(postBattleScreenExpTitle,
+                                                                                    new Color(postBattleScreenExpTitle.color.r
+                                                                                        , postBattleScreenExpTitle.color.g
+                                                                                        , postBattleScreenExpTitle.color.b, 1f)
+                                                                                    , pauseBetweenEnemiesTime / 2f);
+            
+                                                    currentAnimations.Add(text3in);
+
+                                                    text3in.OnAnimationFinished     = delegate { AnimationEnded(text3in); };
+            
+                                                    text3in.Play();
+                                                };
+        
         text3out.Play();
+        //**********
 
-        //UIAnimation.SwapText(postBattleScreenExpTitle, "Total", pauseBetweenEnemiesTime);
-        //UIAnimation.Alpha(postBattleScreenButtonPanel, 1, pauseBetweenEnemiesTime).Play();
+        //***Add Items
+        AddItemIcons();
+        //**********
 
-        UIAnimation buttonsIn = UIAnimation.Alpha(postBattleScreenButtonPanel, 1, pauseBetweenEnemiesTime);
+        //***Fade in button panel at bottom
+        //TODO: If the "Back to world map" button is clicked before it's fully loaded (like at alpha = .8)
+        //      battle rewards won't be given (i think) very small window to do this tho?
+        UIAnimation buttonsIn                   = UIAnimation.Alpha(postBattleScreenButtonPanel, 1, pauseBetweenEnemiesTime);
+
         currentAnimations.Add(buttonsIn);
-        buttonsIn.OnAnimationFinished = delegate { AnimationEnded(buttonsIn); postBattleScreenInvisibleButton.gameObject.SetActive(false); };
+
+        buttonsIn.OnAnimationFinished           = delegate { 
+                                                    AnimationEnded(buttonsIn);
+                                                    postBattleScreenInvisibleButton.gameObject.SetActive(false);
+                                                    ApplyEndOfBattleRewards();
+                                                };
+        
         buttonsIn.Play();
+        //**********
     }
 
     //TODO: Functionality is pretty similar to ItemTargetCardController_Unit.UpdateLevelBar().
     //      might want to consider making the bars a prefab or something and consolidating funcitonality to a "bar controller"
+    //
+    //TODO: If you get exactly the exp needed for the next level, the bar should bump up the value and then be empty but
+    //      it will stop at 100% fill and not bump the level up
     private IEnumerator FillBar(Progressor progressor, TextMeshProUGUI label, Unit u, Helpful.StatTypes s, int expAdded, float animationTime)
     {
         if (progressor.currentValue + expAdded > progressor.toValue)
@@ -1162,6 +1244,59 @@ public class BattleManager : MonoBehaviour
             rt.SetParent(postBattleScreenPlayerBattlePartyContainer);
             rt.localPosition    = Vector3.zero;
             rt.localScale       = Vector3.one;
+        }
+    }
+
+    private void AddItemIcons()
+    {
+        //TODO: Maybe fade these in?
+        foreach (KeyValuePair<Item, int> itemEarned in battleItemRewards)
+        {
+            //TODO: Remove the button slot's OnClick behavior.
+            //      Probably want it to give a tooltip with the name or something instead
+            //      itemGO.GetComponent<UIButton>().GetBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick).Event.RemoveAllListeners();
+            //         ^^ this won't work to remove it, will need to remove the inspector given click function and set with this in code
+            //          here and in the inventory where these are also used
+            //TODO: If I implement max number held in inventory, that will probably need to be checked here, and visually represented
+            GameObject itemGO               = Instantiate(itemSlot, postBattleScreenItemRewardContainer);
+            itemGO.transform.localPosition  = Vector3.zero;
+            itemGO.transform.localScale     = Vector3.one;
+            ItemSlotController slot         = itemGO.GetComponent<ItemSlotController>();
+            slot.Setup(itemEarned.Key, itemEarned.Value);
+        }
+    }
+
+    private Image AddEnemyIconToPostBattleScreen(Unit enemy)
+    {
+        GameObject go   = new GameObject();
+        Image goI       = go.AddComponent<Image>();
+        goI.sprite      = enemy.InBattleSprite;
+        goI.color       = new Color32(255, 255, 255, 0);
+        Transform t     = go.transform;
+        t.SetParent(postBattleScreenEnemiesDefeatedContainer);
+        t.localScale    = Vector3.one;
+        t.localPosition = Vector3.zero;
+
+        return goI;
+    }
+
+    private void ApplyEndOfBattleRewards()
+    {
+        //EXP
+        for (int i = 0; i < unitEXPRewardsFromDefeatedEnemies.Count; i++)
+        {
+            object[] info   = new object[3];
+            info[0]         = unitEXPRewardsFromDefeatedEnemies[i].statType;    //Stat
+            info[1]         = unitEXPRewardsFromDefeatedEnemies[i].expAmount;   //Amount
+            info[2]         = unitEXPRewardsFromDefeatedEnemies[i].playerUnit;  //Unit
+
+            Signal.Send("PartyManagement", "AwardExperience", info);
+        }
+
+        //Items
+        foreach (KeyValuePair<Item, int> reward in battleItemRewards)
+        {
+            PlayerPartyManager.instance.AddItemToInventory(reward.Key, reward.Value);
         }
     }
 

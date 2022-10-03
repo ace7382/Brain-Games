@@ -22,5 +22,11 @@ MonoBehaviour:
   pathPuzzleBoards: []
   shadowShapePuzzles: []
   difficultyBase: 100
+  expAwardedOnDefeat:
+  - {x: 5, y: 75}
+  - {x: 6, y: 200}
+  - {x: 7, y: 150}
+  - {x: 8, y: 60}
+  itemRewards: []
   baseStats: 0f0000001400000000000000140000000000000000000000140000000000000000000000
   statGrowthRates: 000000000000000000000000000000000000000000000000000000000000000000000000

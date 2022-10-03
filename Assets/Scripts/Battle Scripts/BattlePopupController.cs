@@ -94,6 +94,8 @@ public class BattlePopupController : MonoBehaviour
 
         RectTransform uTran;
 
+        //TODO: This causes an error to be thrown on battle complete if something is queued to popup i think?
+        //      I've only seen the error once so haven't fully looked into it
         if ((Unit)info[2] == BattleManager.instance.CurrentPlayerUnit.UnitInfo)
         {
             uTran = BattleManager.instance.CurrentPlayerUnit.GetComponent<RectTransform>();

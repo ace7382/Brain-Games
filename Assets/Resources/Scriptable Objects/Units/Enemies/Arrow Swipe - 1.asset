@@ -23,10 +23,10 @@ MonoBehaviour:
   shadowShapePuzzles: []
   difficultyBase: 0
   expAwardedOnDefeat:
-  - {x: 5, y: 75}
-  - {x: 6, y: 200}
-  - {x: 7, y: 150}
-  - {x: 8, y: 60}
+  - {x: 5, y: 750}
+  - {x: 6, y: 2000}
+  - {x: 7, y: 15000}
+  - {x: 8, y: 600}
   itemRewards:
   - item: {fileID: 11400000, guid: 37d6486ee4fcaa04b8183e115dd40a23, type: 2}
     chance: 75

@@ -365,21 +365,19 @@ public static class Helpful
     //TODO: This is basically the same function but less useful. Combine with ItemTargetCardController_Unit.UpdateStatValue
     public static IEnumerator IncreaseDisplayNumberOverTime(TextMeshProUGUI displayText, int startValue, int endValue, string prefix, string suffix, float time)
     {
-        if (startValue >= endValue)
+        float start         = startValue;
+        float goal          = endValue;
+        float elapsedTime   = 0f;
+
+        while (elapsedTime < time)
         {
-            Debug.LogWarning("Start Value is larger than or equal to End Value");
-            yield break;
+            displayText.text = String.Format("{0}{1}{2}", prefix, ((int)Mathf.Lerp(start, goal, elapsedTime / time)).ToString(), suffix);
+            elapsedTime     += Time.deltaTime;
+
+            yield return null;
         }
 
-        int currentValue        = startValue;
-        WaitForSeconds ticktime = new WaitForSeconds(time / (endValue - startValue));
-
-        while (currentValue < endValue)
-        {
-            currentValue++;
-            displayText.text = String.Format("{0}{1}{2}", prefix, currentValue.ToString(), suffix);
-            yield return ticktime;
-        }
+        displayText.text    = String.Format("{0}{1}{2}", prefix, endValue.ToString(), suffix);
     }
 
     public static IEnumerator FadeGraphicIn(Graphic g, float time)
