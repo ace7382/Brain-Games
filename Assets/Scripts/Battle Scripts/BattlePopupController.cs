@@ -237,6 +237,10 @@ public class BattlePopupController : MonoBehaviour
         c.horizontalFit     = ContentSizeFitter.FitMode.PreferredSize;
         c.verticalFit       = ContentSizeFitter.FitMode.PreferredSize;
 
+        CanvasGroup can     = go.AddComponent<CanvasGroup>();
+        can.blocksRaycasts  = false;
+        can.interactable    = false;
+
         return go;
     }
 

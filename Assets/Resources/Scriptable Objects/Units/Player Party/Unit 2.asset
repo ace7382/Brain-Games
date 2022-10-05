@@ -22,5 +22,8 @@ MonoBehaviour:
   triviaQuestions: []
   pathPuzzleBoards: []
   shadowShapePuzzles: []
+  difficultyBase: 0
+  expAwardedOnDefeat: []
+  itemRewards: []
   baseStats: 01000000140000001c000000000000000900000000000000000000000000000000000000
   statGrowthRates: 050000000200000003000000020000000000000006000000020000000300000003000000

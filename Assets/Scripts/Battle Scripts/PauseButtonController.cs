@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class PauseButtonController : MonoBehaviour
 {
-    //Called by the Pause Button and Unpause Button's OnClick Behaviors
-    public void OnClick(bool isPausing)
+    //Called by the Pause Button's OnClick Behavior
+    public void OnClick()
     {
-        Signal.Send("Battle", isPausing ? "Pause" : "Unpause");
+        Signal.Send("Battle", "Pause");
     }
 }

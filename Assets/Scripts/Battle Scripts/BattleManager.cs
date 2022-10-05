@@ -81,6 +81,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private RectTransform              enemyContainer;
     [SerializeField] private Image                      playerSprite;
     [SerializeField] private Image                      enemySprite;
+    [SerializeField] private GameObject                 bottomButtonPanel;
+    [SerializeField] private RectTransform              battlePartyButtonContainer;
 
     [Space]
 
@@ -115,8 +117,6 @@ public class BattleManager : MonoBehaviour
 
     [Space]
 
-    [Header("Pause Screen")]
-    [SerializeField] private GameObject                 pauseButton;
     [SerializeField] private GameObject                 pauseScreen;
 
     #endregion
@@ -148,8 +148,6 @@ public class BattleManager : MonoBehaviour
     private SignalStream                                battle_enemykoed_stream;
     private SignalReceiver                              battle_pause_receiver;
     private SignalStream                                battle_pause_stream;
-    private SignalReceiver                              battle_unpause_receiver;
-    private SignalStream                                battle_unpause_stream;
     private SignalReceiver                              battle_countdownended_receiver;
     private SignalStream                                battle_countdownended_stream;
     private SignalReceiver                              battle_boardreset_receiver;
@@ -191,7 +189,6 @@ public class BattleManager : MonoBehaviour
         battle_playerkoed_stream                    = SignalStream.Get("Battle", "PlayerKOed");
         battle_enemykoed_stream                     = SignalStream.Get("Battle", "EnemyKOed");
         battle_pause_stream                         = SignalStream.Get("Battle", "Pause");
-        battle_unpause_stream                       = SignalStream.Get("Battle", "Unpause");
         battle_countdownended_stream                = SignalStream.Get("Battle", "CountdownEnded");
         battle_boardreset_stream                    = SignalStream.Get("Battle", "BoardReset");
         partymanagement_expadded_stream             = SignalStream.Get("PartyManagement", "AwardExperience");
@@ -199,8 +196,7 @@ public class BattleManager : MonoBehaviour
 
         battle_playerkoed_receiver                  = new SignalReceiver().SetOnSignalCallback(PlayerKO);
         battle_enemykoed_receiver                   = new SignalReceiver().SetOnSignalCallback(EnemyKO);
-        battle_pause_receiver                       = new SignalReceiver().SetOnSignalCallback(Pause);
-        battle_unpause_receiver                     = new SignalReceiver().SetOnSignalCallback(Unpause);
+        battle_pause_receiver                       = new SignalReceiver().SetOnSignalCallback(PauseButtonClicked);
         battle_countdownended_receiver              = new SignalReceiver().SetOnSignalCallback(CountdownEndedBattleBegin);
         battle_boardreset_receiver                  = new SignalReceiver().SetOnSignalCallback(BoardReset);
         partymanagement_expadded_receiver           = new SignalReceiver().SetOnSignalCallback(AddEXPEarnedInBattle);
@@ -249,7 +245,6 @@ public class BattleManager : MonoBehaviour
         battle_playerkoed_stream.ConnectReceiver(battle_playerkoed_receiver);
         battle_enemykoed_stream.ConnectReceiver(battle_enemykoed_receiver);
         battle_pause_stream.ConnectReceiver(battle_pause_receiver);
-        battle_unpause_stream.ConnectReceiver(battle_unpause_receiver);
         battle_countdownended_stream.ConnectReceiver(battle_countdownended_receiver);
         battle_boardreset_stream.ConnectReceiver(battle_boardreset_receiver);
         partymanagement_expadded_stream.ConnectReceiver(partymanagement_expadded_receiver);
@@ -261,7 +256,6 @@ public class BattleManager : MonoBehaviour
         battle_playerkoed_stream.DisconnectReceiver(battle_playerkoed_receiver);
         battle_enemykoed_stream.DisconnectReceiver(battle_enemykoed_receiver);
         battle_pause_stream.DisconnectReceiver(battle_pause_receiver);
-        battle_unpause_stream.DisconnectReceiver(battle_unpause_receiver);
         battle_countdownended_stream.DisconnectReceiver(battle_countdownended_receiver);
         battle_boardreset_stream.DisconnectReceiver(battle_boardreset_receiver);
         partymanagement_expadded_stream.DisconnectReceiver(partymanagement_expadded_receiver);
@@ -428,7 +422,7 @@ public class BattleManager : MonoBehaviour
 
         preBattleScreen.SetActive(true);
 
-        pauseButton.SetActive(false);
+        bottomButtonPanel.SetActive(false);
         pauseScreen.SetActive(false);
 
         UpdatePreBattleEnemyDisplay();
@@ -556,6 +550,19 @@ public class BattleManager : MonoBehaviour
         Signal.Send("Battle", "PlayerCurrentHPUpdate", currentPlayerUnitController.UnitInfo.CurrentHP);
     }
 
+    private void ChangePlayerBattleUnit(Unit playerUnit)
+    {
+        if (playerUnit == CurrentPlayerUnit.UnitInfo)
+            return;
+
+        CurrentPlayerUnit.ResetBattleUnitController();
+
+        SetupPlayerBattleUnit(playerUnit);
+
+        if (!IsPaused)
+            StartPlayerTimerAbilities();
+    }
+
     private void SetupEnemyBattleUnit(Unit enemyUnit)
     {
         enemyAbilityButtons = new List<AbilityButtonController>();
@@ -592,6 +599,23 @@ public class BattleManager : MonoBehaviour
     {
         pauseScreen.SetActive(false);
 
+        for (int i = 0; i < playerBattleParty.Count; i++)
+        {
+            Unit temp                           = playerBattleParty[i];
+
+            GameObject go                       = new GameObject();
+            RectTransform goT                   = go.AddComponent<RectTransform>();
+            go.AddComponent<Image>().sprite     = temp.InBattleSprite;
+            UIButton goButt                     = go.AddComponent<UIButton>();
+
+            goT.SetParent(battlePartyButtonContainer);
+            goT.localScale                      = Vector3.one;
+            goT.localPosition                   = Vector3.zero;
+
+            goButt.AddBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick)
+                .Event.AddListener(delegate { ChangePlayerBattleUnit(temp); });
+        }
+
         GameObject.Find("Player HP Bar").GetComponent<CanvasGroup>().alpha = 1;
         GameObject.Find("Enemy HP Bar").GetComponent<CanvasGroup>().alpha = 1;
 
@@ -618,7 +642,7 @@ public class BattleManager : MonoBehaviour
 
     private void StartCountdown()
     {
-        pauseButton.SetActive(false);
+        bottomButtonPanel.SetActive(false);
 
         DisablePlayerAbilityButtons();
         DisableEnemyAbilityButtons();
@@ -645,7 +669,7 @@ public class BattleManager : MonoBehaviour
     private void CountdownEndedBattleBegin(Signal signal)
     {
         battleBoard.SetActive(true);
-        pauseButton.SetActive(true);
+        bottomButtonPanel.SetActive(true);
 
         EnablePlayerAbilityButtons();
         EnableEnemyAbilityButtons();
@@ -717,13 +741,11 @@ public class BattleManager : MonoBehaviour
 
     private void PlayerKO(Signal signal)
     {
-        if (playerBattleParty.GetFirstLivingUnit() != null)
+        Unit next = playerBattleParty.GetFirstLivingUnit();
+
+        if (next != null)
         {
-            currentPlayerUnitController.ResetBattleUnitController();
-
-            SetupPlayerBattleUnit(playerBattleParty.GetFirstLivingUnit());
-
-            StartPlayerTimerAbilities();
+            ChangePlayerBattleUnit(next);
         }
         else
         {
@@ -740,36 +762,38 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private void Pause(Signal signal)
+    private void PauseButtonClicked(Signal signal)
     {
-        currentGameController.Pause();
+        if (IsPaused) //Unpause
+        {
+            pauseScreen.SetActive(false);
+            //bottomButtonPanel.SetActive(true);
 
-        battleBoard.SetActive(false);
+            battleBoard.SetActive(true);
 
-        pauseScreen.SetActive(true);
-        pauseButton.SetActive(false);
+            StartEnemyTimerAbilities();
+            StartPlayerTimerAbilities();
 
-        pauseScreen.GetComponentInChildren<AbilityDisplayController>().ResetDisplay();
+            SetEnemyAbilityButtonsInteractability(false);
 
-        PauseEnemyTimerAbilities();
-        PausePlayerTimerAbilities();
+            currentGameController.Unpause();
+        }
+        else //Pause
+        {
+            currentGameController.Pause();
 
-        SetEnemyAbilityButtonsInteractability(true);
-    }
+            battleBoard.SetActive(false);
 
-    private void Unpause(Signal signal)
-    {
-        pauseScreen.SetActive(false);
-        pauseButton.SetActive(true);
+            pauseScreen.SetActive(true);
+            //bottomButtonPanel.SetActive(false);
 
-        battleBoard.SetActive(true);
+            pauseScreen.GetComponentInChildren<AbilityDisplayController>().ResetDisplay();
 
-        StartEnemyTimerAbilities();
-        StartPlayerTimerAbilities();
+            PauseEnemyTimerAbilities();
+            PausePlayerTimerAbilities();
 
-        SetEnemyAbilityButtonsInteractability(false);
-
-        currentGameController.Unpause();
+            SetEnemyAbilityButtonsInteractability(true);
+        }
     }
 
     private void ShowEndOfBattleScreen()
@@ -820,13 +844,16 @@ public class BattleManager : MonoBehaviour
             //EXP earned
             for (int i = 0; i < enemiesDefeated[e].EXPAward.Count; i++)
             {
-                PlayerUnitEnemyEXPAward award   = new PlayerUnitEnemyEXPAward();
-                award.playerUnit                = CurrentPlayerUnit.UnitInfo;
-                award.enemyUnit                 = enemiesDefeated[e];
-                award.statType                  = (Helpful.StatTypes)enemiesDefeated[e].EXPAward[i].x;
-                award.expAmount                 = enemiesDefeated[e].EXPAward[i].y;
+                for (int p = 0; p < playerBattleParty.Count; p++)
+                { 
+                    PlayerUnitEnemyEXPAward award   = new PlayerUnitEnemyEXPAward();
+                    award.playerUnit                = playerBattleParty[p];
+                    award.enemyUnit                 = enemiesDefeated[e];
+                    award.statType                  = (Helpful.StatTypes)enemiesDefeated[e].EXPAward[i].x;
+                    award.expAmount                 = enemiesDefeated[e].EXPAward[i].y / playerBattleParty.Count;
 
-                unitEXPRewardsFromDefeatedEnemies.Add(award);
+                    unitEXPRewardsFromDefeatedEnemies.Add(award);
+                }
             }
         }
 
@@ -837,8 +864,8 @@ public class BattleManager : MonoBehaviour
         //Stop the battle game
         currentGameController.Pause();
 
-        //Disable and hide the pause button
-        pauseButton.SetActive(false);
+        //Disable and hide the bottom buttons
+        bottomButtonPanel.SetActive(false);
 
         //Stop abilities
         DisableEnemyAbilityButtons();
@@ -868,6 +895,10 @@ public class BattleManager : MonoBehaviour
         u.OnAnimationFinished   = delegate { PostBattleScreenInitialAnimation(); };
 
         u.Play();
+
+        //Fully remove the ability panels bc their transparent canvases block clicks
+        playerAbilitiesParentContainer.gameObject.SetActive(false);
+        enemyAbilitiesParentContainer.gameObject.SetActive(false);
     }
 
     private void PostBattleScreenInitialAnimation()
@@ -1159,7 +1190,7 @@ public class BattleManager : MonoBehaviour
     //      might want to consider making the bars a prefab or something and consolidating funcitonality to a "bar controller"
     //
     //TODO: If you get exactly the exp needed for the next level, the bar should bump up the value and then be empty but
-    //      it will stop at 100% fill and not bump the level up
+    //      it will stop at 100% fill and not bump the level up <- only was able to get this to happen once?
     private IEnumerator FillBar(Progressor progressor, TextMeshProUGUI label, Unit u, Helpful.StatTypes s, int expAdded, float animationTime)
     {
         if (progressor.currentValue + expAdded > progressor.toValue)
@@ -1189,9 +1220,9 @@ public class BattleManager : MonoBehaviour
             float playToValue       = progressor.currentValue + expAdded > progressor.toValue ?
                                         progressor.toValue : progressor.currentValue + expAdded;
 
-            Debug.Log(string.Format("Filling {0}. Current Value {1}, Bar.toValue {2}, Setting bar to {3} over the next {4} seconds"
-                    , s.GetShorthand(), progressor.currentValue.ToString(), progressor.toValue.ToString()
-                    , playToValue.ToString(), progressor.GetDuration().ToString()));
+            //Debug.Log(string.Format("Filling {0}. Current Value {1}, Bar.toValue {2}, Setting bar to {3} over the next {4} seconds"
+            //        , s.GetShorthand(), progressor.currentValue.ToString(), progressor.toValue.ToString()
+            //        , playToValue.ToString(), progressor.GetDuration().ToString()));
 
             progressor.PlayToValue(playToValue);
 
@@ -1237,6 +1268,7 @@ public class BattleManager : MonoBehaviour
             if (icons.FindIndex(x => x.sprite == playerBattleParty[i].InBattleSprite) > -1)
                 continue;
 
+            Unit unit           = playerBattleParty[i];
             GameObject go       = new GameObject();
             Image im            = go.AddComponent<Image>();
             im.sprite           = playerBattleParty[i].InBattleSprite;
@@ -1244,6 +1276,42 @@ public class BattleManager : MonoBehaviour
             rt.SetParent(postBattleScreenPlayerBattlePartyContainer);
             rt.localPosition    = Vector3.zero;
             rt.localScale       = Vector3.one;
+            UIButton butt       = go.AddComponent<UIButton>();
+
+            butt.AddBehaviour(Doozy.Runtime.UIManager.UIBehaviour.Name.PointerClick)
+                .Event.AddListener(delegate { ChangeEndScreenUnit(unit); });
+        }
+    }
+
+    private void ChangeEndScreenUnit(Unit u)
+    {
+        playerSprite.sprite         = u.InBattleSprite;
+        playerSprite.color          = Color.white;
+        float fillDur               = .5f;
+
+        //All EXP (from performance AND enemy rewards) has been calculated and stored, so we just need to reference it
+        int[] expEarned             = new int[postBattleScreenExpBarProgressors.Length];
+        UnitStat k                  = new UnitStat();
+        k.unit                      = u;
+
+        for (int i = 0; i < postBattleScreenExpBarProgressors.Length; i++)
+        {
+            k.statType              = (Helpful.StatTypes)i;
+            expEarned[i]            = expEarnedDuringBattle.ContainsKey(k) ? expEarnedDuringBattle[k] : 0;
+        }
+
+        //All exp has already been awarded bc the invisible button will no longer be visible,
+        //  so we can just go by the unit's stats instead of calculating anything based on earned exp
+        for (int i = 0; i < postBattleScreenExpBarLevels.Length; i++)
+        {
+            Helpful.StatTypes stat                                      = (Helpful.StatTypes)i;
+
+            postBattleScreenExpBarLevels[i].text                        = u.GetStatWithMods(stat).ToString();
+            postBattleScreenExpBarAdds[i].text                          = "+" + expEarned[i].ToString();
+            postBattleScreenExpBarAdds[i].gameObject.SetActive(expEarned[i] > 0);
+
+            postBattleScreenExpBarProgressors[i].reaction.settings.duration = fillDur;
+            postBattleScreenExpBarProgressors[i].PlayToProgress((float)u.GetExpForStat(stat) / (float)u.GetEXPNextLevelValue(stat));
         }
     }
 
