@@ -56,6 +56,8 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     private float                               boardXMin;
     private float                               boardXMax;
+    private float                               boardYMin;
+    private float                               boardYMax;
 
     private float                               performanceIndex;
     private float                               performanceTimer;
@@ -101,6 +103,8 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
         boardXMin                           = rt.TransformPoint(rt.rect.min).x;
         boardXMax                           = rt.TransformPoint(rt.rect.max).x;
+        boardYMin                           = rt.TransformPoint(rt.rect.min).y;
+        boardYMax                           = rt.TransformPoint(rt.rect.max).y;
 
         InputManager.instance.OnStartTouch  += SwipeStart;
         InputManager.instance.OnEndTouch    += SwipeEnd;
@@ -160,7 +164,7 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     private void SwipeStart(Vector2 position, float time)
     {
-        if (position.x < boardXMin || position.x > boardXMax)
+        if (position.x < boardXMin || position.x > boardXMax || position.y < boardYMin || position.y > boardYMax)
             return;
 
         swiping = true;
@@ -219,7 +223,7 @@ public class BattleGame_ArrowSwipe : BattleGameControllerBase
 
     private void NextArrow()
     {
-        //TODO: Move single arrows around
+        //TODO: Single arrows not in the center
         //TODO: Add moving arrows
 
         foreach (Transform child in extraArrowContainer)
