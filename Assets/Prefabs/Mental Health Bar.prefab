@@ -88,9 +88,9 @@ GameObject:
   - component: {fileID: 433414947228934616}
   - component: {fileID: 347802335848322531}
   - component: {fileID: 433414947228934617}
-  - component: {fileID: 433414947228934623}
+  - component: {fileID: 196885023865472251}
   m_Layer: 5
-  m_Name: Player HP Bar
+  m_Name: Mental Health Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &433414947228934623
+--- !u!114 &196885023865472251
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -177,10 +177,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 433414947228934619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff34bd36ce574b448920d823b8c0f546, type: 3}
+  m_Script: {fileID: 11500000, guid: 58eb2cdf465194a4d81377bcf55b7231, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: 0
   displayText: {fileID: 433414947925515187}
   imageMask: {fileID: 433414947961715798}
 --- !u!1 &433414947925515181

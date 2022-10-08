@@ -18324,6 +18324,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 433414947228934618, guid: d436c15a490e27845bc546f6aa64df83, type: 3}
   m_PrefabInstance: {fileID: 776780106}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &776780108 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 196885023865472251, guid: d436c15a490e27845bc546f6aa64df83, type: 3}
+  m_PrefabInstance: {fileID: 776780106}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58eb2cdf465194a4d81377bcf55b7231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &790504446
 GameObject:
   m_ObjectHideFlags: 0
@@ -23533,6 +23544,8 @@ MonoBehaviour:
   enemySprite: {fileID: 1085020243}
   bottomButtonPanel: {fileID: 1763702924}
   battlePartyButtonContainer: {fileID: 1892009316}
+  playerMHBar: {fileID: 433414947858140900}
+  enemyMHBar: {fileID: 776780108}
   preBattleScreen: {fileID: 1947667779}
   preBattleScreenAllUnitsContainer: {fileID: 1759234124}
   preBattleScreenBattleUnitsContainer: {fileID: 1790625630}
@@ -23544,6 +23557,8 @@ MonoBehaviour:
   enemyBattleGameName: {fileID: 1834465591}
   previousArrow: {fileID: 1596404864}
   nextArrow: {fileID: 2101445381}
+  preBattleEnemyMHBar: {fileID: 2009710567}
+  preBattleEnemyModel: {fileID: 0}
   postBattleScreen: {fileID: 1936251762}
   postBattleScreenVictoryDefeatText: {fileID: 182920401}
   postBattleScreenSectionLabels:
@@ -43485,6 +43500,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 433414947228934618, guid: d436c15a490e27845bc546f6aa64df83, type: 3}
   m_PrefabInstance: {fileID: 2009710565}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2009710567 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 196885023865472251, guid: d436c15a490e27845bc546f6aa64df83, type: 3}
+  m_PrefabInstance: {fileID: 2009710565}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58eb2cdf465194a4d81377bcf55b7231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2014185812
 GameObject:
   m_ObjectHideFlags: 0
@@ -45472,3 +45498,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d436c15a490e27845bc546f6aa64df83, type: 3}
+--- !u!114 &433414947858140900 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 196885023865472251, guid: d436c15a490e27845bc546f6aa64df83, type: 3}
+  m_PrefabInstance: {fileID: 433414947858140899}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58eb2cdf465194a4d81377bcf55b7231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

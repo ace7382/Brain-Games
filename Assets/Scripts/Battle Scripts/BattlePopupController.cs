@@ -29,6 +29,8 @@ public class BattlePopupController : MonoBehaviour
     private SignalStream                            partymanagement_expadded_stream;
     private SignalReceiver                          partymanagement_statleveledup_receiver;
     private SignalStream                            partymanagement_statleveledup_stream;
+    private SignalReceiver                          partymanagement_unitstatchanged_receiver;
+    private SignalStream                            partymanagement_unitstatchanged_stream;
 
     #endregion
 
@@ -36,28 +38,32 @@ public class BattlePopupController : MonoBehaviour
 
     private void Awake()
     {
-        partymanagement_expadded_stream         = SignalStream.Get("PartyManagement", "EXPAdded");
-        partymanagement_expadded_receiver       = new SignalReceiver().SetOnSignalCallback(EnqueueEXPPopup);
-        partymanagement_statleveledup_stream    = SignalStream.Get("PartyManagement", "StatLeveledUp");
-        partymanagement_statleveledup_receiver  = new SignalReceiver().SetOnSignalCallback(EnqueueLevelUpPopup);
+        partymanagement_expadded_stream             = SignalStream.Get("PartyManagement", "EXPAdded");
+        partymanagement_expadded_receiver           = new SignalReceiver().SetOnSignalCallback(EnqueueEXPPopup);
+        partymanagement_statleveledup_stream        = SignalStream.Get("PartyManagement", "StatLeveledUp");
+        partymanagement_statleveledup_receiver      = new SignalReceiver().SetOnSignalCallback(EnqueueLevelUpPopup);
+        partymanagement_unitstatchanged_stream      = SignalStream.Get("PartyManagement", "UnitStatChanged");
+        partymanagement_unitstatchanged_receiver    = new SignalReceiver().SetOnSignalCallback(MentalHealthChangePopup);
 
-        statUpPopupQueue                        = new Queue<Signal>();
-        showingStatUp                           = false;
+        statUpPopupQueue                            = new Queue<Signal>();
+        showingStatUp                               = false;
 
-        expPopupQueue                           = new Queue<Signal>();
-        canSendNextEXPPopup                     = true;
+        expPopupQueue                               = new Queue<Signal>();
+        canSendNextEXPPopup                         = true;
     }
 
     private void OnEnable()
     {
         partymanagement_expadded_stream.ConnectReceiver(partymanagement_expadded_receiver);
         partymanagement_statleveledup_stream.ConnectReceiver(partymanagement_statleveledup_receiver);
+        partymanagement_unitstatchanged_stream.ConnectReceiver(partymanagement_unitstatchanged_receiver);
     }
 
     private void OnDisable()
     {
         partymanagement_expadded_stream.DisconnectReceiver(partymanagement_expadded_receiver);
         partymanagement_statleveledup_stream.DisconnectReceiver(partymanagement_statleveledup_receiver);
+        partymanagement_unitstatchanged_stream.DisconnectReceiver(partymanagement_unitstatchanged_receiver);
     }
 
     private void Update()
@@ -80,6 +86,56 @@ public class BattlePopupController : MonoBehaviour
     #endregion
 
     #region Private Functions
+
+    private void MentalHealthChangePopup(Signal signal)
+    {
+        //Signal is object[]
+        //info[0]   - Unit              - The Unit who had a change in a stat
+        //info[1]   - Helpful.StatType  - The stat that changed
+        //info[2]   - int               - The amount and direction of the change
+        //info[3]   - int               - The new value of the stat
+
+        object[] info           = signal.GetValueUnsafe<object[]>();
+        Helpful.StatTypes stat  = (Helpful.StatTypes)info[1];
+
+        if (stat == Helpful.StatTypes.COUNT) //TODO: More instances of Count being used as Current MH
+        {
+            Unit u              = (Unit)info[0];
+            int diff            = (int)info[2];
+
+            RectTransform uTran = u == BattleManager.instance.CurrentPlayerUnit.UnitInfo ? 
+                BattleManager.instance.CurrentPlayerUnit.GetComponent<RectTransform>()
+                : BattleManager.instance.CurrentEnemy.GetComponent<RectTransform>();
+
+            TextMeshProUGUI t   = pooledPopups.Find(x => !x.gameObject.activeInHierarchy);
+
+            if (t == null)
+                t = CreateNewPoolItem();
+
+            Vector2 spawnPoint = new Vector2(
+                                    uTran.anchoredPosition.x + ((uTran.rect.size.x / 2f) * Random.Range(-.75f, .75f))
+                                    , uTran.anchoredPosition.y + (uTran.rect.size.y * 1.1f)
+                                );
+
+            RectTransform tTran = t.rectTransform;
+
+            t.gameObject.SetActive(true);
+            t.font                              = UniversalInspectorVariables.instance.KGHappySolid;
+            t.fontSize                          = 40f;
+            t.color                             = diff > 0 ? Color.green : Color.red;
+            t.text                              = string.Format("{0}{1} MH", diff > 0 ? "+" : "", diff.ToString());
+            tTran.SetParent(uTran.parent);
+            tTran.localScale                    = Vector3.one;
+            tTran.localPosition                 = spawnPoint;
+
+            UIAnimation moveUpAndFade;
+            moveUpAndFade                       = UIAnimation.PositionY(tTran, tTran.anchoredPosition.y + 150, 1.2f);
+            moveUpAndFade.Play();
+            moveUpAndFade                       = UIAnimation.Color(t, Color.clear, 1.2f);
+            moveUpAndFade.OnAnimationFinished   = (GameObject obj) => { tTran.SetParent(transform); obj.SetActive(false); };
+            moveUpAndFade.Play();
+        }
+    }
 
     private void PopupEXP(Signal signal)
     {
@@ -108,13 +164,8 @@ public class BattlePopupController : MonoBehaviour
 
         if (t == null)
         {
-            t = CreateNewPoolItem().GetComponent<TextMeshProUGUI>();
+            t = CreateNewPoolItem();
         }
-
-        //Debug.Log(string.Format("Position: {0} S2W: {3}\nAnchored Position: {1} S2W: {4}\nLocal Position: {2} S2W: {5}"
-        //    , uTran.position, uTran.anchoredPosition, uTran.localPosition, 
-        //    Camera.main.ScreenToWorldPoint(uTran.position), Camera.main.ScreenToWorldPoint(uTran.anchoredPosition)
-        //    ,Camera.main.ScreenToWorldPoint(uTran.localPosition)));
 
         //TODO: Probably better to get the position right than to reparent this but?? how do i get the right position???
         //      this works for now and doesn't seem to have any performance issues if I cache the transform though
@@ -170,7 +221,7 @@ public class BattlePopupController : MonoBehaviour
 
         if (t == null)
         {
-            t = CreateNewPoolItem().GetComponent<TextMeshProUGUI>();
+            t = CreateNewPoolItem();
         }
 
         Vector2 spawnPoint = new Vector2(
@@ -220,7 +271,8 @@ public class BattlePopupController : MonoBehaviour
         canSendNextEXPPopup = true;
         showingStatUp       = false;
     }
-    private GameObject CreateNewPoolItem()
+
+    private TextMeshProUGUI CreateNewPoolItem()
     {
         //TODO: either make a prefab for the popup or set all of the font/color/text size etc in here
         GameObject go = new GameObject(string.Format("Popup Text {0}", (pooledPopups.Count + 1).ToString()));
@@ -241,7 +293,7 @@ public class BattlePopupController : MonoBehaviour
         can.blocksRaycasts  = false;
         can.interactable    = false;
 
-        return go;
+        return t;
     }
 
     private void RainbowColorCycle(Graphic g, float t, System.Action<UnityEngine.GameObject> onEnd)

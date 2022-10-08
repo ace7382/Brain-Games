@@ -54,10 +54,10 @@ public class Ability_Attack1 : Ability
             return;
 
         object[] info   = new object[2];
-        info[0]         = owner.IsPlayer;
-        info[1]         = 3 * currentCharges; //owner.UnitInfo.{whatever stat}
+        info[0]         = owner;
+        info[1]         = 3 * currentCharges;
 
-        Signal.Send("Battle","UnitTakeDamage", info);
+        Signal.Send("Battle", "UnitAttacked", info);
 
         ResetCharges();
     }

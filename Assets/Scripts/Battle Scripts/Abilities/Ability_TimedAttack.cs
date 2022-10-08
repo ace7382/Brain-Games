@@ -57,10 +57,10 @@ public class Ability_TimedAttack : Ability
         ResetCharges();
 
         object[] info           = new object[2];
-        info[0]                 = owner.IsPlayer;
+        info[0]                 = owner;
         info[1]                 = (100 * chargesToAttackWith); //owner.UnitInfo.{whatever stat}
 
-        Signal.Send("Battle", "UnitTakeDamage", info);
+        Signal.Send("Battle", "UnitAttacked", info);
     }
 
     public override void Charge(int chargeActionID)

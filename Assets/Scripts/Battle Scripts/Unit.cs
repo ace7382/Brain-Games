@@ -49,7 +49,31 @@ public class Unit
         {
             if (currentHP == value) return;
 
-            currentHP = Mathf.Clamp(value, 0, GetStatWithMods(Helpful.StatTypes.MaxHP));
+            int oldv        = currentHP;
+            int newv        = Mathf.Clamp(value, 0, GetStatWithMods(Helpful.StatTypes.MaxHP));
+
+            int diff        = newv - oldv;
+
+            if (diff == 0)
+                return;
+
+            currentHP       = newv;
+
+            object[] info   = new object[4];
+            info[0]         = this;
+            info[1]         = Helpful.StatTypes.COUNT; //TODO: More instances of using COUNT as current MH
+            info[2]         = diff;
+            info[3]         = currentHP;
+
+            Signal.Send("PartyManagement", "UnitStatChanged", info);
+
+            if (newv == 0)
+            {
+                info        = new object[1];
+                info[0]     = this;
+
+                Signal.Send("PartyManagement", "UnitKOed", info);
+            }
         }
     }
 
@@ -122,6 +146,11 @@ public class Unit
                 , currentHP == 0));
             return currentHP == 0; 
         }
+    }
+
+    public GameObject UnitModel
+    {
+        get { return battleUnitBase.unitModel; }
     }
 
     #endregion

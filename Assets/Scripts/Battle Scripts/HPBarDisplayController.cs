@@ -1,3 +1,5 @@
+//TODO: Delete this script. Shouldn't be used anymore
+
 using Doozy.Runtime.Signals;
 using System.Collections;
 using System.Collections.Generic;

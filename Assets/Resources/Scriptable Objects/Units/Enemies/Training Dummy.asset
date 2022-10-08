@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11c8af7e0c004e042ac2d806714e1087, type: 3}
-  m_Name: Arrow Swipe - 1
+  m_Name: Training Dummy
   m_EditorClassIdentifier: 
   abilityNames:
   - Ability_EnemyAttack
@@ -40,3 +40,5 @@ MonoBehaviour:
     numberDropped: {x: 25, y: 35}
   baseStats: 010000000a000000000000000a00000000000000000000000a0000000000000000000000
   statGrowthRates: 000000000000000000000000000000000000000000000000000000000000000000000000
+  unitModel: {fileID: 1423470163212545534, guid: f58475e9436d25049b4355861d36e831, type: 3}
+  animationController: {fileID: 1423470163212545531, guid: f58475e9436d25049b4355861d36e831, type: 3}

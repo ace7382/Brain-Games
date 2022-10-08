@@ -20,4 +20,6 @@ public class UnitBase : ScriptableObject
 
     public int[]                        baseStats       = new int[(int)Helpful.StatTypes.COUNT];
     public Helpful.StatGrowthRates[]    statGrowthRates = new Helpful.StatGrowthRates[(int)Helpful.StatTypes.COUNT];
+
+    public GameObject                   unitModel;
 }

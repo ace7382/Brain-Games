@@ -72,10 +72,10 @@ public class Ability_EnemyTimedAttack : Ability
         ResetCharges(); //TODO: Should this go before the calls at the bottom? Other abilities just reset at the end???
 
         object[] info   = new object[2];
-        info[0]         = owner.IsPlayer;
+        info[0]         = owner;
         info[1]         = (1 * chargesToAttackWith); //owner.UnitInfo.{whatever stat}
 
-        Signal.Send("Battle", "UnitTakeDamage", info);
+        Signal.Send("Battle", "UnitAttacked", info);
         Signal.Send("Battle", "BoardReset");
     }
 
